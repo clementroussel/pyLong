@@ -1,7 +1,7 @@
 """ --> styles de ligne <-- """
 lineStyles = {'solid' : '-',
               'dashed' : '--',
-              'dashed & dotted' : '-.',
+              'dash-dotted' : '-.',
               'dotted' : ':'}
 
 """ --> styles de marqueur <-- """
