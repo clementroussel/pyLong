@@ -1,19 +1,9 @@
-class Annotation :
-    """ 
-    --> définition de l'objet Annotation <-- 
-    """
-    compteur = 0
-    
-    def __init__(self) :
-        Annotation.compteur += 1
-    
-        self.actif = True
+class Annotation:
+    def __init__(self) :   
+        self.active = True
+
+        self.group = 0
+
+        self.opacity = 1.
         
-        self.groupe = 0
-        
-        self.opacite = 1.
-        
-        self.ordre = 1
-        
-    def __del__(self) :
-        Annotation.compteur -= 1
+        self.order = 1
