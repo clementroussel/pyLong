@@ -1,6 +1,6 @@
 from matplotlib.text import Text as mpl_Text
 
-from pyLong.dictionaries import lineStyles, colors
+from pyLong.dictionaries import colors
 from pyLong.annotation import Annotation
 
 class Text(Annotation):
