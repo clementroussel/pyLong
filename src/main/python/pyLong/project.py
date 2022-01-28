@@ -1,4 +1,3 @@
-from ast import In
 from pyLong.layout import Layout
 from pyLong.group import Group
 #from pyLong.Apercu import *
