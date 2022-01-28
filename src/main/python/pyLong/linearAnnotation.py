@@ -3,7 +3,7 @@ from matplotlib.text import Text as mpl_Text
 
 import numpy as np
 
-from pyLong.dictionaries import *
+from pyLong.dictionaries import lineStyles, colors
 from pyLong.annotation import Annotation
 
 
@@ -27,7 +27,7 @@ class LinearAnnotation(Annotation):
                                 'x end': 1000.,
                                 'z coordinate': 500.,
                                 'arrow style': '<->',
-                                'line style': 'solide',
+                                'line style': 'solid',
                                 'color': 'Black',
                                 'thickness': 0.8}
         
