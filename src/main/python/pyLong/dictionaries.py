@@ -102,9 +102,3 @@ colors = {'Pink' : '#FFC0CB',
           'Silver' : '#C0C0C0',
           'Black' : '#000000',
           'White' : '#FFFFFF'}
-
-""" --> trio couleurs HTML <-- """
-triosCouleur = {'Green,Orange,Red' : ['#008000','#FFA500','#FF0000'],
-                'Dark Green,Dark Orange,Dark Red' : ['#006400','#FF8C00','#8B0000'],
-                'Forest Green,Orange Red,Crimson' : ['#228B22','#FF4500','#DC143C'],
-               }
