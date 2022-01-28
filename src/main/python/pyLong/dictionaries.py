@@ -1,8 +1,8 @@
 """ --> styles de ligne <-- """
-lineStyles = {'solide' : '-',
-              'tiretée' : '--',
-              'tiretée et pointillée' : '-.',
-              'pointillée' : ':'}
+lineStyles = {'solid' : '-',
+              'dashed' : '--',
+              'dashed & dotted' : '-.',
+              'dotted' : ':'}
 
 """ --> styles de marqueur <-- """
 styles2marqueur = {'point' : '.',
