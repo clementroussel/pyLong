@@ -61,11 +61,11 @@ class Interval(Annotation):
         self.text.set_alpha(self.opacity)
         self.text.set_zorder(self.order)
         self.text.set_bbox(dict(linestyle=lineStyles[self.frame['style']],
-                                 edgecolor=colors[self.frame['color']],
-                                 linewidth=self.frame['thickness'],
-                                 facecolor='White',
-                                 alpha=self.opacity,
-                                 zorder=self.order))
+                                edgecolor=colors[self.frame['color']],
+                                linewidth=self.frame['thickness'],
+                                facecolor='White',
+                                alpha=self.opacity,
+                                zorder=self.order))
         
         self.text.set_visible(self.active)
         
