@@ -1,7 +1,7 @@
 from matplotlib.text import Annotation as mpl_Annotation
 
 from pyLong.dictionaries import lineStyles, colors
-from pyLong.annotation import *
+from pyLong.annotation import Annotation
 
 
 class VerticalAnnotation(Annotation):
