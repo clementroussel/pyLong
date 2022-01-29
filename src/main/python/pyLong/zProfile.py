@@ -15,6 +15,7 @@ from pyLong.lowess import py_lowess
 
 class zProfile:
     counter = 0
+    
     def __init__(self) :
         zProfile.counter += 1
         
