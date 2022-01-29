@@ -21,6 +21,7 @@ from pyLong.rectangle import Rectangle
 
 
 class Project:
+    
     def __init__(self):
         self.path = ""
 
