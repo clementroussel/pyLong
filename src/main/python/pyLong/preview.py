@@ -71,7 +71,7 @@ class Preview:
             xs.sort()        
     
             i = xs.index(event.xdata)
-            ys.insert(i, self.profil.interpoler(event.xdata))
+            ys.insert(i, self.profil.interpolate(event.xdata))
             
             self.line.set_data(xs, ys)
             self.line.figure.canvas.draw()
@@ -113,55 +113,55 @@ class Preview:
         self.line.set_visible(self.visible)
         self.line.set_picker(5)
 
-    def trier(self, mode="ascendant"):
-        ascendant, ascendant_inverse = False, False
-        descendant, descendant_inverse = False, False
+    def sort(self, mode="ascending"):
+        ascending, ascending_inverted = False, False
+        descending, descending_inverted = False, False
 
-        if (self.abscisses[0] < self.abscisses[-1] and self.altitudes[0] < self.altitudes[-1]):
-            # le profil est ascendant
-            ascendant = True
+        if (self.x[0] < self.x[-1] and self.z[0] < self.z[-1]):
+            # profile is ascending
+            ascending = True
 
-        elif (self.abscisses[0] > self.abscisses[-1] and self.altitudes[0] > self.altitudes[-1]):
-            # le profil est ascendant inversé
-            ascendant_inverse = True
+        elif (self.x[0] > self.x[-1] and self.z[0] > self.z[-1]):
+            # profile is ascending but inverted
+            ascending_inverted = True
 
-        elif (self.abscisses[0] < self.abscisses[-1] and self.altitudes[0] > self.altitudes[-1]):
-            # le profil est descendant
-            descendant = True
-
-        else:
-            # le profil est descendant inversé
-            descendant_inverse = True
-
-        if mode == "ascendant":
-            if ascendant == True:
-                pass
-
-            elif ascendant_inverse == True:
-                self.abscisses = np.flip(self.abscisses)
-                self.altitudes = np.flip(self.altitudes)
-
-            elif descendant == True:
-                self.abscisses = self.abscisses[0] + self.abscisses[-1] - np.flip(self.abscisses)
-                self.altitudes = np.flip(self.altitudes)
-
-            else:
-                self.abscisses = self.abscisses[-1] + self.abscisses[0] - self.abscisses
+        elif (self.x[0] < self.x[-1] and self.z[0] > self.z[-1]):
+            # profile is descending
+            descending = True
 
         else:
-            if descendant == True:
+            # profile is descending but inverted
+            descending_inverted = True
+
+        if mode == "ascending":
+            if ascending:
                 pass
 
-            elif descendant_inverse == True:
-                self.abscisses = np.flip(x)
-                self.altitudes = np.flip(z)
+            elif ascending_inverted:
+                self.x = np.flip(self.x)
+                self.z = np.flip(self.z)
 
-            elif ascendant == True:
-                self.abscisses = self.abscisses[0] + self.abscisses[-1] - np.flip(self.abscisses)
-                self.altitudes = np.flip(self.altitudes)
+            elif descending:
+                self.x = self.x[0] + self.x[-1] - np.flip(self.x)
+                self.z = np.flip(self.z)
 
             else:
-                self.abscisses = self.abscisses[-1] + self.abscisses[0] - self.abscisses
+                self.x = self.x[-1] + self.x[0] - self.x
+
+        else:
+            if descending:
+                pass
+
+            elif descending_inverted:
+                self.x = np.flip(self.x)
+                self.znp.flip(self.z)
+
+            elif ascending:
+                self.x = self.x[0] + self.x[-1] - np.flip(self.x)
+                self.z = np.flip(self.z)
+
+            else:
+                self.x = self.x[-1] + self.x[0] - self.x
         
     def __del__(self):
         Preview.counter -= 1
