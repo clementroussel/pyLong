@@ -1,8 +1,8 @@
 from pyLong.layout import Layout
 from pyLong.group import Group
-#from pyLong.Apercu import *
+from pyLong.preview import Preview
 
-#from pyLong.zProfil import *
+from pyLong.zProfile import zProfile
 #from pyLong.pProfil import *
 
 from pyLong.text import Text
@@ -49,7 +49,7 @@ class Project:
 
         self.otherDatas = []
 
- #       self.previewProfile = Apercu()
+        self.preview = Preview()
 
         self.reminderLines = []
 
@@ -63,7 +63,7 @@ class Project:
         self.subplots.clear()
 
         self.profiles.clear()
-        zProfil.counter = 0
+        zProfile.counter = 0
         sProfil.counter = 0
 
         self.groups.clear()
@@ -93,7 +93,7 @@ class Project:
 
         #self.preferences = projet.preferences
 
-        # self.apercu = projet.apercu
+        self.preview = project.preview
 
         self.layouts.clear()
         Layout.counter = len(project.layouts) - 1
@@ -101,7 +101,7 @@ class Project:
 
         self.subplots = project.subplots
 
-        zProfil.counter = len(project.profiles)
+        zProfile.counter = len(project.profiles)
         sProfil.counter = len(project.profiles)
         self.profiles = project.profiles
 
