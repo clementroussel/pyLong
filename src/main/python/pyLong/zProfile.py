@@ -49,7 +49,7 @@ class zProfile:
         self.line = Line2D([], [])
         
     def solve(self, z, x) :
-        f = interp1d(self.x, self.z, kind = 'cubic')
+        f = interp1d(self.x, self.z, kind='cubic')
         def F(x) :
             return float(f(x) - z)
         
