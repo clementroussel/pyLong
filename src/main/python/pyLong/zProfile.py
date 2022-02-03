@@ -141,7 +141,7 @@ class zProfile:
             else:
                 self.x = self.x[-1] + self.x[0] - self.x
                 
-    def lowess(self, lw_n, lw_f, nsteps=2) :  
+    def lowess(self, lw_n, lw_f, nsteps=2):  
         x = np.copy(self.x)
         z = np.copy(self.z)
         
@@ -158,7 +158,7 @@ class zProfile:
         
         return np.array(x), np.array(z)
     
-    def butterworth(self, but_o, but_f, btype='lowpass', analog=False) :
+    def butterworth(self, but_o, but_f, btype='lowpass', analog=False):
         x = np.copy(self.x)
         z = np.copy(self.z)
         
@@ -172,7 +172,7 @@ class zProfile:
         
         return np.array(x), np.array(z)
     
-    def savitsky_golay(self, sg_o, sg_f) :
+    def savitsky_golay(self, sg_o, sg_f):
         x = np.copy(self.x)
         z = np.copy(self.z)
         
@@ -182,7 +182,7 @@ class zProfile:
         
         return np.array(x), np.array(z)
           
-    def simplify(self, ratio) :
+    def simplify(self, ratio):
         xz = np.array([self.x, self.z]).T
         S = Simplifier(xz)
         xzs = S.simplify(ratio=ratio)
@@ -198,7 +198,7 @@ class zProfile:
             
             return x, z
         
-    def export(self, path, delimiter, formatting, separator) :
+    def export(self, path, delimiter, formatting, separator):
         xz = np.array([self.x, self.z]).T
         xz = pd.DataFrame(xz)
         xz.to_csv(path,
@@ -208,7 +208,7 @@ class zProfile:
                   index = False,
                   header = ['X','Z'])
         
-    def __del__(self) :
+    def __del__(self):
         zProfile.counter -= 1
 
     def __getstate__(self):
