@@ -132,7 +132,7 @@ class zProfile:
 
             elif descending_inverted:
                 self.x = np.flip(self.x)
-                self.znp.flip(self.z)
+                self.z = np.flip(self.z)
 
             elif ascending:
                 self.x = self.x[0] + self.x[-1] - np.flip(self.x)
