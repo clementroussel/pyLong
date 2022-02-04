@@ -37,7 +37,7 @@ class zProfile:
                                'color': random.choice(list(colors.keys())),
                                'thickness': random.randint(1, 5)}
         
-        self.markerProperties = {'style': 'aucun',
+        self.markerProperties = {'style': 'none',
                                  'color': random.choice(list(colors.keys())),
                                  'size': random.randint(1, 5)}
         
