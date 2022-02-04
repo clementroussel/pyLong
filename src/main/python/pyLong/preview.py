@@ -25,7 +25,7 @@ class Preview:
                                'color': 'Red',
                                'thickness': 4}
         
-        self.markerProperties = {'style': 'aucun',
+        self.markerProperties = {'style': 'none',
                                  'color': 'Black',
                                  'size': 4}
         
