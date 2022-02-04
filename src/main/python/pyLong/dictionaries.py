@@ -40,23 +40,19 @@ legendPlacements = {'upper right': ('upper right', (1,1)),
                     'upper center': ('upper center', (0.5,1)),
                     'center': ('center', (0.5,0.5))}
 
-""" --> délimiteurs <-- """
-delimiteurs = {'espace' : ' ',
-               'tabulation' : '\t',
-               'virgule' : ',',
-               'point virgule' : ';'}
+delimiters = {'space' : ' ',
+              'tabulation' : '\t',
+              'comma' : ',',
+              'semicolon' : ';'}
 
-""" --> séparateurs décimal <-- """
-separateurs = {'point' : '.',
-               'virgule' : ','}
+separators = {'point' : '.',
+              'comma' : ','}
 
-""" --> extensions <-- """
 extensions = {'pdf' : 'Portable Document Format',
               'png' : 'Portable Network Graphics',
               'eps' : 'Encapsulated PostScript',
               'svg' : 'Scalable Vector Graphics'}
 
-""" --> couleurs HTML <-- """
 colors = {'Pink' : '#FFC0CB',
           'Deep Pink' : '#FF1493',
           'Violet' : '#EE82EE',
