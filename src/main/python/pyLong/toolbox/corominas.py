@@ -2,7 +2,6 @@ from matplotlib.lines import Line2D
 import numpy as np
 
 from pyLong.dictionaries import colors, lineStyles
-
 from pyLong.intersect import intersection
 
 
