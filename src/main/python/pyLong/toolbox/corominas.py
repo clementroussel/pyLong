@@ -61,7 +61,7 @@ class Corominas():
     def __del__(self):
         Corominas.counter -= 1
         
-    def calculer(self, pyLong):
+    def calculate(self):
         if self.parameters['zprofile'] is None:
             self.success = False
             return 0
