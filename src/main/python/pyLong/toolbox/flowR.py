@@ -204,6 +204,7 @@ class FlowR():
                 
             self.parameters['x end'] = xDebrisFlow[k]
             self.parameters['z end'] = zDebrisFlow[k]
+            
             self.results['s'] = speedDebrisFlow[:k+1]
             self.results['x'] = xDebrisFlow[:k+1]
             self.results['z'] = energyDebrisFlow[:k+1]
