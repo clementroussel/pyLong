@@ -3,7 +3,7 @@ import numpy as np
 from pyparsing import col
 from scipy import interpolate
 
-from pyLong.dictionaries import *
+from pyLong.dictionaries import lineStyles, colors
 
 
 class FlowR():
