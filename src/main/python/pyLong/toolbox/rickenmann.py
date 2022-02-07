@@ -89,55 +89,55 @@ class Rickenmann() :
             sprofile.updateData(zprofile.x, zprofile.z)               
 
         # getting hands on parameters
-        abscisses = zprofil.abscisses
-        altitudes = zprofil.altitudes
-        abscisse2debut = self.parametres['abscisse départ']
-        volume = self.parametres['volume']
-        pas = self.parametres['pas de calcul']
+        x = zprofile.x
+        z = zprofile.z
+        xStart = self.parameters['x start']
+        volume = self.parameters['volume']
+        step = self.parameters['step']
             
-        # calcul dans le cas ascendant
-        if not descendant:
-            # calcul de l'altitude du point de départ
-            if xmin < abscisse2debut < xmax:
-                altitude2debut = zprofil.interpoler(abscisse2debut)
-                self.parametres['altitude départ'] = altitude2debut
-            elif abscisse2debut == xmin or abscisse2debut == xmax:
-                k = list(zprofil.abscisses).index(abscisse2debut)
-                altitude2debut = zprofil.altitudes[k]
-                self.parametres['altitude départ'] = altitude2debut
+        # calculation in ascending case
+        if not descending:
+            # calculatuion of zStart
+            if xmin < xStart < xmax:
+                zStart = zprofile.interpolate(xStart)
+                self.parameters['z start'] = zStart
+            elif xStart == xmin or xStart == xmax:
+                k = list(zprofile.x).index(xStart)
+                zStart = zprofile.z[k]
+                self.parameters['z start'] = zStart
             else:
-                self.calculReussi = False
+                self.success = False
                 return 0
             
-            altitudesLave = list(np.arange(altitude2debut, zxmin, -pas))
-            altitudesLave.append(zxmin)
+            zDebrisFlow = list(np.arange(zStart, zxmin, -step))
+            zDebrisFlow.append(zxmin)
             
-            if not self.parametres['enveloppe']:
-                abscissesLave = [abscisse2debut - 1.9 * volume**0.16 * (altitude2debut - z)**0.83 for z in altitudesLave]
+            if not self.parameters['envelope']:
+                xDebrisFlow = [xStart - 1.9 * volume**0.16 * (zStart - z)**0.83 for z in zDebrisFlow]
             else:
-                abscissesLave = [abscisse2debut - 6.0 * volume**0.16 * (altitude2debut - z)**0.83 for z in altitudesLave]
+                xDebrisFlow = [xStart - 6.0 * volume**0.16 * (zStart - z)**0.83 for z in zDebrisFlow]
                 
             try:
-                xInter, zInter = intersection(np.array(abscisses), np.array(altitudes), np.array(abscissesLave), np.array(altitudesLave))
+                xInter, zInter = intersection(np.array(x), np.array(z), np.array(xDebrisFlow), np.array(zDebrisFlow))
                 xInter = xInter[0]
                 zInter = zInter[0]
                 
-                if np.abs(xInter - self.parametres['abscisse départ']) < 0.01:
-                    xInter = abscissesLave[-1]
-                    zInter = altitudesLave[-1]
+                if np.abs(xInter - self.parameters['x start']) < 0.01:
+                    xInter = xDebrisFlow[-1]
+                    zInter = zDebrisFlow[-1]
                 else:
-                    abscissesLave.append(xInter)
-                    abscissesLave.sort()
-                    abscissesLave.reverse()
+                    xDebrisFlow.append(xInter)
+                    xDebrisFlow.sort()
+                    xDebrisFlow.reverse()
                     
-                    k = abscissesLave.index(xInter)
-                    abscissesLave = abscissesLave[:k+1]
+                    k = xDebrisFlow.index(xInter)
+                    xDebrisFlow = xDebrisFlow[:k+1]
                     
-                    altitudesLave = altitudesLave[:k+1]
-                    altitudesLave[-1] = zInter
+                    zDebrisFlow = zDebrisFlow[:k+1]
+                    zDebrisFlow[-1] = zInter
                             
             except:
-                self.calculReussi = False
+                self.success = False
                 return 0     
 
             self.parametres['abscisse arrivée'] = xInter
