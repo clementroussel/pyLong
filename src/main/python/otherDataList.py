@@ -1,61 +1,61 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from Liste import *
+from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox
+from PyQt5.QtCore import Qt
+
+from list import List
 
 
-class ListeAutresDonnees(Liste):
-    def __init__(self, intitule, parent):
-        super().__init__(intitule)
+class OtherDataList(List):
+    def __init__(self, title, parent):
+        super().__init__(title)
 
         self.pyLong = parent
 
-        self.liste.doubleClicked.connect(self.pyLong.optionsDonnees)
-        self.liste.itemChanged.connect(self.activer)
+        # self.liste.doubleClicked.connect(self.pyLong.optionsDonnees)
+        # self.liste.itemChanged.connect(self.activer)
 
-        self.liste.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.liste.customContextMenuRequested.connect(self.contextMenu)
+        # self.liste.setContextMenuPolicy(Qt.CustomContextMenu)
+        # self.liste.customContextMenuRequested.connect(self.contextMenu)
 
-        self.popMenu = QMenu(self)
-        self.popMenu.addAction(self.pyLong.action_ajouterDonnees)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_styleDonnees)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_supprimerDonnees)
+        # self.popMenu = QMenu(self)
+        # self.popMenu.addAction(self.pyLong.action_ajouterDonnees)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_styleDonnees)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_supprimerDonnees)
 
         layout = QVBoxLayout()
 
-        layout.addWidget(self.liste)
+        layout.addWidget(self.list)
         self.setLayout(layout)
 
     def contextMenu(self, point):
-        self.popMenu.exec_(self.liste.mapToGlobal(point))
+        self.popMenu.exec_(self.list.mapToGlobal(point))
 
     def update(self):
-        self.liste.clear()
-        for donnee in self.pyLong.projet.autresDonnees:
+        self.list.clear()
+        for data in self.pyLong.project.otherData:
             item = QListWidgetItem()
-            item.setText(donnee.intitule)
+            item.setText(data.title)
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            if donnee.visible:
+            if data.active:
                 item.setCheckState(Qt.Checked)
             else:
                 item.setCheckState(Qt.Unchecked)
-            self.liste.addItem(item)
+            self.list.addItem(item)
 
     def selection(self):
-        n = self.liste.count()
+        n = self.list.count()
         selections = []
 
         for i in range(n):
-            selections.append(self.liste.item(i).isSelected())
+            selections.append(self.list.item(i).isSelected())
 
         return n > 0 and True in selections
 
-    def supprimer(self):
+    def delete(self):
         if self.selection():
             indices = []
-            for item in self.liste.selectedIndexes():
+            for item in self.list.selectedIndexes():
                 indices.append(item.row())
 
             indices.sort()
@@ -63,70 +63,70 @@ class ListeAutresDonnees(Liste):
 
             if len(indices) == 1:
                 i = indices[0]
-                donnee = self.pyLong.projet.autresDonnees[i]
+                data = self.pyLong.project.otherData[i]
 
                 dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Supprimer une donnée")
-                dialogue.setText("Supprimer la donnée : {} ?".format(donnee.intitule))
+                dialogue.setWindowTitle("Delete a data")
+                dialogue.setText("Delete data : {} ?".format(data.title))
                 dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Oui")
-                dialogue.button(QMessageBox.No).setText("Non")
+                dialogue.button(QMessageBox.Yes).setText("Yes")
+                dialogue.button(QMessageBox.No).setText("No")
                 dialogue.setIcon(QMessageBox.Question)
                 reponse = dialogue.exec_()
 
                 if reponse == QMessageBox.Yes:
                     try:
-                        donnee.line.remove()
+                        data.line.remove()
                     except:
                         pass
-                    self.pyLong.projet.autresDonnees.pop(i)
+                    self.pyLong.project.otherData.pop(i)
                     self.update()
                     self.pyLong.canvas.draw()
 
                 try:
-                    self.liste.setCurrentRow(i)
+                    self.list.setCurrentRow(i)
                 except:
                     pass
 
             else:
                 dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Supprimer plusieurs données")
-                dialogue.setText("Supprimer les {} données sélectionnées ?".format(len(indices)))
+                dialogue.setWindowTitle("Delete data")
+                dialogue.setText("Data the {} selected data ?".format(len(indices)))
                 dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Oui")
-                dialogue.button(QMessageBox.No).setText("Non")
+                dialogue.button(QMessageBox.Yes).setText("Yes")
+                dialogue.button(QMessageBox.No).setText("No")
                 dialogue.setIcon(QMessageBox.Question)
                 reponse = dialogue.exec_()
 
                 if reponse == QMessageBox.Yes:
                     for i in indices:
-                        donnee = self.pyLong.projet.autresDonnees[i]
-                        donnee.line.remove()
-                        self.pyLong.projet.autresDonnees.pop(i)
+                        data = self.pyLong.project.otherData[i]
+                        data.line.remove()
+                        self.pyLong.project.otherData.pop(i)
 
                     self.update()
                     self.pyLong.canvas.draw()
 
                     try:
-                        self.liste.setCurrentRow(i)
+                        self.list.setCurrentRow(i)
                     except:
                         pass
 
         else:
             alerte = QMessageBox(self)
-            alerte.setText("Sélectionnez une ou plusieurs donnée(s) avant de lancer cette commande.")
+            alerte.setText("Select one or more data before running this command.")
             alerte.setIcon(QMessageBox.Warning)
             alerte.exec_()
 
-    def activer(self):
-        for j in range(self.liste.count()):
-            donnee = self.pyLong.projet.autresDonnees[j]
+    def activate(self):
+        for j in range(self.list.count()):
+            data = self.pyLong.project.otherData[j]
 
-            if self.liste.item(j).checkState() == Qt.Checked:
-                donnee.visible = True
+            if self.list.item(j).checkState() == Qt.Checked:
+                data.active = True
             else:
-                donnee.visible = False
+                data.active = False
 
-            donnee.update()
+            data.update()
 
         self.pyLong.canvas.draw()

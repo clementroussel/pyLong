@@ -48,7 +48,7 @@ class Project:
 
         self.calculations = []
 
-        self.otherDatas = []
+        self.otherData = []
 
         self.preview = Preview()
 

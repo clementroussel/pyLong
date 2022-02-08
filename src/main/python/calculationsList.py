@@ -1,96 +1,96 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from Liste import *
+from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox
+from PyQt5.QtCore import Qt
 
-from pyLong.LigneEnergie import *
-from pyLong.Mezap import *
-from pyLong.FlowR import *
-from pyLong.Rickenmann import *
-from pyLong.Corominas import *
+from list import List
 
-from DialogLigneEnergie import *
-from DialogMezap import *
-from DialogFlowR import *
-from DialogRickenmann import *
-from DialogCorominas import *
+from pyLong.toolbox.energyLine import EnergyLine
+from pyLong.toolbox.mezap import Mezap
+from pyLong.toolbox.flowR import FlowR
+from pyLong.toolbox.rickenmann import Rickenmann
+from pyLong.toolbox.corominas import Corominas
+
+# from DialogLigneEnergie import *
+# from DialogMezap import *
+# from DialogFlowR import *
+# from DialogRickenmann import *
+# from DialogCorominas import *
 
 
-class ListeCalculs(Liste):
-    def __init__(self, intitule, parent):
-        super().__init__(intitule)
+class CalculationsList(List):
+    def __init__(self, title, parent):
+        super().__init__(title)
 
         self.pyLong = parent
 
-        self.liste.doubleClicked.connect(self.ouvrirCalcul)
-        self.liste.itemChanged.connect(self.activer)
+        # self.liste.doubleClicked.connect(self.ouvrirCalcul)
+        # self.liste.itemChanged.connect(self.activer)
 
-        self.liste.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.liste.customContextMenuRequested.connect(self.contextMenu)
+        # self.liste.setContextMenuPolicy(Qt.CustomContextMenu)
+        # self.liste.customContextMenuRequested.connect(self.contextMenu)
 
-        self.popMenu = QMenu(self)
-        self.popMenu.addAction(self.pyLong.action_toolbox)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_calcul)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_supprimerCalculs)
+        # self.popMenu = QMenu(self)
+        # self.popMenu.addAction(self.pyLong.action_toolbox)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_calcul)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_supprimerCalculs)
 
         layout = QVBoxLayout()
 
-        layout.addWidget(self.liste)
+        layout.addWidget(self.list)
         self.setLayout(layout)
 
     def contextMenu(self, point):
-        self.popMenu.exec_(self.liste.mapToGlobal(point))
+        self.popMenu.exec_(self.list.mapToGlobal(point))
 
     def update(self):
-        self.liste.clear()
-        for calcul in self.pyLong.projet.calculs:
+        self.list.clear()
+        for calculation in self.pyLong.project.calculations:
             item = QListWidgetItem()
-            item.setText(calcul.intitule)
-            if type(calcul) != Mezap:
+            item.setText(calculation.title)
+            if not isinstance(calculation, Mezap):
                 item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-                if calcul.actif:
+                if calculation.active:
                     item.setCheckState(Qt.Checked)
                 else:
                     item.setCheckState(Qt.Unchecked)
-            self.liste.addItem(item)
+            self.list.addItem(item)
 
     def selection(self):
         n = self.liste.count()
         selections = []
 
         for i in range(n):
-            selections.append(self.liste.item(i).isSelected())
+            selections.append(self.list.item(i).isSelected())
 
         return n > 0 and True in selections
 
-    def ouvrirCalcul(self):
+    def open(self):
         if self.selection():
-            i = self.liste.currentRow()
-            calcul = self.pyLong.projet.calculs[i]
+            i = self.list.currentRow()
+            calculation = self.pyLong.project.calculations[i]
 
-            if type(calcul) == LigneEnergie:
-                DialogLigneEnergie(parent=self.pyLong).exec_()
-            elif type(calcul) == Mezap:
+            if isinstance(calculation, EnergyLine):
+                DialogEnergyLine(parent=self.pyLong).exec_()
+            elif isinstance(calculation, Mezap):
                 DialogMezap(parent=self.pyLong).exec_()
-            elif type(calcul) == FlowR:
+            elif isinstance(calculation, FlowR):
                 DialogFlowR(parent=self.pyLong).exec_()
-            elif type(calcul) == Rickenmann:
+            elif isinstance(calculation, Rickenmann):
                 DialogRickenmann(parent=self.pyLong).exec_()
-            elif type(calcul) == Corominas:
+            elif isinstance(calculation, Corominas):
                 DialogCorominas(parent=self.pyLong).exec_()
 
         else:
             alerte = QMessageBox(self)
-            alerte.setText("Sélectionnez un calcul avant de lancer cette commande.")
+            alerte.setText("Select a calculation before running this command.")
             alerte.setIcon(QMessageBox.Warning)
             alerte.exec_()
 
-    def supprimer(self):
+    def delete(self):
         if self.selection():
             indices = []
-            for item in self.liste.selectedIndexes():
+            for item in self.list.selectedIndexes():
                 indices.append(item.row())
 
             indices.sort()
@@ -98,73 +98,73 @@ class ListeCalculs(Liste):
 
             if len(indices) == 1:
                 i = indices[0]
-                calcul = self.pyLong.projet.calculs[i]
+                calculation = self.pyLong.project.calculations[i]
 
                 dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Supprimer un calcul")
-                dialogue.setText("Supprimer le calcul : {} ?".format(calcul.intitule))
+                dialogue.setWindowTitle("Delete a calculation")
+                dialogue.setText("Delete calculation : {} ?".format(calculation.title))
                 dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Oui")
-                dialogue.button(QMessageBox.No).setText("Non")
+                dialogue.button(QMessageBox.Yes).setText("Yes")
+                dialogue.button(QMessageBox.No).setText("No")
                 dialogue.setIcon(QMessageBox.Question)
                 reponse = dialogue.exec_()
 
                 if reponse == QMessageBox.Yes:
-                    if type(calcul) in [LigneEnergie, Rickenmann, FlowR, Corominas]:
-                        calcul.line.remove()
+                    if isinstance(calculation, (EnergyLine, Rickenmann, FlowR, Corominas)):
+                        calculation.line.remove()
 
-                    self.pyLong.projet.calculs.pop(i)
+                    self.pyLong.project.calculations.pop(i)
                     self.update()
-                    # self.pyLong.canvas.draw()
-                    self.pyLong.canvas.updateLegendes()
+
+                    self.pyLong.canvas.updateLegends()
 
                 try:
-                    self.liste.setCurrentRow(i)
+                    self.list.setCurrentRow(i)
                 except:
                     pass
 
             else:
                 dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Supprimer plusieurs calculs")
-                dialogue.setText("Supprimer les {} calculs sélectionnés ?".format(len(indices)))
+                dialogue.setWindowTitle("Delete calculations")
+                dialogue.setText("Delete the {} selected calculations ?".format(len(indices)))
                 dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Oui")
-                dialogue.button(QMessageBox.No).setText("Non")
+                dialogue.button(QMessageBox.Yes).setText("Yes")
+                dialogue.button(QMessageBox.No).setText("No")
                 dialogue.setIcon(QMessageBox.Question)
                 reponse = dialogue.exec_()
 
                 if reponse == QMessageBox.Yes:
                     for i in indices:
-                        calcul = self.pyLong.projet.calculs[i]
-                        if type(calcul) in [LigneEnergie, Rickenmann, FlowR, Corominas]:
-                            calcul.line.remove()
+                        calculation = self.pyLong.project.calculations[i]
+                        if isinstance(calculation, (EnergyLine, Rickenmann, FlowR, Corominas)):
+                            calculation.line.remove()
 
-                        self.pyLong.projet.calculs.pop(i)
+                        self.pyLong.project.calculations.pop(i)
 
                     self.update()
-                    # self.pyLong.canvas.draw()
-                    self.pyLong.canvas.updateLegendes()
+
+                    self.pyLong.canvas.updateLegends()
 
                 try:
-                    self.liste.setCurrentRow(i)
+                    self.list.setCurrentRow(i)
                 except:
                     pass
 
         else:
             alerte = QMessageBox(self)
-            alerte.setText("Sélectionnez un ou plusieurs calcul(s) avant de lancer cette commande.")
+            alerte.setText("Select one or more calculation(s) before running this command.")
             alerte.setIcon(QMessageBox.Warning)
             alerte.exec_()
 
-    def activer(self):
-        for j in range(self.liste.count()):
-            calcul = self.pyLong.projet.calculs[j]
-            if type(calcul) != Mezap:
-                if self.liste.item(j).checkState() == Qt.Checked:
-                    calcul.actif = True
+    def activate(self):
+        for j in range(self.list.count()):
+            calculation = self.pyLong.project.calculations[j]
+            if not isinstance(calculation, Mezap):
+                if self.list.item(j).checkState() == Qt.Checked:
+                    calculation.active = True
                 else:
-                    calcul.actif = False
+                    calculation.active = False
 
-                calcul.update()
+                calculation.update()
 
         self.pyLong.canvas.draw()

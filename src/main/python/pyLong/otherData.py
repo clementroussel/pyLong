@@ -13,6 +13,8 @@ class OtherData:
 
     def __init__(self):
         OtherData.counter += 1
+
+        self.active = True
         
         self.title = ""
         
@@ -36,8 +38,6 @@ class OtherData:
                                  'color': random.choice(list(colors.keys())),
                                  'size': random.randint(1, 5)}
         
-        self.visible = True
-        
         self.clear()
 
     def clear(self):
@@ -49,7 +49,7 @@ class OtherData:
         if not self.visible:
             self.line.set_label("")
         else:
-            self.line.set_label(self.legende)
+            self.line.set_label(self.label)
             
         self.line.set_linestyle(lineStyles[self.lineProperties['style']])
         self.line.set_color(colors[self.lineProperties['color']])
@@ -60,7 +60,7 @@ class OtherData:
         self.line.set_markersize(self.markerProperties['size'])
         self.line.set_alpha(self.opacity)
         self.line.set_zorder(self.order)
-        self.line.set_visible(self.visible)
+        self.line.set_visible(self.active)
         
     def __del__(self):
         OtherData.counter -= 1
