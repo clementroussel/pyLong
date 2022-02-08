@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QHBoxLayout
 from PyQt5.QtCore import Qt
 
-from list import List
-from checkableComboBox import CheckableComboBox
+from interface.list import List
+from interface.checkableComboBox import CheckableComboBox
 
 from pyLong.text import Text
 from pyLong.verticalAnnotation import VerticalAnnotation

@@ -1,5 +1,6 @@
 venv/
 target/
 src/main/python/__pycache__/
+src/main/python/interface/__pycache__/
 src/main/python/pyLong/__pycache__/
 src/main/python/pyLong/toolbox/__pycache__/

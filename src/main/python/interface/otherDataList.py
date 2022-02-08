@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox
 from PyQt5.QtCore import Qt
 
-from list import List
+from interface.list import List
 
 
 class OtherDataList(List):

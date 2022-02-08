@@ -4,12 +4,13 @@ from PyQt5.QtGui import QPalette
 
 # PyQt5 custom modules
 # from barreOutils import *
-from canvas import Canvas
+from interface.actions import createActions
+from interface.canvas import Canvas
 
-from profilesList import ProfilesList
-from annotationsList import AnnotationsList
-from calculationsList import CalculationsList
-from otherDataList import OtherDataList
+from interface.profilesList import ProfilesList
+from interface.annotationsList import AnnotationsList
+from interface.calculationsList import CalculationsList
+from interface.otherDataList import OtherDataList
 # from ListeAnnotations import *
 # from ListeCalculs import *
 # from ListeAutresDonnees import *
@@ -82,7 +83,7 @@ class MainWindow(QMainWindow):
         with open(self.appctxt.get_resource('recent/projects.json')) as file:
             self.recentFiles = json.load(file)['chemins']
 
-        self.projet = Project()
+        self.project = Project()
 
         self.interactiveEdition = False
 
@@ -95,6 +96,7 @@ class MainWindow(QMainWindow):
         self.navigationBar.setIconSize(QSize(20, 20))
 
 #         menusEtOutils(self, self.appctxt)
+        self.createActions()
 
         # self.navigationBar._actions['pan'].setText("Se déplacer")
         # self.navigationBar._actions['zoom'].setText("Zoomer")
@@ -132,6 +134,9 @@ class MainWindow(QMainWindow):
         centralWidget.setLayout(mainLayout)
         self.setCentralWidget(centralWidget)
         self.showMaximized()
+
+    def createActions(self):
+        createActions(self)
 
 #     def ouvrirProjetRecent(self, chemin):
 #         self.nouveauProjet()

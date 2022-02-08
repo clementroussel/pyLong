@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QSplashScreen
 
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
-from mainWindow import MainWindow
+from interface.mainWindow import MainWindow
 
 import sys
 import time
