@@ -8,6 +8,7 @@ from canvas import Canvas
 
 from profilesList import ProfilesList
 from calculationsList import CalculationsList
+from otherDataList import OtherDataList
 # from ListeAnnotations import *
 # from ListeCalculs import *
 # from ListeAutresDonnees import *
