@@ -1,5 +1,4 @@
 venv/
 target/
-src\main\python\__pycache__\
-src\main\python\pyLong\__pycache__\
-src\main\_linearAnnotation_script_0.py
+src/main/python/__pycache__/
+src/main/python/pyLong/__pycache__/
