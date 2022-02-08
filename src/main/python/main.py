@@ -1,3 +1,6 @@
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QSplashScreen
+
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from mainWindow import MainWindow
