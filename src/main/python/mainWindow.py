@@ -1,10 +1,12 @@
-from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QScrollArea
+from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QPalette
 
-# # modules PyQt5 personnalisés
+# PyQt5 custom modules
 # from barreOutils import *
-# from Canvas import *
+from canvas import Canvas
 
-# from ListeProfils import *
+from profilesList import ProfilesList
 # from ListeAnnotations import *
 # from ListeCalculs import *
 # from ListeAutresDonnees import *
@@ -39,8 +41,8 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 # from DialogAjoutDonnees import *
 # from DialogOptionsDonnees import *
 
-# # modules matplotlib
-# from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+# matplotlib modules
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 
 # python modules
 # import os
@@ -58,10 +60,10 @@ from pyLong.project import Project
 # from pyLong.Rectangle import *
 
 
-# class BarreDeNavigation(NavigationToolbar):
-#     # only display the buttons we need
-#     toolitems = [t for t in NavigationToolbar.toolitems if
-#                  t[0] in ('Pan', 'Zoom')]
+class NavigationBar(NavigationToolbar):
+    # only display the buttons we need
+    toolitems = [t for t in NavigationToolbar.toolitems if
+                 t[0] in ('Pan', 'Zoom')]
 
 
 class MainWindow(QMainWindow):
@@ -74,7 +76,7 @@ class MainWindow(QMainWindow):
         
         self.appctxt = appctxt
 
-        with open(self.appctxt.get_resource('recent/projets.json')) as file:
+        with open(self.appctxt.get_resource('recent/projects.json')) as file:
             self.recentFiles = json.load(file)['chemins']
 
         self.projet = Project()
@@ -83,25 +85,22 @@ class MainWindow(QMainWindow):
 
         self.freeze = False
 
-#         self.canvas = Canvas(parent=self)
+        self.canvas = Canvas(parent=self)
 #         self.canvas.mpl_connect('button_press_event', self.onDoubleClick)
 
-#         self.barreDeNavigation = BarreDeNavigation(self.canvas, self)
-#         self.barreDeNavigation.setIconSize(QSize(20, 20))
+        self.navigationBar = NavigationBar(self.canvas, self)
+        self.navigationBar.setIconSize(QSize(20, 20))
 
 #         menusEtOutils(self, self.appctxt)
 
-#         self.barreDeNavigation._actions['pan'].setText("Se déplacer")
-#         self.barreDeNavigation._actions['zoom'].setText("Zoomer")
+        # self.navigationBar._actions['pan'].setText("Se déplacer")
+        # self.navigationBar._actions['zoom'].setText("Zoomer")
 
 #         self.canvas.addContextMenu()
 
-#         widgetCentral = QWidget()
-#         mainLayout = QHBoxLayout()
-
-#         layout = QVBoxLayout()
-#         self.listeProfils = ListeProfils("Profils en long", parent=self)
-#         layout.addWidget(self.listeProfils)
+        layout = QVBoxLayout()
+        self.profilesList = ProfilesList("Profiles", parent=self)
+        layout.addWidget(self.profilesList)
 
 #         self.listeAnnotations = ListeAnnotations("Annotations", parent=self)
 #         layout.addWidget(self.listeAnnotations)
@@ -111,21 +110,17 @@ class MainWindow(QMainWindow):
 
 #         self.listeAutresDonnees = ListeAutresDonnees("Autres données", parent=self)
 #         layout.addWidget(self.listeAutresDonnees)
-#         mainLayout.addLayout(layout)
+        mainLayout.addLayout(layout)
 
-#         layout = QVBoxLayout()
-#         self.scrollArea = QScrollArea()
-#         self.scrollArea.setBackgroundRole(QPalette.Dark)
-#         self.scrollArea.setWidget(self.canvas)
-#         self.scrollArea.setAlignment(Qt.AlignCenter)
-#         self.scrollArea.setVisible(True)
-#         layout.addWidget(self.scrollArea)
-#         layout.addWidget(self.barreDeNavigation)
-#         mainLayout.addLayout(layout)
-
-#         widgetCentral.setLayout(mainLayout)
-#         self.setCentralWidget(widgetCentral)
-#         self.showMaximized()
+        layout = QVBoxLayout()
+        self.scrollArea = QScrollArea()
+        self.scrollArea.setBackgroundRole(QPalette.Dark)
+        self.scrollArea.setWidget(self.canvas)
+        self.scrollArea.setAlignment(Qt.AlignCenter)
+        self.scrollArea.setVisible(True)
+        layout.addWidget(self.scrollArea)
+        layout.addWidget(self.navigationBar)
+        mainLayout.addLayout(layout)
 
 #         self.canvas.initialiser()
 #         self.canvas.dessiner()
