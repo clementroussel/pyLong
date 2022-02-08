@@ -164,7 +164,7 @@ class EnergyLine():
                 above = list(zEnergyLine - z >= 0) # (True : energy ligne above profile | False : energy ligne below profile)
 
                 if False in above:
-                    k = above.index(False) # point index which follows the intersection
+                    k = above.index(False) # point's index which follows the intersection
                     
                     xa = x[k-1] # point's x-coord which precedes the intersection
                     za = z[k-1] # point's z-coord which precedes the intersection
@@ -187,52 +187,52 @@ class EnergyLine():
                     self.parameters['z end'] = f(x[-1])
                 
             else:
-                f = lambda x: + np.tan(np.radians(angle)) * (x - abscisse2debut) + altitude2debut
-                # conservation des points situés "à gauche" du point de début
-                abscisses = list(zprofil.abscisses)
-                if abscisse2debut not in abscisses:
-                    abscisses.append(abscisse2debut)
-                    abscisses.sort()
-                    j = abscisses.index(abscisse2debut)
-                    altitudes = np.array(zprofil.altitudes[:j+1])
-                    altitudes[-1] = zprofil.interpoler(abscisse2debut)
+                f = lambda x: + np.tan(np.radians(angle)) * (x - xStart) + zStart
+                # keeping points to the left of the start
+                x = list(zprofile.x)
+                if xStart not in x:
+                    x.append(xStart)
+                    x.sort()
+                    j = x.index(xStart)
+                    z = np.array(zprofile.z[:j+1])
+                    z[-1] = zprofile.interpolate(xStart)
                 else:
-                    j = abscisses.index(abscisse2debut)
-                    altitudes = zprofil.altitudes[:j+1]
+                    j = x.index(xStart)
+                    z = zprofile.z[:j+1]
                     
-                abscisses = np.array(abscisses[:j+1])
+                x = np.array(x[:j+1])
                 
-                z = f(abscisses) # altitudes sur la ligne d'énergie
+                zEnergyLine = f(x) # altitudes of the energy line
                 
-                enDessous = list(altitudes - z >= 0) # tableau (True : ligne en dessouss du profil | False : ligne au desous du profil)
+                below = list(z - zEnergyLine >= 0) # (True : energy ligne below profile | False : energy ligne above profile)
 
-                if True in enDessous[:-1]:
-                    k = enDessous.index(False) # indice du point qui suit l'intersection
+                if True in below[:-1]:
+                    k = below.index(False) # point's index which follows the intersection
                     
-                    xa = abscisses[k-1] # abscisse du point qui précède l'intersection
-                    za = altitudes[k-1] # altitude du point qui précède l'intersection
-                    xb = abscisses[k] # abscisse du point qui suit l'intersection
-                    zb = altitudes[k] # altitude du point qui suit l'intersection
+                    xa = x[k-1] # point's x-coord which precedes the intersection
+                    za = z[k-1] # point's z-coord which precedes the intersection
+                    xb = x[k] # point's x-coord which follows the intersection
+                    zb = z[k] # point's z-coord which follows the intersection
                     
-                    a2 = (zb - za) / (xb - xa) # coefficient directeur de l'équation du segment du profil contenant l'intersection
-                    b2 = za - a2 * xa # ordonnée à l'origine de l'équation du segment du profil contenant l'intersection
+                    a2 = (zb - za) / (xb - xa) # slope coefficient of the equation of the segment of the profile containing the intersection
+                    b2 = za - a2 * xa # ordinate at the origin of the equation of the segment of the profile containing the intersection
                     
-                    a1 = + np.tan(np.radians(angle)) # coefficient directeur de la ligne d'énergie
-                    b1 = altitude2debut - a1 * abscisse2debut # ordonnée à l'origine de la ligne d'énergie
+                    a1 = + np.tan(np.radians(angle)) # slope coefficient of the energy line
+                    b1 = zStart - a1 * xStart # ordinate at the origin of the energy line
                     
-                    xInter = (b2 - b1) / (a1 - a2) # abscisse de l'intersection de la ligne d'énergie avec le profil
+                    xInter = (b2 - b1) / (a1 - a2) # abscissa of the intersection of the energy line with the profile
                     
-                    self.parametres['abscisse arrivée'] = xInter
-                    self.parametres['altitude arrivée'] = zprofil.interpoler(xInter)
+                    self.parameters['x end'] = xInter
+                    self.parameters['z end'] = zprofile.interpolate(xInter)
                     
                 else:
-                    self.parametres['abscisse arrivée'] = abscisses[0]
-                    self.parametres['altitude arrivée'] = f(abscisses[0])
+                    self.parameters['x end'] = x[0]
+                    self.parameters['z end'] = f(x[0])
         
-            if np.abs(self.parametres['abscisse départ'] - self.parametres['abscisse arrivée']) < 0.001:
-                self.calculReussi = False
+            if np.abs(self.parameters['x start'] - self.parameters['x end']) < 0.01:
+                self.success = False
             else:
-                self.calculReussi = True
+                self.success = True
                 
         else: # méthode : arrivée + angle
             # récupération du profil
