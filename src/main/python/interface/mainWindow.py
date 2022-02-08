@@ -7,6 +7,7 @@ from PyQt5.QtGui import QPalette
 from canvas import Canvas
 
 from profilesList import ProfilesList
+from annotationsList import AnnotationsList
 from calculationsList import CalculationsList
 from otherDataList import OtherDataList
 # from ListeAnnotations import *
@@ -104,8 +105,8 @@ class MainWindow(QMainWindow):
         self.profilesList = ProfilesList("Profiles", parent=self)
         layout.addWidget(self.profilesList)
 
-#         self.listeAnnotations = ListeAnnotations("Annotations", parent=self)
-#         layout.addWidget(self.listeAnnotations)
+        self.annotationsList = AnnotationsList("Annotations", parent=self)
+        layout.addWidget(self.annotationsList)
 
         self.calculationsList = CalculationsList("Calculations (Toolbox)", parent=self)
         layout.addWidget(self.calculationsList)

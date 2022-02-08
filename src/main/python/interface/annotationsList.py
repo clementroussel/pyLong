@@ -1,127 +1,127 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from Liste import *
-from CheckableComboBox import *
+from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QHBoxLayout
+from PyQt5.QtCore import Qt
 
-from pyLong.Texte import *
-from pyLong.AnnotationPonctuelle import *
-from pyLong.AnnotationLineaire import *
-from pyLong.Zone import *
-from pyLong.Rectangle import *
+from list import List
+from checkableComboBox import CheckableComboBox
 
-from DialogTexte import *
-from DialogAnnotationPonctuelle import *
-from DialogAnnotationLineaire import *
-from DialogZone import *
-from DialogRectangle import *
-from DialogGestionGroupes import *
+from pyLong.text import Text
+from pyLong.verticalAnnotation import VerticalAnnotation
+from pyLong.linearAnnotation import LinearAnnotation
+from pyLong.interval import Interval
+from pyLong.rectangle import Rectangle
 
-from DialogAjoutGroupe import *
-from DialogRenommerGroupe import *
-from DialogSupprimerGroupes import *
+# from DialogTexte import *
+# from DialogAnnotationPonctuelle import *
+# from DialogAnnotationLineaire import *
+# from DialogZone import *
+# from DialogRectangle import *
+# from DialogGestionGroupes import *
 
-from pyLong.LigneRappel import *
+# from DialogAjoutGroupe import *
+# from DialogRenommerGroupe import *
+# from DialogSupprimerGroupes import *
+
+from pyLong.reminderLine import ReminderLine
 
 
-class ListeAnnotations(Liste):
-    def __init__(self, intitule, parent):
-        super().__init__(intitule)
+class AnnotationsList(List):
+    def __init__(self, title, parent):
+        super().__init__(title)
 
         self.pyLong = parent
 
-        self.liste.doubleClicked.connect(self.ouvrirAnnotation)
-        self.liste.itemChanged.connect(self.activerAnnotation)
+        # self.liste.doubleClicked.connect(self.ouvrirAnnotation)
+        # self.liste.itemChanged.connect(self.activerAnnotation)
 
-        self.liste.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.liste.customContextMenuRequested.connect(self.contextMenu)
+        # self.liste.setContextMenuPolicy(Qt.CustomContextMenu)
+        # self.liste.customContextMenuRequested.connect(self.contextMenu)
 
-        self.popMenu = QMenu(self)
-        self.popMenu.addAction(self.pyLong.action_texte)
-        self.popMenu.addAction(self.pyLong.action_annotationPonctuelle)
-        self.popMenu.addAction(self.pyLong.action_annotationLineaire)
-        self.popMenu.addAction(self.pyLong.action_zoneProfil)
-        self.popMenu.addAction(self.pyLong.action_formeRectangulaire)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_styleAnnotation)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_copierPropriete)
-        self.popMenu.addAction(self.pyLong.action_collerPropriete)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_ajusterAnnotations)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_dupliquerAnnotation)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_gestionGroupes)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_supprimerAnnotations)
-        self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_annotations2ligneRappel)
-        self.popMenu.addAction(self.pyLong.action_lignesRappel)
+        # self.popMenu = QMenu(self)
+        # self.popMenu.addAction(self.pyLong.action_texte)
+        # self.popMenu.addAction(self.pyLong.action_annotationPonctuelle)
+        # self.popMenu.addAction(self.pyLong.action_annotationLineaire)
+        # self.popMenu.addAction(self.pyLong.action_zoneProfil)
+        # self.popMenu.addAction(self.pyLong.action_formeRectangulaire)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_styleAnnotation)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_copierPropriete)
+        # self.popMenu.addAction(self.pyLong.action_collerPropriete)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_ajusterAnnotations)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_dupliquerAnnotation)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_gestionGroupes)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_supprimerAnnotations)
+        # self.popMenu.addSeparator()
+        # self.popMenu.addAction(self.pyLong.action_annotations2ligneRappel)
+        # self.popMenu.addAction(self.pyLong.action_lignesRappel)
 
         layout = QVBoxLayout()
 
         sublayout = QHBoxLayout()
 
-        self.groupes = CheckableComboBox()
-        for i, groupe in enumerate(self.pyLong.projet.groupes):
-            self.groupes.addItem(groupe.intitule)
-            self.groupes.setItemChecked(i, groupe.actif)
+        # self.groupes = CheckableComboBox()
+        # for i, groupe in enumerate(self.pyLong.projet.groupes):
+        #     self.groupes.addItem(groupe.intitule)
+        #     self.groupes.setItemChecked(i, groupe.actif)
 
-        self.groupes.activated.connect(self.activerGroupe)
-        self.groupes.currentIndexChanged.connect(self.updateListe)
-        self.groupes.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.groupes.customContextMenuRequested.connect(self.contextMenuGroupes)
+        # self.groupes.activated.connect(self.activerGroupe)
+        # self.groupes.currentIndexChanged.connect(self.updateListe)
+        # self.groupes.setContextMenuPolicy(Qt.CustomContextMenu)
+        # self.groupes.customContextMenuRequested.connect(self.contextMenuGroupes)
 
-        self.popMenuGroupes = QMenu(self)
-        ajouterGroupe = QAction('Ajouter un groupe', self)
-        renommerGroupe = QAction('Renommer le groupe', self)
-        supprimerGroupe = QAction('Supprimer des groupes', self)
-        ajouterGroupe.triggered.connect(self.ajouterGroupe)
-        renommerGroupe.triggered.connect(self.renommerGroupe)
-        supprimerGroupe.triggered.connect(self.supprimerGroupes)
-        self.popMenuGroupes.addAction(ajouterGroupe)
-        self.popMenuGroupes.addSeparator()
-        self.popMenuGroupes.addAction(renommerGroupe)
-        self.popMenuGroupes.addSeparator()
-        self.popMenuGroupes.addAction(supprimerGroupe)
+        # self.popMenuGroupes = QMenu(self)
+        # ajouterGroupe = QAction('Ajouter un groupe', self)
+        # renommerGroupe = QAction('Renommer le groupe', self)
+        # supprimerGroupe = QAction('Supprimer des groupes', self)
+        # ajouterGroupe.triggered.connect(self.ajouterGroupe)
+        # renommerGroupe.triggered.connect(self.renommerGroupe)
+        # supprimerGroupe.triggered.connect(self.supprimerGroupes)
+        # self.popMenuGroupes.addAction(ajouterGroupe)
+        # self.popMenuGroupes.addSeparator()
+        # self.popMenuGroupes.addAction(renommerGroupe)
+        # self.popMenuGroupes.addSeparator()
+        # self.popMenuGroupes.addAction(supprimerGroupe)
 
-        sublayout.addWidget(self.groupes)
+        # sublayout.addWidget(self.groupes)
 
-        self.goTop = QPushButton()
-        self.goTop.setToolTip("Monter l'annotation en première position")
-        self.goTop.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/top.png')))
-        self.goTop.setIconSize(QSize(12, 12))
-        self.goTop.setMaximumWidth(25)
-        self.goTop.clicked.connect(self.deplacerVersHaut)
-        sublayout.addWidget(self.goTop)
+        # self.goTop = QPushButton()
+        # self.goTop.setToolTip("Monter l'annotation en première position")
+        # self.goTop.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/top.png')))
+        # self.goTop.setIconSize(QSize(12, 12))
+        # self.goTop.setMaximumWidth(25)
+        # self.goTop.clicked.connect(self.deplacerVersHaut)
+        # sublayout.addWidget(self.goTop)
 
-        self.monter = QPushButton()
-        self.monter.setToolTip("Monter l'annotation d'un rang")
-        self.monter.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/monter.png')))
-        self.monter.setIconSize(QSize(12, 12))
-        self.monter.setMaximumWidth(25)
-        self.monter.clicked.connect(self.monterAnnotation)
-        sublayout.addWidget(self.monter)
+        # self.monter = QPushButton()
+        # self.monter.setToolTip("Monter l'annotation d'un rang")
+        # self.monter.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/monter.png')))
+        # self.monter.setIconSize(QSize(12, 12))
+        # self.monter.setMaximumWidth(25)
+        # self.monter.clicked.connect(self.monterAnnotation)
+        # sublayout.addWidget(self.monter)
 
-        self.descendre = QPushButton()
-        self.descendre.setToolTip("Descendre l'annotation d'un rang")
-        self.descendre.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/descendre.png')))
-        self.descendre.setIconSize(QSize(12, 12))
-        self.descendre.setMaximumWidth(25)
-        self.descendre.clicked.connect(self.descendreAnnotation)
-        sublayout.addWidget(self.descendre)
+        # self.descendre = QPushButton()
+        # self.descendre.setToolTip("Descendre l'annotation d'un rang")
+        # self.descendre.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/descendre.png')))
+        # self.descendre.setIconSize(QSize(12, 12))
+        # self.descendre.setMaximumWidth(25)
+        # self.descendre.clicked.connect(self.descendreAnnotation)
+        # sublayout.addWidget(self.descendre)
 
-        self.goDown = QPushButton()
-        self.goDown.setToolTip("Descendre l'annotation en dernière position")
-        self.goDown.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/down.png')))
-        self.goDown.setIconSize(QSize(12, 12))
-        self.goDown.setMaximumWidth(25)
-        self.goDown.clicked.connect(self.deplacerVersBas)
-        sublayout.addWidget(self.goDown)
+        # self.goDown = QPushButton()
+        # self.goDown.setToolTip("Descendre l'annotation en dernière position")
+        # self.goDown.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/down.png')))
+        # self.goDown.setIconSize(QSize(12, 12))
+        # self.goDown.setMaximumWidth(25)
+        # self.goDown.clicked.connect(self.deplacerVersBas)
+        # sublayout.addWidget(self.goDown)
 
         layout.addLayout(sublayout)
-        layout.addWidget(self.liste)
+        layout.addWidget(self.list)
         self.setLayout(layout)
 
     def contextMenu(self, point):
