@@ -4,7 +4,7 @@ class Layout:
     def __init__(self):
         Layout.counter += 1
 
-        self.title = "layout {}".format(Layout.compteur)
+        self.title = ""
 
         self.dimensions = {'width': 29.7,
                            'height': 21.0}

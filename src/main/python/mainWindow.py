@@ -42,14 +42,14 @@ from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout
 # # modules matplotlib
 # from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 
-# # modules python
+# python modules
 # import os
 # import pickle
 # from pickle import Pickler, Unpickler
-# import json
+import json
 
-# # modules pyLong
-# from pyLong.Projet import *
+# pyLong modules
+from pyLong.project import Project
 
 # from pyLong.Texte import *
 # from pyLong.AnnotationPonctuelle import *
@@ -71,21 +71,17 @@ class MainWindow(QMainWindow):
 
         centralWidget = QWidget()
         mainLayout = QHBoxLayout()
-
-        centralWidget.setLayout(mainLayout)
-
-        self.setCentralWidget(centralWidget)
         
-#         self.appctxt = appctxt
+        self.appctxt = appctxt
 
-#         with open(self.appctxt.get_resource('recent/projets.json')) as file:
-#             self.recentFiles = json.load(file)['chemins']
+        with open(self.appctxt.get_resource('recent/projets.json')) as file:
+            self.recentFiles = json.load(file)['chemins']
 
-#         self.projet = Projet()
+        self.projet = Project()
 
-#         self.editionActive = False
+        self.interactiveEdition = False
 
-#         self.freeze = False
+        self.freeze = False
 
 #         self.canvas = Canvas(parent=self)
 #         self.canvas.mpl_connect('button_press_event', self.onDoubleClick)
@@ -133,6 +129,10 @@ class MainWindow(QMainWindow):
 
 #         self.canvas.initialiser()
 #         self.canvas.dessiner()
+
+        centralWidget.setLayout(mainLayout)
+        self.setCentralWidget(centralWidget)
+        self.showMaximized()
 
 #     def ouvrirProjetRecent(self, chemin):
 #         self.nouveauProjet()

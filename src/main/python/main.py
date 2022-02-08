@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     appctxt.app.processEvents()
 
-    time.sleep(3)
+    time.sleep(1)
 
     # Create and display the main window
     mainWindow = MainWindow(appctxt)
