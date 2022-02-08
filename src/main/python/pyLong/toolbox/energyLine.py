@@ -142,8 +142,8 @@ class EnergyLine():
                 self.success = False
                 return 0
                 
-            # representative function of the energy line
             if descending:
+                # representative function of the energy line
                 f = lambda x : - np.tan(np.radians(angle)) * (x - xStart) + zStart
                 # keeping points to the right of the start
                 x = list(zprofile.x)
@@ -161,7 +161,7 @@ class EnergyLine():
                 
                 zEnergyLine = f(x) # altitudes of the energy line
                 
-                above = list(zEnergyLine - z >= 0) # (True : energy ligne above profile | False : energy ligne below profile)
+                above = list(zEnergyLine - z >= 0) # (True : energy line above profile | False : energy line below profile)
 
                 if False in above:
                     k = above.index(False) # point's index which follows the intersection
@@ -204,7 +204,7 @@ class EnergyLine():
                 
                 zEnergyLine = f(x) # altitudes of the energy line
                 
-                below = list(z - zEnergyLine >= 0) # (True : energy ligne below profile | False : energy ligne above profile)
+                below = list(z - zEnergyLine >= 0) # (True : energy line below profile | False : energy line above profile)
 
                 if True in below[:-1]:
                     k = below.index(False) # point's index which follows the intersection
@@ -234,139 +234,139 @@ class EnergyLine():
             else:
                 self.success = True
                 
-        else: # méthode : arrivée + angle
-            # récupération du profil
-            i = self.parametres['profil']
-            zprofil, pprofil = pyLong.projet.profils[i]
+        else: # method : end + angle
+            # getting hands on profile
+            zprofile = self.parameters['zprofile']
+            sprofile = self.parameters['sprofile']
             
-            xmin = np.min(zprofil.abscisses)
-            xmax = np.max(zprofil.abscisses)
+            xmin = np.min(zprofile.x)
+            xmax = np.max(zprofile.x)
             
-            i = list(zprofil.abscisses).index(xmin)
-            zxmin = zprofil.altitudes[i]
-            i = list(zprofil.abscisses).index(xmax)
-            zxmax = zprofil.altitudes[i]
+            i = list(zprofile.x).index(xmin)
+            zxmin = zprofile.z[i]
+            i = list(zprofile.x).index(xmax)
+            zxmax = zprofile.z[i]
             
-            # tri du profil
+            # sorting
             if zxmin > zxmax:
-                descendant = True
-                zprofil.trier(mode="descendant")
-                pprofil.updateData(zprofil.abscisses, zprofil.altitudes)
+                descending = True
+                zprofile.sort(mode="descending")
+                sprofile.updateData(zprofile.x, zprofile.z)
                 
             else:
-                descendant = False
-                zprofil.trier(mode = "ascendant")
-                pprofil.updateData(zprofil.abscisses, zprofil.altitudes)               
+                descending = False
+                zprofile.sort(mode = "ascending")
+                sprofile.updateData(zprofile.x, zprofile.z)               
             
-            # récupération des paramètres dans des variables nommées plus simplement
-            abscisse2fin = self.parametres['abscisse arrivée']
-            angle = self.parametres['angle']
+            # hands on parameters
+            xEnd = self.parameters['x end']
+            angle = self.parameters['angle']
             
-            if xmin < abscisse2fin < xmax:
-                altitude2fin = zprofil.interpoler(abscisse2fin)
-                self.parametres['altitude arrivée'] = altitude2fin
-            elif abscisse2fin == xmin or abscisse2fin == xmax:
-                k = list(zprofil.abscisses).index(abscisse2fin)
-                altitude2fin = zprofil.altitudes[k]
-                self.parametres['altitude arrivée'] = altitude2fin
+            if xmin < xEnd < xmax:
+                zEnd = zprofile.interpolate(xEnd)
+                self.parameters['z end'] = zEnd
+            elif xEnd == xmin or xEnd == xmax:
+                k = list(zprofile.x).index(xEnd)
+                zEnd = zprofile.z[k]
+                self.parameters['z end'] = zEnd
             else:
-                self.calculReussi = False
+                self.success = False
                 return 0
                 
-            if descendant:
-                # fonction représentative de la ligne d'énergie
-                f = lambda x: - np.tan(np.radians(angle)) * (x - abscisse2fin) + altitude2fin
+            if descending:
+                # representative function of the energy line
+                f = lambda x: - np.tan(np.radians(angle)) * (x - xEnd) + zEnd
                 
-                # conservation des points situés "à gauche" du point de fin
-                abscisses = list(zprofil.abscisses)
+                # keeping points to the left of the end
+                x = list(zprofile.x)
                 
-                if abscisse2fin not in abscisses:
-                    abscisses.append(abscisse2fin)
-                    abscisses.sort()
-                    j = abscisses.index(abscisse2fin)
-                    altitudes = np.array(zprofil.altitudes[:j+1])
-                    altitudes[-1] = zprofil.interpoler(abscisse2fin)
+                if xEnd not in x:
+                    x.append(xEnd)
+                    x.sort()
+                    j = x.index(xEnd)
+                    z = np.array(zprofile.z[:j+1])
+                    z[-1] = zprofile.interpolate(xEnd)
                 else:
-                    j = abscisses.index(abscisse2fin)
-                    altitudes = zprofil.altitudes[:j+1]
+                    j = x.index(xEnd)
+                    z = zprofile.z[:j+1]
                     
-                abscisses = np.array(abscisses[:j+1])
+                x = np.array(x[:j+1])
                 
-                z = f(abscisses) # altitudes sur la ligne d'énergie
+                zEnergyLine = f(x) # altitudes of the energy line
                 
-                enDessous = list(altitudes - z >= 0) # tableau (True : ligne en dessous du profil | False : ligne au dessus du profil)   
+                below = list(z - zEnergyLine >= 0) # (True : energy line below profile | False : energy line above profile)   
 
-                if True in enDessous[:-1]:
-                    k = enDessous.index(False) # indice du point qui suit l'intersection
+                if True in below[:-1]:
+                    k = below.index(False) # point's index which follows the intersection
                     
-                    xa = abscisses[k-1] # abscisse du point qui précède l'intersection
-                    za = altitudes[k-1] # altitude du point qui précède l'intersection
-                    xb = abscisses[k] # abscisse du point qui suit l'intersection
-                    zb = altitudes[k] # altitude du point qui suit l'intersection
+                    xa = x[k-1] # point's x-coord which precedes the intersection
+                    za = z[k-1] # point's z-coord which precedes the intersection
+                    xb = x[k] # point's x-coord which follows the intersection
+                    zb = z[k] # point's z-coord which follows the intersection
                     
-                    a2 = (zb - za) / (xb - xa) # coefficient directeur de l'équation du segment du profil contenant l'intersection
-                    b2 = za - a2 * xa # ordonnée à l'origine de l'équation du segment du profil contenant l'intersection
+                    a2 = (zb - za) / (xb - xa) # slope coefficient of the equation of the segment of the profile containing the intersection
+                    b2 = za - a2 * xa # ordinate at the origin of the equation of the segment of the profile containing the intersection
                     
-                    a1 =  - np.tan(np.radians(angle)) # coefficient directeur de la ligne d'énergie
-                    b1 = altitude2fin - a1 * abscisse2fin # ordonnée à l'origine de la ligne d'énergie
+                    a1 =  - np.tan(np.radians(angle)) # slope coefficient of the energy line
+                    b1 = zEnd - a1 * xEnd # ordinate at the origin of the energy line
                     
-                    xInter = (b2 - b1) / (a1 - a2) # abscisse de l'intersection de la ligne d'énergie avec le profil
+                    xInter = (b2 - b1) / (a1 - a2) # abscissa of the intersection of the energy line with the profile
                     
-                    self.parametres['abscisse départ'] = xInter
-                    self.parametres['altitude départ'] = zprofil.interpoler(xInter)
+                    self.parameters['x start'] = xInter
+                    self.parameters['z start'] = zprofile.interpolate(xInter)
                     
                 else:
-                    self.parametres['abscisse départ'] = abscisses[0]
-                    self.parametres['altitude départ'] = f(abscisses[0]) 
+                    self.parameters['x start'] = x[0]
+                    self.parameters['z start'] = f(x[0]) 
             
-            else: # profil ascendant
-                f = lambda x: + np.tan(np.radians(angle)) * (x - abscisse2fin) + altitude2fin
+            else: # ascending case
+                f = lambda x: + np.tan(np.radians(angle)) * (x - xEnd) + zEnd
                 
-                # conservation des points situés "à droite" du point de fin
-                abscisses = list(zprofil.abscisses)
-                if abscisse2fin not in abscisses:
-                    abscisses.append(abscisse2fin)
-                    abscisses.sort()
-                    j = abscisses.index(abscisse2fin)
-                    altitudes = np.array(zprofil.altitudes[j-1:])
-                    altitudes[0] = zprofil.interpoler(abscisse2fin)
+                # keeping points to the right of the end
+                x = list(zprofile.x)
+                if xEnd not in x:
+                    x.append(xEnd)
+                    x.sort()
+                    j = x.index(xEnd)
+                    z = np.array(zprofile.z[j-1:])
+                    z[0] = zprofile.interpolate(xEnd)
                 else:
-                    j = abscisses.index(abscisse2fin)
-                    altitudes = zprofil.altitudes[j:]
+                    j = x.index(xEnd)
+                    z = zprofile.z[j:]
                     
-                abscisses = np.array(abscisses[j:])
+                x = np.array(x[j:])
                 
-                z = f(abscisses) # altitudes sur la ligne d'énergie
+                zEnergyLine = f(x) # altitudes of the energy line
                 
-                enDessous = list(z - altitudes >= 0) # tableau (True : ligne au dessus du profil | False : ligne en dessous du profil)
+                below = list(zEnergyLine - z >= 0) # (True : energy line above profile | False : energy line below profile)
 
-                if False in enDessous:
-                    k = enDessous.index(False) # indice du point qui suit l'intersection
+                if False in below:
+                    k = below.index(False) # point's index which follows the intersection
                     
-                    xa = abscisses[k-1] # abscisse du point qui précède l'intersection
-                    za = altitudes[k-1] # altitude du point qui précède l'intersection
-                    xb = abscisses[k] # abscisse du point qui suit l'intersection
-                    zb = altitudes[k] # altitude du point qui suit l'intersection
+                    xa = x[k-1] # point's x-coord which precedes the intersection
+                    za = z[k-1] # point's z-coord which precedes the intersection
+                    xb = x[k] # point's x-coord which follows the intersection
+                    zb = z[k] # point's z-coord which follows the intersection
                     
-                    a2 = (zb - za) / (xb - xa) # coefficient directeur de l'équation du segment du profil contenant l'intersection
-                    b2 = za - a2 * xa # ordonnée à l'origine de l'équation du segment du profil contenant l'intersection
+                    a2 = (zb - za) / (xb - xa) # slope coefficient of the equation of the segment of the profile containing the intersection
+                    b2 = za - a2 * xa # ordinate at the origin of the equation of the segment of the profile containing the intersection
                     
-                    a1 = + np.tan(np.radians(angle)) # coefficient directeur de la ligne d'énergie
-                    b1 = altitude2fin - a1 * abscisse2fin # ordonnée à l'origine de la ligne d'énergie
+                    a1 = + np.tan(np.radians(angle)) # slope coefficient of the energy line
+                    b1 = zEnd - a1 * xEnd # ordinate at the origin of the energy line
                     
-                    xInter = (b2 - b1) / (a1 - a2) # abscisse de l'intersection de la ligne d'énergie avec le profil
+                    xInter = (b2 - b1) / (a1 - a2) # abscissa of the intersection of the energy line with the profile
                     
-                    self.parametres['abscisse départ'] = xInter
-                    self.parametres['altitude départ'] = zprofil.interpoler(xInter) 
+                    self.parameters['x start'] = xInter
+                    self.parameters['z start'] = zprofile.interpolate(xInter) 
                     
                 else:
-                    self.parametres['abscisse départ'] = abscisses[-1]
-                    self.parametres['altitude départ'] = f(abscisses[-1])
+                    self.parameters['abscisse départ'] = x[-1]
+                    self.parameters['altitude départ'] = f(x[-1])
            
-            if np.abs(self.parametres['abscisse départ'] - self.parametres['abscisse arrivée']) < 0.001:
-                self.calculReussi = False
+            if np.abs(self.parameters['x start'] - self.parameters['x end']) < 0.01:
+                self.success = False
             else:
-                self.calculReussi = True
+                self.success = True
 
     def __getstate__(self):
         attributes = dict(self.__dict__)
