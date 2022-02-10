@@ -465,7 +465,7 @@ def createActions(self):
     self.otherDataMenu.addSeparator()
     self.otherDataMenu.addAction(self.deleteDataAction)
 
-    self.resourceMenu = menu.addMenu("Ressources")
+    self.resourceMenu = menu.addMenu("Resources")
     self.resourceMenu.addAction(self.documentationAction)
     self.resourceMenu.addSeparator()
     self.resourceMenu.addAction(self.aboutAction)
