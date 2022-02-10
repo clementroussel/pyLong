@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QMenu
+from PyQt5.QtCore import Qt
 
 from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.figure import Figure
@@ -15,9 +16,11 @@ from pyLong.toolbox.energyLine import EnergyLine
 from pyLong.toolbox.rickenmann import Rickenmann
 from pyLong.toolbox.flowR import FlowR
 from pyLong.toolbox.corominas import Corominas
-# from pyLong.Mezap import *
+from pyLong.toolbox.mezap import Mezap
 
 from pyLong.reminderLine import ReminderLine
+
+from pyLong.dictionaries import lineStyles, colors, legendPlacements
 
 import numpy as np
 
@@ -33,47 +36,47 @@ class Canvas(FigureCanvas):
         self.customContextMenuRequested.connect(self.contextMenu)
 
         self.popMenu = QMenu(self)
-        self.popMenu.addAction(self.pyLong.action_miseEnPage)
-        self.popMenu.addAction(self.pyLong.action_miseEnPage_avancee)
+        self.popMenu.addAction(self.pyLong.layoutAction)
+        self.popMenu.addAction(self.pyLong.advancedLayoutAction)
         self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.rafraichirFigure)
+        self.popMenu.addAction(self.pyLong.refreshAction)
         self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.barreDeNavigation._actions['pan'])
-        self.popMenu.addAction(self.pyLong.barreDeNavigation._actions['zoom'])
+        self.popMenu.addAction(self.pyLong.navigationBar._actions['pan'])
+        self.popMenu.addAction(self.pyLong.navigationBar._actions['zoom'])
         self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_exporterFigure)
-        self.popMenu.addAction(self.pyLong.action_copierFigure)
+        self.popMenu.addAction(self.pyLong.printAction)
+        self.popMenu.addAction(self.pyLong.copyFigureAction)
         self.popMenu.addSeparator()
-        self.popMenu.addAction(self.pyLong.action_gestionSubplots)
+        self.popMenu.addAction(self.pyLong.subplotsManagerAction)
 
     def contextMenu(self, point):
-        if not (self.pyLong.barreDeNavigation._actions['pan'].isChecked() or self.pyLong.barreDeNavigation._actions['zoom'].isChecked()):
+        if not (self.pyLong.navigationBar._actions['pan'].isChecked() or self.pyLong.navigationBar._actions['zoom'].isChecked()):
             self.popMenu.exec_(self.mapToGlobal(point))
         else:
             pass
 
-    def initialiser(self):
+    def initialize(self):
         if not self.pyLong.freeze:
             gs = GridSpec(1, 1, figure=self.figure)
             self.ax_z = self.figure.add_subplot(gs[0:, :])
             self.ax_p = self.ax_z.twinx()
 
-            self.figure.tight_layout()
+            self.figure.tight_layout(pad=1.75)
 
-    def effacer(self):
+    def erase(self):
         if not self.pyLong.freeze:
             for ax in self.figure.axes:
                 ax.clear()
 
-    def formatter(self):
+    def updateLayout(self):
         if not self.pyLong.freeze:
-            self.effacer()
+            self.erase()
             self.figure.clear()
 
-            i = self.pyLong.listeLayouts.currentIndex()
-            layout = self.pyLong.projet.layouts[i]
+            i = self.pyLong.layoutsList.currentIndex()
+            layout = self.pyLong.project.layouts[i]
 
-            symbolePente = self.pyLong.projet.preferences['pente']
+            slopeSymbol = self.pyLong.project.settings.slopeSymbol
 
             n_subdivisions = layout.subdivisions
             n_subplots = len(layout.subplots)
@@ -85,70 +88,70 @@ class Canvas(FigureCanvas):
             self.ax_z = self.figure.add_subplot(gs[0:n_subdivisions - n_subdivisions_subplots, :])
             self.ax_p = self.ax_z.twinx()
 
-            self.ax_z.set_xlim((layout.abscisses['min'] - layout.abscisses['delta gauche'],
-                                layout.abscisses['max'] + layout.abscisses['delta droite']))
+            self.ax_z.set_xlim((layout.xAxisProperties['min'] - layout.xAxisProperties['left shift'],
+                                layout.xAxisProperties['max'] + layout.xAxisProperties['right shift']))
 
             self.ax_z.tick_params(axis='x',
-                                  colors=couleurs[layout.abscisses['couleur valeur']],
-                                  labelsize=layout.abscisses['taille valeur'])
+                                  colors=colors[layout.xAxisProperties['value color']],
+                                  labelsize=layout.xAxisProperties['value size'])
 
-            self.ax_z.set_xticks(np.linspace(layout.abscisses['min'],
-                                             layout.abscisses['max'],
-                                             layout.abscisses['intervalles'] + 1))
+            self.ax_z.set_xticks(np.linspace(layout.xAxisProperties['min'],
+                                             layout.xAxisProperties['max'],
+                                             layout.xAxisProperties['intervals'] + 1))
 
-            self.ax_z.set_ylim((layout.altitudes['min'] - layout.altitudes['delta bas'],
-                                layout.altitudes['max'] + layout.altitudes['delta haut']))
+            self.ax_z.set_ylim((layout.zAxisProperties['min'] - layout.zAxisProperties['lower shift'],
+                                layout.zAxisProperties['max'] + layout.zAxisProperties['upper shift']))
 
-            self.ax_z.set_ylabel(layout.altitudes['libellé'],
-                                 {'color': couleurs[layout.altitudes['couleur libellé']],
-                                  'fontsize': layout.altitudes['taille libellé']})
+            self.ax_z.set_ylabel(layout.zAxisProperties['label'],
+                                 {'color': colors[layout.zAxisProperties['label color']],
+                                  'fontsize': layout.zAxisProperties['label size']})
 
             self.ax_z.tick_params(axis='y',
-                                  colors=couleurs[layout.altitudes['couleur valeur']],
-                                  labelsize=layout.altitudes['taille valeur'])
+                                  colors=colors[layout.zAxisProperties['value color']],
+                                  labelsize=layout.zAxisProperties['value size'])
 
-            self.ax_z.set_yticks(np.linspace(layout.altitudes['min'],
-                                             layout.altitudes['max'],
-                                             layout.altitudes['intervalles'] + 1))
+            self.ax_z.set_yticks(np.linspace(layout.zAxisProperties['min'],
+                                             layout.zAxisProperties['max'],
+                                             layout.zAxisProperties['intervals'] + 1))
 
             if n_subdivisions > 1 and n_subplots > 0:
                 self.ax_z.xaxis.set_ticks_position('top')
             else:
-                self.ax_z.set_xlabel(layout.abscisses['libellé'],
-                                     {'color': couleurs[layout.abscisses['couleur libellé']],
-                                      'fontsize': layout.abscisses['taille libellé']})
+                self.ax_z.set_xlabel(layout.xAxisProperties['label'],
+                                     {'color': colors[layout.xAxisProperties['label color']],
+                                      'fontsize': layout.xAxisProperties['label size']})
 
-            self.ax_z.grid(visible=layout.grille['active'],
+            self.ax_z.grid(visible=layout.grid['active'],
                            which='major',
                            axis='both',
-                           linestyle=styles2ligne[layout.grille['style']],
-                           linewidth=layout.grille['épaisseur'],
-                           alpha=layout.grille['opacité'],
-                           zorder=layout.grille['ordre'])
+                           linestyle=lineStyles[layout.grid['style']],
+                           linewidth=layout.grid['thickness'],
+                           alpha=layout.grid['opacity'],
+                           zorder=layout.grid['order'])
 
             self.ax_p.set_ylim(
-                (layout.pentes['min {}'.format(symbolePente)] - layout.pentes['delta bas {}'.format(symbolePente)],
-                 layout.pentes['max {}'.format(symbolePente)] + layout.pentes['delta haut {}'.format(symbolePente)]))
+                (layout.slopeAxisProperties['min {}'.format(slopeSymbol)] - layout.slopeAxisProperties['lower shift {}'.format(slopeSymbol)],
+                 layout.slopeAxisProperties['max {}'.format(slopeSymbol)] + layout.slopeAxisProperties['upper shift {}'.format(slopeSymbol)]))
 
-            self.ax_p.set_ylabel(layout.pentes['libellé'],
-                                 {'color': couleurs[layout.pentes['couleur libellé']],
-                                  'fontsize': layout.pentes['taille libellé']})
+            self.ax_p.set_ylabel(layout.slopeAxisProperties['label'],
+                                 {'color': colors[layout.slopeAxisProperties['label color']],
+                                  'fontsize': layout.slopeAxisProperties['label size']})
 
             self.ax_p.tick_params(axis='y',
-                                  colors=couleurs[layout.pentes['couleur valeur']],
-                                  labelsize=layout.pentes['taille valeur'])
+                                  colors=colors[layout.slopeAxisProperties['value color']],
+                                  labelsize=layout.slopeAxisProperties['value size'])
 
-            self.ax_p.set_yticks(np.linspace(layout.pentes['min {}'.format(symbolePente)],
-                                             layout.pentes['max {}'.format(symbolePente)],
-                                             layout.pentes['intervalles {}'.format(symbolePente)] + 1))
+            self.ax_p.set_yticks(np.linspace(layout.slopeAxisProperties['min {}'.format(slopeSymbol)],
+                                             layout.slopeAxisProperties['max {}'.format(slopeSymbol)],
+                                             layout.slopeAxisProperties['intervals {}'.format(slopeSymbol)] + 1))
 
-            labelsPente = [str(np.round(p, 1)) + '{}'.format(symbolePente) for p in np.linspace(layout.pentes['min {}'.format(symbolePente)],
-                                                                                                layout.pentes['max {}'.format(symbolePente)],
-                                                                                                layout.pentes['intervalles {}'.format(symbolePente)] + 1)]
+            slopeLabels = [str(np.round(p, 1)) + '{}'.format(slopeSymbol) for p in np.linspace(layout.slopeAxisProperties['min {}'.format(slopeSymbol)],
+                                                                                               layout.slopeAxisProperties['max {}'.format(slopeSymbol)],
+                                                                                               layout.slopeAxisProperties['intervals {}'.format(slopeSymbol)] + 1)]
 
-            self.ax_p.set_yticklabels(labelsPente)
+            self.ax_p.set_yticklabels(slopeLabels)
 
-            if layout.axeSecondaire:
+            if layout.secondaryAxis:
                 self.ax_p.set_visible(True)
             else:
                 self.ax_p.set_visible(False)
@@ -162,44 +165,44 @@ class Canvas(FigureCanvas):
                 self.subplots[i].set_ylim((layout.subplots[i].ordonnees['min'] - layout.subplots[i].ordonnees['delta bas'],
                                            layout.subplots[i].ordonnees['max'] + layout.subplots[i].ordonnees['delta haut']))
 
-                self.subplots[i].set_yticks(np.linspace(layout.subplots[i].ordonnees['min'],
-                                                        layout.subplots[i].ordonnees['max'],
-                                                        layout.subplots[i].ordonnees['intervalles'] + 1))
+                self.subplots[i].set_yticks(np.linspace(layout.subplots[i].yAxisProperties['min'],
+                                                        layout.subplots[i].yAxisProperties['max'],
+                                                        layout.subplots[i].yAxisProperties['intervals'] + 1))
 
-                self.subplots[i].set_ylabel(layout.subplots[i].ordonnees['libellé'],
-                                            {'color': couleurs[layout.subplots[i].ordonnees['couleur libellé']],
-                                             'fontsize': layout.altitudes['taille libellé']})
+                self.subplots[i].set_ylabel(layout.subplots[i].yAxisProperties['label'],
+                                            {'color': colors[layout.subplots[i].yAxisProperties['label color']],
+                                             'fontsize': layout.zAxisProperties['label size']})
 
                 self.subplots[i].tick_params(axis='y',
-                                             colors=couleurs[layout.subplots[i].ordonnees['couleur valeur']],
-                                             labelsize=layout.altitudes['taille valeur'])
+                                             colors=colors[layout.subplots[i].yAxisProperties['value color']],
+                                             labelsize=layout.zAxisProperties['value size'])
 
-                self.subplots[i].grid(visible=layout.grille['active'],
+                self.subplots[i].grid(visible=layout.grid['active'],
                                       which='major',
                                       axis='both',
-                                      linestyle=styles2ligne[layout.grille['style']],
-                                      linewidth=layout.grille['épaisseur'],
-                                      alpha=layout.grille['opacité'],
-                                      zorder=layout.grille['ordre'])
+                                      linestyle=lineStyles[layout.grid['style']],
+                                      linewidth=layout.grid['thickness'],
+                                      alpha=layout.grid['opacity'],
+                                      zorder=layout.grid['order'])
 
-                self.subplots[i].set_xlim((layout.abscisses['min'] - layout.abscisses['delta gauche'],
-                                           layout.abscisses['max'] + layout.abscisses['delta droite']))
+                self.subplots[i].set_xlim((layout.xAxisProperties['min'] - layout.xAxisProperties['left shift'],
+                                           layout.xAxisProperties['max'] + layout.xAxisProperties['right shift']))
 
                 self.subplots[i].tick_params(axis='x',
-                                             colors=couleurs[layout.abscisses['couleur valeur']],
-                                             labelsize=layout.abscisses['taille valeur'])
+                                             colors=colors[layout.xAxisProperties['value color']],
+                                             labelsize=layout.xAxisProperties['value size'])
 
-                self.subplots[i].set_xticks(np.linspace(layout.abscisses['min'],
-                                                        layout.abscisses['max'],
-                                                        layout.abscisses['intervalles'] + 1))
+                self.subplots[i].set_xticks(np.linspace(layout.xAxisProperties['min'],
+                                                        layout.xAxisProperties['max'],
+                                                        layout.xAxisProperties['intervals'] + 1))
 
                 if i != n_subplots - 1:
                     plt.setp(self.subplots[i].get_xticklabels(), visible=False)
                     self.subplots[i].tick_params(axis='x', length=0)
                 else:
-                    self.subplots[i].set_xlabel(layout.abscisses['libellé'],
-                                                {'color': couleurs[layout.abscisses['couleur libellé']],
-                                                 'fontsize': layout.abscisses['taille libellé']})
+                    self.subplots[i].set_xlabel(layout.xAxisProperties['label'],
+                                                {'color': colors[layout.xAxisProperties['label color']],
+                                                 'fontsize': layout.xAxisProperties['label size']})
 
             self.figure.align_ylabels()
             self.figure.tight_layout(pad=1.75)
@@ -208,234 +211,228 @@ class Canvas(FigureCanvas):
             self.ax_z.set_zorder(self.ax_p.get_zorder() + 1)
             self.ax_z.patch.set_visible(False)
 
-    def ajusterRatio(self):
-        i = self.pyLong.listeLayouts.currentIndex()
-        layout = self.pyLong.projet.layouts[i]
+    def adjustRatio(self):
+        i = self.pyLong.layoutsList.currentIndex()
+        layout = self.pyLong.project.layouts[i]
 
-        largeur = layout.dimensions['largeur']
-        hauteur = layout.dimensions['hauteur']
+        width = layout.dimensions['width']
+        height = layout.dimensions['height']
 
-        self.resize(self.width(), self.width() * (hauteur / largeur))
+        self.resize(self.width(), self.width() * (height / width))
         self.figure.tight_layout(pad=1.75)
         self.figure.subplots_adjust(hspace=layout.hspace)
         self.draw()
 
-    def ajusterLargeur(self):
-        i = self.pyLong.listeLayouts.currentIndex()
-        layout = self.pyLong.projet.layouts[i]
+    def adjustWidth(self):
+        i = self.pyLong.layoutsList.currentIndex()
+        layout = self.pyLong.project.layouts[i]
 
-        largeur = layout.dimensions['largeur']
-        hauteur = layout.dimensions['hauteur']
+        width = layout.dimensions['width']
+        height = layout.dimensions['height']
 
-        self.resize(0.99 * self.pyLong.scrollArea.width(), 0.99 * self.pyLong.scrollArea.width() * (hauteur / largeur))
+        self.resize(0.99 * self.pyLong.scrollArea.width(), 0.99 * self.pyLong.scrollArea.width() * (height / width))
         self.figure.tight_layout(pad=1.75)
         self.figure.subplots_adjust(hspace=layout.hspace)
         self.draw()
 
-    def ajusterHauteur(self):
-        i = self.pyLong.listeLayouts.currentIndex()
-        layout = self.pyLong.projet.layouts[i]
+    def adjustHeight(self):
+        i = self.pyLong.layoutsList.currentIndex()
+        layout = self.pyLong.project.layouts[i]
 
-        largeur = layout.dimensions['largeur']
-        hauteur = layout.dimensions['hauteur']
+        width = layout.dimensions['width']
+        height = layout.dimensions['height']
 
-        self.resize(0.99 * self.pyLong.scrollArea.height() * (largeur / hauteur), 0.99 * self.pyLong.scrollArea.height())
+        self.resize(0.99 * self.pyLong.scrollArea.height() * (width / height), 0.99 * self.pyLong.scrollArea.height())
         self.figure.tight_layout(pad=1.75)
         self.figure.subplots_adjust(hspace=layout.hspace)
         self.draw()
 
-    def agrandir(self):
-        i = self.pyLong.listeLayouts.currentIndex()
-        layout = self.pyLong.projet.layouts[i]
+    def zoomIn(self):
+        i = self.pyLong.layoutsList.currentIndex()
+        layout = self.pyLong.project.layouts[i]
 
         self.resize(self.width()*1.05, self.height()*1.05)
         self.figure.tight_layout(pad=1.75)
         self.figure.subplots_adjust(hspace=layout.hspace)
         self.draw()
 
-    def retrecir(self):
-        i = self.pyLong.listeLayouts.currentIndex()
-        layout = self.pyLong.projet.layouts[i]
+    def zoomOut(self):
+        i = self.pyLong.layoutsList.currentIndex()
+        layout = self.pyLong.project.layouts[i]
 
         self.resize(self.width()/1.05, self.height()/1.05)
         self.figure.tight_layout(pad=1.75)
         self.figure.subplots_adjust(hspace=layout.hspace)
         self.draw()
 
-    def dessiner(self):
+    def updateFigure(self):
         if not self.pyLong.freeze:
-            self.ajusterRatio()
+            self.adjustRatio()
             pyLong = self.pyLong
 
-            i = pyLong.listeLayouts.currentIndex()
-            layout = pyLong.projet.layouts[i]
+            i = pyLong.layoutsList.currentIndex()
+            layout = pyLong.project.layouts[i]
 
-            symbolePente = pyLong.projet.preferences['pente']
+            slopeSymbol = pyLong.project.settings.slopeSymbol
 
-            self.formatter()
-            # profil aperçu
-            self.pyLong.projet.apercu.clear()
-            self.ax_z.add_line(self.pyLong.projet.apercu.line)
+            self.updateLayout()
 
-            # zProfils et pProfils
-            for zprofil, pprofil in pyLong.projet.profils:
-                zprofil.clear()
-                zprofil.update()
-                pprofil.clear()
-                pprofil.update()
+            # preview profile
+            self.pyLong.project.preview.clear()
+            self.ax_z.add_line(self.pyLong.project.preview.line)
 
-                self.ax_z.add_line(zprofil.line)
+            # zProfiles and sProfiles
+            for zprofile, sprofile in pyLong.project.profiles:
+                zprofile.clear()
+                zprofile.update()
+                sprofile.clear()
+                sprofile.update()
 
-                if not layout.axeSecondaire and pprofil.marqueursVisibles:
-                    self.ax_z.add_line(pprofil.line)
+                self.ax_z.add_line(zprofile.line)
+                self.ax_z.add_line(sprofile.trickLine)
 
-                elif layout.axeSecondaire and symbolePente == "%" and pprofil.marqueursVisibles:
-                    self.ax_p.add_line(pprofil.line_pourcents)
+                if not layout.secondaryAxis and sprofile.markersVisible:
+                    self.ax_z.add_line(sprofile.line)
 
-                elif layout.axeSecondaire and symbolePente == "°" and pprofil.marqueursVisibles:
-                    self.ax_p.add_line(pprofil.line_degres)
+                elif layout.secondaryAxis and slopeSymbol == "%" and sprofile.markersVisible:
+                    self.ax_p.add_line(sprofile.linePercents)
+
+                elif layout.secondaryAxis and slopeSymbol == "°" and sprofile.markersVisible:
+                    self.ax_p.add_line(sprofile.line_degres)
                     
-                # écriture des pentes
-                if pprofil.pentesVisibles and pprofil.actif:
-                    if not layout.axeSecondaire:
-                        if symbolePente == "%":
-                            for i in range(len(pprofil.pentes)):
-                                self.ax_z.text(pprofil.abscisses[i],
-                                               pprofil.altitudes[i] + pprofil.annotation['décalage z'],
-                                               s="{}%".format(str(np.round(pprofil.pentesPourcents[i], 1))),
-                                               fontsize=pprofil.annotation['taille'],
-                                               color=couleurs[pprofil.annotation['couleur']],
-                                               alpha=pprofil.opacite,
+                # slope annotations
+                if sprofile.annotationsVisible and sprofile.active:
+                    if not layout.secondaryAxis:
+                        if slopeSymbol == "%":
+                            for i in range(len(sprofile.slopes)):
+                                self.ax_z.text(sprofile.x[i],
+                                               sprofile.z[i] + sprofile.annotationProperties['z shift'],
+                                               s="{}%".format(str(np.round(sprofile.slopesPercents[i], 1))),
+                                               fontsize=sprofile.annotationProperties['size'],
+                                               color=colors[sprofile.annotationProperties['color']],
+                                               alpha=sprofile.opacity,
                                                horizontalalignment='center',
                                                verticalalignment='center',
                                                rotation=0,
-                                               zorder=pprofil.ordre)
+                                               zorder=sprofile.order)
 
                         else:
-                            for i in range(len(pprofil.pentes)):
-                                self.ax_z.text(pprofil.abscisses[i],
-                                               pprofil.altitudes[i] + pprofil.annotation['décalage z'],
-                                               s="{}°".format(str(np.round(pprofil.pentesDegres[i], 1))),
-                                               fontsize=pprofil.annotation['taille'],
-                                               color=couleurs[pprofil.annotation['couleur']],
-                                               alpha=pprofil.opacite,
+                            for i in range(len(sprofile.slopes)):
+                                self.ax_z.text(sprofile.x[i],
+                                               sprofile.z[i] + sprofile.annotationProperties['z shift'],
+                                               s="{}°".format(str(np.round(sprofile.slopesDegrees[i], 1))),
+                                               fontsize=sprofile.annotationProperties['size'],
+                                               color=colors[sprofile.annotationProperties['color']],
+                                               alpha=sprofile.opacity,
                                                horizontalalignment='center',
                                                verticalalignment='center',
-                                               zorder=pprofil.ordre)
+                                               zorder=sprofile.order)
                     
                     else:
-                        if symbolePente == "%":
-                            for i in range(len(pprofil.pentes)):
-                                if layout.pentes['min %'] <= pprofil.pentesPourcents[i] <= layout.pentes['max %']:
-                                    self.ax_p.text(pprofil.abscisses[i],
-                                                   pprofil.pentesPourcents[i] + pprofil.annotation['décalage p %'],
-                                                   s="{}%".format(str(np.round(pprofil.pentesPourcents[i], 1))),
-                                                   fontsize=pprofil.annotation['taille'],
-                                                   color=couleurs[pprofil.annotation['couleur']],
-                                                   alpha=pprofil.opacite,
+                        if slopeSymbol == "%":
+                            for i in range(len(sprofile.slopes)):
+                                if layout.slopeAxisProperties['min %'] <= sprofile.slopesPercents[i] <= layout.slopeAxisProperties['max %']:
+                                    self.ax_p.text(sprofile.x[i],
+                                                   sprofile.slopesPercents[i] + sprofile.annotationProperties['s shift %'],
+                                                   s="{}%".format(str(np.round(sprofile.slopesPercents[i], 1))),
+                                                   fontsize=sprofile.annotationProperties['size'],
+                                                   color=colors[sprofile.annotationProperties['color']],
+                                                   alpha=sprofile.opacity,
                                                    horizontalalignment='center',
                                                    verticalalignment='bottom',
-                                                   zorder=pprofil.ordre)
+                                                   zorder=sprofile.order)
 
                         else:
-                            for i in range(len(pprofil.pentes)):
-                                if layout.pentes['min °'] <= pprofil.pentesDegres[i] <= layout.pentes['max °']:
-                                    self.ax_p.text(pprofil.abscisses[i],
-                                                   pprofil.pentesDegres[i] + pprofil.annotation['décalage p °'],
-                                                   s="{}%".format(str(np.round(pprofil.pentesDegres[i], 1))),
-                                                   fontsize=pprofil.annotation['taille'],
-                                                   color=couleurs[pprofil.annotation['couleur']],
-                                                   alpha=pprofil.opacite,
+                            for i in range(len(sprofile.slopes)):
+                                if layout.slopeAxisProperties['min °'] <= sprofile.slopesDegrees[i] <= layout.slopeAxisProperties['max °']:
+                                    self.ax_p.text(sprofile.x[i],
+                                                   sprofile.slopesDegrees[i] + sprofile.annotationProperties['s shift °'],
+                                                   s="{}%".format(str(np.round(sprofile.slopesDegrees[i], 1))),
+                                                   fontsize=sprofile.annotationProperties['size'],
+                                                   color=colors[sprofile.annotationProperties['color']],
+                                                   alpha=sprofile.opacity,
                                                    horizontalalignment='center',
                                                    verticalalignment='bottom',
-                                                   zorder=pprofil.ordre)
+                                                   zorder=sprofile.order)
 
             # annotations
-            for groupe in pyLong.projet.groupes:
-                if groupe.actif:
-                    for annotation in groupe.annotations:
+            for group in pyLong.project.groups:
+                if group.active:
+                    for annotation in group.annotations:
                         annotation.clear()
                         annotation.update()
-                        if type(annotation) == Texte:
+                        if isinstance(annotation, Text):
                             self.ax_z.add_artist(annotation.text)
 
-                        elif type(annotation) == AnnotationPonctuelle:
+                        elif isinstance(annotation, VerticalAnnotation):
                             self.ax_z.add_artist(annotation.annotation)
 
-                        elif type(annotation) == AnnotationLineaire:
+                        elif isinstance(annotation, LinearAnnotation):
                             self.ax_z.add_artist(annotation.annotation)
                             self.ax_z.add_artist(annotation.text)
 
-                        elif type(annotation) == Zone:
+                        elif isinstance(annotation, Interval):
                             self.ax_z.add_artist(annotation.text)
-                            self.ax_z.add_line(annotation.left_line)
-                            self.ax_z.add_line(annotation.right_line)
+                            self.ax_z.add_line(annotation.startLine)
+                            self.ax_z.add_line(annotation.endLine)
 
-                        elif type(annotation) == Rectangle:
+                        elif isinstance(annotation, Rectangle):
                             self.ax_z.add_patch(annotation.rectangle)
 
-            # calculs
-            for calcul in pyLong.projet.calculs:
-                calcul.clear()
-                calcul.update()
-                if type(calcul) in [LigneEnergie, Rickenmann, FlowR, Corominas]:
-                    self.ax_z.add_line(calcul.line)
+            # calculations
+            for calculation in pyLong.project.calculations:
+                calculation.clear()
+                calculation.update()
+                if isinstance(calculation, (EnergyLine, Rickenmann, FlowR, Corominas)):
+                    self.ax_z.add_line(calculation.line)
 
-            # légende principale
-            if layout.legende['active']:
-                if layout.axeSecondaire:
-                    self.figure.legend(loc=placementsLegende[layout.legende['position']][0],
-                                       ncol=layout.legende['nombre de colonnes'],
-                                       fontsize=layout.legende['taille'],
-                                       frameon=layout.legende['cadre'],
-                                       bbox_to_anchor=placementsLegende[layout.legende['position']][1],
-                                       bbox_transform=self.ax_z.transAxes)
-                else:
-                    self.ax_z.legend(loc=placementsLegende[layout.legende['position']][0],
-                                     ncol=layout.legende['nombre de colonnes'],
-                                     fontsize=layout.legende['taille'],
-                                     frameon=layout.legende['cadre'],
-                                     bbox_to_anchor=placementsLegende[layout.legende['position']][1],
-                                     bbox_transform=self.ax_z.transAxes)
+            # main legend
+            if layout.legend['active']:
+                self.ax_z.legend(loc=legendPlacements[layout.legend['position']][0],
+                                    ncol=layout.legend['columns'],
+                                    fontsize=layout.legend['size'],
+                                    frameon=layout.legend['frame'],
+                                    bbox_to_anchor=legendPlacements[layout.legend['position']][1],
+                                    bbox_transform=self.ax_z.transAxes)
 
-            # autres données
-            for donnee in pyLong.projet.autresDonnees:
-                donnee.clear()
-                donnee.update()
+            # other data
+            for data in pyLong.project.otherData:
+                data.clear()
+                data.update()
 
                 try:
-                    i = [subplot.identifiant for subplot in layout.subplots].index(donnee.subplot)
+                    i = [subplot.id for subplot in layout.subplots].index(data.subplot)
                 except:
                     i = -1
 
                 if i != -1:
-                    self.subplots[i].add_line(donnee.line)
+                    self.subplots[i].add_line(data.line)
 
-            # légende subplots
+            # subplots legend
             for i in range(len(self.subplots)):
-                if layout.subplots[i].legende['active']:
-                    self.subplots[i].legend(loc=placementsLegende[layout.subplots[i].legende['position']][0],
-                                            ncol=layout.subplots[i].legende['nombre de colonnes'],
-                                            fontsize=layout.legende['taille'],
-                                            frameon=layout.legende['cadre'],
-                                            bbox_to_anchor=placementsLegende[layout.subplots[i].legende['position']][1],
+                if layout.subplots[i].legend['active']:
+                    self.subplots[i].legend(loc=legendPlacements[layout.subplots[i].legend['position']][0],
+                                            ncol=layout.subplots[i].legend['columns'],
+                                            fontsize=layout.legend['size'],
+                                            frameon=layout.legend['frame'],
+                                            bbox_to_anchor=legendPlacements[layout.subplots[i].legend['position']][1],
                                             bbox_transform=self.subplots[i].transAxes)
 
 
-            # lignes de rappel
-            for ligne in pyLong.projet.lignesRappel:
-                if ligne.actif:
-                    for subplot in ligne.subplots:
+            # reminder lines
+            for line in pyLong.project.reminderLines:
+                if line.active:
+                    for subplot in line.subplots:
                         try:
-                            i = [s.identifiant for s in layout.subplots].index(subplot)
-                            self.subplots[i].plot([ligne.abscisse, ligne.abscisse],
-                                                  [layout.subplots[i].ordonnees['min']-layout.subplots[i].ordonnees['delta bas'],
-                                                   layout.subplots[i].ordonnees['max']+layout.subplots[i].ordonnees['delta haut']],
-                                                  linestyle=styles2ligne[pyLong.projet.preferences['style rappel']],
-                                                  color=couleurs[pyLong.projet.preferences['couleur rappel']],
-                                                  linewidth=pyLong.projet.preferences['épaisseur rappel'],
-                                                  alpha=pyLong.projet.preferences['opacité rappel'],
-                                                  zorder=pyLong.projet.preferences['ordre rappel'])
+                            i = [s.id for s in layout.subplots].index(subplot)
+                            self.subplots[i].plot([line.x, line.x],
+                                                  [layout.subplots[i].yAxisProperties['min'] - layout.subplots[i].yAxisProperties['lower shift'],
+                                                   layout.subplots[i].yAxisProperties['max'] + layout.subplots[i].yAxisProperties['upper shift']],
+                                                  linestyle=lineStyles[pyLong.project.settings.reminderLineProperties['style']],
+                                                  color=colors[pyLong.projet.settings.reminderLineProperties['color']],
+                                                  linewidth=pyLong.project.settings.reminderLineProperties['thickness'],
+                                                  alpha=pyLong.project.settings.reminderLineProperties['opacity'],
+                                                  zorder=pyLong.project.settings.reminderLineProperties['order'])
                         except:
                             pass
 
@@ -444,26 +441,26 @@ class Canvas(FigureCanvas):
             self.figure.tight_layout(pad=1.75)
             self.figure.subplots_adjust(hspace=layout.hspace)
 
-    def updateLegendes(self):
+    def updateLegends(self):
         if not self.pyLong.freeze:
             pyLong = self.pyLong
 
-            i = pyLong.listeLayouts.currentIndex()
-            layout = pyLong.projet.layouts[i]
+            i = pyLong.layoutsList.currentIndex()
+            layout = pyLong.project.layouts[i]
 
-            if not layout.axeSecondaire:
-                try:
-                    self.ax_z.get_legend().remove()
-                except:
-                    pass
+            # if not layout.secondaryAxis:
+            try:
+                self.ax_z.get_legend().remove()
+            except:
+                pass
 
-                if layout.legende['active']:
-                    self.ax_z.legend(loc=placementsLegende[layout.legende['position']][0],
-                                     ncol=layout.legende['nombre de colonnes'],
-                                     fontsize=layout.legende['taille'],
-                                     frameon=layout.legende['cadre'],
-                                     bbox_to_anchor=placementsLegende[layout.legende['position']][1],
-                                     bbox_transform=self.ax_z.transAxes)
+            if layout.legend['active']:
+                self.ax_z.legend(loc=legendPlacements[layout.legend['position']][0],
+                                    ncol=layout.legend['columns'],
+                                    fontsize=layout.legend['size'],
+                                    frameon=layout.legend['frame'],
+                                    bbox_to_anchor=legendPlacements[layout.legend['position']][1],
+                                    bbox_transform=self.ax_z.transAxes)
 
             for i in range(len(self.subplots)):
                 try:
@@ -471,12 +468,12 @@ class Canvas(FigureCanvas):
                 except:
                     pass
 
-                if layout.subplots[i].legende['active']:
-                    self.subplots[i].legend(loc=placementsLegende[layout.subplots[i].legende['position']][0],
-                                            ncol=layout.subplots[i].legende['nombre de colonnes'],
-                                            fontsize=layout.legende['taille'],
-                                            frameon=layout.legende['cadre'],
-                                            bbox_to_anchor=placementsLegende[layout.subplots[i].legende['position']][1],
+                if layout.subplots[i].legend['active']:
+                    self.subplots[i].legend(loc=legendPlacements[layout.subplots[i].legend['position']][0],
+                                            ncol=layout.subplots[i].legend['columns'],
+                                            fontsize=layout.legend['size'],
+                                            frameon=layout.legend['frame'],
+                                            bbox_to_anchor=legendPlacements[layout.subplots[i].legend['position']][1],
                                             bbox_transform=self.subplots[i].transAxes)
 
             self.draw()

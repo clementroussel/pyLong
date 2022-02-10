@@ -3,7 +3,7 @@ from pyLong.group import Group
 from pyLong.preview import Preview
 
 from pyLong.zProfile import zProfile
-#from pyLong.pProfil import *
+from pyLong.sProfile import sProfile
 
 from pyLong.text import Text
 from pyLong.verticalAnnotation import VerticalAnnotation
@@ -20,10 +20,30 @@ from pyLong.rectangle import Rectangle
 #from pyLong.Donnee import *
 
 
+class Setting():
+
+    def __init__(self):
+
+        self.slopeSymbol = "%"
+        self.profileDirection = "ascending"
+        self.exportFileFormat = "png"
+        self.figureWidth = 29.7
+        self.figureHeight = 21.0
+        self.figureDpi = 200
+
+        self.reminderLineProperties = {'style': 'dashed',
+                                       'color': 'Black',
+                                       'thickness': 0.8,
+                                       'opacity': 1,
+                                       'order': 1}
+
+
 class Project:
     
     def __init__(self):
         self.path = ""
+
+        self.settings = Setting()
 
         # préférences générales du projet
         #self.preferences = {'pente': '%',
@@ -38,13 +58,21 @@ class Project:
         #                    'opacité rappel': 1,
         #                    'ordre rappel': 1}
 
-        self.layouts = [Layout()]
+        self.layouts = []
+
+        layout = Layout()
+        layout.title = "layout 0"
+        self.layouts.append(layout)
 
         self.subplots = []
 
         self.profiles = []
 
-        self.groups = [Group()]
+        self.groups = []
+        
+        group = Group()
+        group.title = "group 0"
+        self.groups.append(group)
 
         self.calculations = []
 
@@ -65,7 +93,7 @@ class Project:
 
         self.profiles.clear()
         zProfile.counter = 0
-        sProfil.counter = 0
+        sProfile.counter = 0
 
         self.groups.clear()
         Group.counter = -1

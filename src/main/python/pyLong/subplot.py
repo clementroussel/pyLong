@@ -1,6 +1,6 @@
 class Subplot:
     def __init__(self):
-        self.identifiant = ""
+        self.id = ""
 
         self.subdivisions = 1
 

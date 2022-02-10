@@ -101,7 +101,7 @@ class MainWindow(QMainWindow):
         # self.navigationBar._actions['pan'].setText("Se déplacer")
         # self.navigationBar._actions['zoom'].setText("Zoomer")
 
-#         self.canvas.addContextMenu()
+        self.canvas.addContextMenu()
 
         layout = QVBoxLayout()
         self.profilesList = ProfilesList("Profiles", parent=self)
@@ -134,6 +134,9 @@ class MainWindow(QMainWindow):
         centralWidget.setLayout(mainLayout)
         self.setCentralWidget(centralWidget)
         self.showMaximized()
+
+        self.canvas.initialize()
+        self.canvas.updateLayout()
 
     def createActions(self):
         createActions(self)

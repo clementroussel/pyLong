@@ -85,7 +85,7 @@ class sProfile:
 
         self.line.set_label("")
         self.linePercents.set_label("")
-        self.lineDegrres.set_label("")
+        self.lineDegrees.set_label("")
         self.trickLine.set_label(self.label)
 
         self.line.set_linestyle("None")
