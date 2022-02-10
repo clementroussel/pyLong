@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QScrollArea
+from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QScrollArea, QMessageBox
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QPalette
 
@@ -49,7 +49,7 @@ from interface.otherDataList import OtherDataList
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 
 # python modules
-# import os
+import os
 # import pickle
 # from pickle import Pickler, Unpickler
 import json
@@ -984,13 +984,9 @@ class MainWindow(QMainWindow):
 #         figure = QImage(self.canvas.grab())
 #         clipBoard.setImage(figure)
 
-#     def documentation(self):
-#         cmd = r"start https://pyLong-doc.readthedocs.io/fr/latest/#"
-#         os.system(cmd)
 
-#     def onf(self):
-#         cmd = r"start https://www.onf.fr/onf"
-#         os.system(cmd)
+
+
 
 #     def controleOutilsNavigation(self):
 #         if self.barreDeNavigation._actions['pan'].isChecked():
@@ -1000,20 +996,28 @@ class MainWindow(QMainWindow):
 #         else:
 #             pass
 
-#     def aboutPyLong(self):
-#         texte = "<center>" \
-#                 "<h1>pyLong</h1>" \
-#                 "<p>Version 22.01" \
-#                 "<hr />" \
-#                 "&#8291;" \
-#                 "<img src="+self.appctxt.get_resource('images/logo-vert-vectorise.png')+">" \
-#                 "<br/>" \
-#                 "<img src="+self.appctxt.get_resource('images/logo_rtm.png') + ">" \
-#                 "<hr /><br/>" \
-#                 "Conception : Damien KUSS<br/>" \
-#                 "damien.kuss@onf.fr<br/><br/>" \
-#                 "Support : Clément ROUSSEL<br/>" \
-#                 "clement.roussel@onf.fr<\p>"
-#         dialogue = QMessageBox()
-#         dialogue.setWindowIcon(QIcon(self.appctxt.get_resource('icones/propos.png')))
-#         dialogue.about(self, "À propos de pyLong", texte)
+    def documentation(self):
+        cmd = r"start https://pyLong-doc.readthedocs.io/fr/latest/#"
+        os.system(cmd)
+
+    def about(self):
+        text = "<center>" \
+               "<h1>pyLong</h1>" \
+               "<p>Version dev" \
+               "<hr />" \
+               "&#8291;" \
+               "<img src="+self.appctxt.get_resource('images/logo_onf.png')+">" \
+               "<br/>" \
+               "<img src="+self.appctxt.get_resource('images/logo_rtm.png') + ">" \
+               "<hr /><br/>" \
+               "Conception : Damien KUSS<br/>" \
+               "damien.kuss@onf.fr<br/><br/>" \
+               "Support : Clément ROUSSEL<br/>" \
+               "clement.roussel@onf.fr<\p>"
+        dialogue = QMessageBox()
+        # dialogue.setWindowIcon(QIcon(self.appctxt.get_resource('icones/propos.png')))
+        dialogue.about(self, "About pyLong", text)
+
+    def onf(self):
+        cmd = r"start https://www.onf.fr/onf"
+        os.system(cmd)
