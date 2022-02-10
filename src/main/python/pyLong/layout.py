@@ -54,7 +54,7 @@ class Layout:
                                     'upper shift °': 5}
 
         self.grid = {'active': True,
-                     'which': "both",
+                     'secondary': True,
                      'style': 'dashed',
                      'thickness': 0.8,
                      'opacity': 0.5,

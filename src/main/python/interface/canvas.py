@@ -97,9 +97,6 @@ class Canvas(FigureCanvas):
                                              layout.xAxisProperties['max'],
                                              layout.xAxisProperties['intervals'] + 1))
 
-            if layout.grid['which'] == "both":
-                self.ax_z.xaxis.set_minor_locator(AutoMinorLocator())
-
             self.ax_z.set_ylim((layout.zAxisProperties['min'] - layout.zAxisProperties['lower shift'],
                                 layout.zAxisProperties['max'] + layout.zAxisProperties['upper shift']))
 
@@ -115,9 +112,6 @@ class Canvas(FigureCanvas):
                                              layout.zAxisProperties['max'],
                                              layout.zAxisProperties['intervals'] + 1))
 
-            if layout.grid['which'] == "both":
-                self.ax_z.yaxis.set_minor_locator(AutoMinorLocator())
-
             if n_subdivisions > 1 and n_subplots > 0:
                 self.ax_z.xaxis.set_ticks_position('top')
             else:
@@ -126,7 +120,7 @@ class Canvas(FigureCanvas):
                                       'fontsize': layout.xAxisProperties['label size']})
 
             self.ax_z.grid(visible=layout.grid['active'],
-                           which=layout.grid['which'],
+                           which='major',
                            axis='both',
                            linestyle=lineStyles[layout.grid['style']],
                            linewidth=layout.grid['thickness'],
@@ -181,9 +175,6 @@ class Canvas(FigureCanvas):
                                              colors=colors[layout.subplots[i].yAxisProperties['value color']],
                                              labelsize=layout.zAxisProperties['value size'])
 
-                if layout.grid['which'] == "both":
-                    self.subplots[i].yaxis.set_minor_locator(AutoMinorLocator())
-
                 self.subplots[i].grid(visible=layout.grid['active'],
                                       which='major',
                                       axis='both',
@@ -202,9 +193,6 @@ class Canvas(FigureCanvas):
                 self.subplots[i].set_xticks(np.linspace(layout.xAxisProperties['min'],
                                                         layout.xAxisProperties['max'],
                                                         layout.xAxisProperties['intervals'] + 1))
-
-                if layout.grid['which'] == "both":
-                    self.subplots[i].xaxis.set_minor_locator(AutoMinorLocator())
 
                 if i != n_subplots - 1:
                     plt.setp(self.subplots[i].get_xticklabels(), visible=False)

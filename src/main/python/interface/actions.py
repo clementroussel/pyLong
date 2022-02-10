@@ -97,7 +97,7 @@ def createActions(self):
     ##################################################
 
     self.layoutAction = QAction(QIcon(self.appctxt.get_resource('icons/layout.png')), "Layout properties", self)
-    #self.layoutAction.triggered.connect(self.layout)
+    self.layoutAction.triggered.connect(self.layout)
     self.figureToolBar.addAction(self.layoutAction)
 
     self.advancedLayoutAction = QAction(QIcon(self.appctxt.get_resource('icons/advancedLayout.png')), "Advanced layout properties", self)

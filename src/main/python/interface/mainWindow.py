@@ -11,6 +11,8 @@ from interface.profilesList import ProfilesList
 from interface.annotationsList import AnnotationsList
 from interface.calculationsList import CalculationsList
 from interface.otherDataList import OtherDataList
+
+from interface.dialogLayout import DialogLayout
 # from ListeAnnotations import *
 # from ListeCalculs import *
 # from ListeAutresDonnees import *
@@ -971,8 +973,8 @@ class MainWindow(QMainWindow):
 #     def gestionPreferences(self):
 #         DialogPreferences(parent=self).exec_()
 
-#     def miseEnPage(self):
-#         DialogLayout(self).exec_()
+    def layout(self):
+        DialogLayout(self).exec_()
 
 #     def rafraichir(self):
 #         self.controleOutilsNavigation()
