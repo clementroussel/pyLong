@@ -40,25 +40,25 @@ def createActions(self):
     self.fullScreenAction = QAction(QIcon(self.appctxt.get_resource('icons/fullScreen.png')), "Full screen", self)
     self.fullScreenAction.setCheckable(True)
     self.fullScreenAction.setShortcut(QKeySequence("F11"))
-    #self.fullScreenAction.triggered.connect(self.pleinEcran)
+    self.fullScreenAction.triggered.connect(self.fullScreen)
     self.interfaceToolBar.addAction(self.fullScreenAction)
 
     self.zoomInAction = QAction(QIcon(self.appctxt.get_resource('icons/zoomIn.png')), "Zoom in", self)
     self.zoomInAction.setShortcut(QKeySequence("Ctrl++"))
-    #self.zoomInAction.triggered.connect(self.zoomIn)
+    self.zoomInAction.triggered.connect(self.zoomIn)
     self.interfaceToolBar.addAction(self.zoomInAction)
 
     self.zoomOutAction = QAction(QIcon(self.appctxt.get_resource('icons/zoomOut.png')), "Zoom out", self)
     self.zoomOutAction.setShortcut(QKeySequence("Ctrl+-"))
-    #self.zoomOutAction.triggered.connect(self.zoomOut)
+    self.zoomOutAction.triggered.connect(self.zoomOut)
     self.interfaceToolBar.addAction(self.zoomOutAction)
 
     self.adjustWidthAction = QAction(QIcon(self.appctxt.get_resource('icons/adjustWidth.png')), "Adjust width", self)
-    #self.adjustWidthAction.triggered.connect(self.adjustWidth)
+    self.adjustWidthAction.triggered.connect(self.adjustWidth)
     self.interfaceToolBar.addAction(self.adjustWidthAction)
 
     self.adjustHeightAction = QAction(QIcon(self.appctxt.get_resource('icons/adjustHeight.png')), "Adjust height", self)
-    #self.adjustHeightAction.triggered.connect(self.adjustHieght)
+    self.adjustHeightAction.triggered.connect(self.adjustHeight)
     self.interfaceToolBar.addAction(self.adjustHeightAction)
 
     self.interfaceToolBar.addSeparator()

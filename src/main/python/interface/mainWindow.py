@@ -204,17 +204,17 @@ class MainWindow(QMainWindow):
 #     def lignesRappel(self):
 #         DialogLignesRappel(parent=self).exec_()
 
-#     def ajusterLargeur(self):
-#         self.canvas.ajusterLargeur()
+    def adjustWidth(self):
+        self.canvas.adjustWidth()
 
-#     def ajusterHauteur(self):
-#         self.canvas.ajusterHauteur()
+    def adjustHeight(self):
+        self.canvas.adjustHeight()
 
-#     def agrandirCanvas(self):
-#         self.canvas.agrandir()
+    def zoomIn(self):
+        self.canvas.zoomIn()
 
-#     def retrecirCanvas(self):
-#         self.canvas.retrecir()
+    def zoomOut(self):
+        self.canvas.zoomOut()
 
 #     def optionsDonnees(self):
 #         if self.listeAutresDonnees.selection():
@@ -231,41 +231,41 @@ class MainWindow(QMainWindow):
 #     def miseEnPage_avancee(self):
 #         DialogLayoutAvancee(parent=self).exec_()
 
-#     def pleinEcran(self, checked):
-#         if checked:
-#             self.outilsProjet.setVisible(False)
-#             self.outilsInterface.setVisible(False)
-#             self.outilsFigure.setVisible(False)
-#             self.outilsSubplots.setVisible(False)
-#             self.outilsProfils.setVisible(False)
-#             self.outilsEdition.setVisible(False)
-#             self.outilsAnnotations.setVisible(False)
-#             self.outilsRappels.setVisible(False)
-#             self.outilsToolBox.setVisible(False)
-#             self.outilsAutresDonnees.setVisible(False)
-#             self.outilsRessources.setVisible(False)
-#             self.outilsONF.setVisible(False)
-#             self.listeProfils.setVisible(False)
-#             self.listeAnnotations.setVisible(False)
-#             self.listeCalculs.setVisible(False)
-#             self.listeAutresDonnees.setVisible(False)
-#         else:
-#             self.outilsProjet.setVisible(True)
-#             self.outilsInterface.setVisible(True)
-#             self.outilsFigure.setVisible(True)
-#             self.outilsSubplots.setVisible(True)
-#             self.outilsProfils.setVisible(True)
-#             self.outilsEdition.setVisible(True)
-#             self.outilsAnnotations.setVisible(True)
-#             self.outilsRappels.setVisible(True)
-#             self.outilsToolBox.setVisible(True)
-#             self.outilsAutresDonnees.setVisible(True)
-#             self.outilsRessources.setVisible(True)
-#             self.outilsONF.setVisible(True)
-#             self.listeProfils.setVisible(True)
-#             self.listeAnnotations.setVisible(True)
-#             self.listeCalculs.setVisible(True)
-#             self.listeAutresDonnees.setVisible(True)
+    def fullScreen(self, checked):
+        if checked:
+            self.projectToolBar.setVisible(False)
+            self.interfaceToolBar.setVisible(False)
+            self.figureToolBar.setVisible(False)
+            self.subplotToolBar.setVisible(False)
+            self.profileToolBar.setVisible(False)
+            self.editingToolBar.setVisible(False)
+            self.annotationToolBar.setVisible(False)
+            self.reminderLineToolBar.setVisible(False)
+            self.toolboxToolBar.setVisible(False)
+            self.otherDataToolBar.setVisible(False)
+            self.resourceToolBar.setVisible(False)
+            self.onfToolBar.setVisible(False)
+            self.profilesList.setVisible(False)
+            self.annotationsList.setVisible(False)
+            self.calculationsList.setVisible(False)
+            self.otherDataList.setVisible(False)
+        else:
+            self.projectToolBar.setVisible(True)
+            self.interfaceToolBar.setVisible(True)
+            self.figureToolBar.setVisible(True)
+            self.subplotToolBar.setVisible(True)
+            self.profileToolBar.setVisible(True)
+            self.editingToolBar.setVisible(True)
+            self.annotationToolBar.setVisible(True)
+            self.reminderLineToolBar.setVisible(True)
+            self.toolboxToolBar.setVisible(True)
+            self.otherDataToolBar.setVisible(True)
+            self.resourceToolBar.setVisible(True)
+            self.onfToolBar.setVisible(True)
+            self.profilesList.setVisible(True)
+            self.annotationsList.setVisible(True)
+            self.calculationsList.setVisible(True)
+            self.otherDataList.setVisible(True)
 
 #     def quitterPylong(self):
 #         dialogue = QMessageBox(self)
