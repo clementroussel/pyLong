@@ -7,7 +7,8 @@ import numpy as np
 from matplotlib.ticker import AutoMinorLocator
 
 from pyLong.dictionaries import legendPlacements, lineStyles
-# from DialogOptionsAxes import *
+
+from interface.dialogAxisOptions import DialogAxisOptions
 
 
 class DialogLayout(QDialog):
@@ -227,7 +228,7 @@ class DialogLayout(QDialog):
 
         axisOptions = QPushButton("Options")
         axisOptions.setAutoDefault(False)
-        # axisOptions.clicked.connect(self.axisOptions)
+        axisOptions.clicked.connect(self.axisOptions)
         layout.addWidget(axisOptions, 5, 0)
 
         axisTab.setLayout(layout)
@@ -339,15 +340,10 @@ class DialogLayout(QDialog):
 
         gridTab.setLayout(layout)
 
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Ok)
-        buttonBox.button(QDialogButtonBox.Apply).setText("Refresh")
-        buttonBox.button(QDialogButtonBox.Apply).setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/refresh.png')))
-        # buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.accept)
-        # buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.actualiser)
-
-        buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(False)
-        buttonBox.button(QDialogButtonBox.Apply).setAutoDefault(True)
-        buttonBox.button(QDialogButtonBox.Apply).setDefault(True)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.accept)
+        buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(True)
+        buttonBox.button(QDialogButtonBox.Ok).setDefault(True)
 
         mainlayout = QGridLayout()
 
@@ -429,7 +425,6 @@ class DialogLayout(QDialog):
 
     def updateGrid(self):
         self.layout.grid['active'] = self.drawGrid.isChecked()
-        self.layout.grid['secondary'] = self.drawSecondaryGrid.isChecked()
         self.layout.grid['style'] = self.gridStyle.currentText()
         self.layout.grid['thickness'] = self.gridThickness.value()
         self.layout.grid['opacity'] = self.gridOpacity.value()
@@ -457,8 +452,8 @@ class DialogLayout(QDialog):
 
         self.pyLong.canvas.draw()
 
-    def optionsAxes(self) :
-        DialogOptionsAxes(self).exec_()
+    def axisOptions(self) :
+        DialogAxisOptions(self).exec_()
 
     def invert(self):
         width = self.width.value()

@@ -41,7 +41,7 @@ class Layout:
                                     'max %': 100.,
                                     'min °': 0,
                                     'max °': 90,
-                                    'label': '',
+                                    'label': 'slopes',
                                     'intervals %': 10,
                                     'intervals °': 9,
                                     'label size': 9.,
@@ -54,7 +54,6 @@ class Layout:
                                     'upper shift °': 5}
 
         self.grid = {'active': True,
-                     'secondary': True,
                      'style': 'dashed',
                      'thickness': 0.8,
                      'opacity': 0.5,
