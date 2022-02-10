@@ -1,3 +1,5 @@
+from pyLong.setting import Setting
+
 from pyLong.layout import Layout
 from pyLong.group import Group
 from pyLong.preview import Preview
@@ -20,43 +22,12 @@ from pyLong.rectangle import Rectangle
 #from pyLong.Donnee import *
 
 
-class Setting():
-
-    def __init__(self):
-
-        self.slopeSymbol = "%"
-        self.profileDirection = "ascending"
-        self.exportFileFormat = "png"
-        self.figureWidth = 29.7
-        self.figureHeight = 21.0
-        self.figureDpi = 200
-
-        self.reminderLineProperties = {'style': 'dashed',
-                                       'color': 'Black',
-                                       'thickness': 0.8,
-                                       'opacity': 1,
-                                       'order': 1}
-
-
 class Project:
     
     def __init__(self):
         self.path = ""
 
         self.settings = Setting()
-
-        # préférences générales du projet
-        #self.preferences = {'pente': '%',
-        #                    'sens': 'ascendant',
-        #                    'extension': 'png',
-        #                    'largeur': 21.0,
-        #                    'hauteur': 29.7,
-        #                    'dpi': 200,
-        #                    'style rappel': 'tiretée',
-        #                    'couleur rappel': 'Black',
-        #                    'épaisseur rappel': 1,
-        #                    'opacité rappel': 1,
-        #                    'ordre rappel': 1}
 
         self.layouts = []
 
@@ -69,7 +40,7 @@ class Project:
         self.profiles = []
 
         self.groups = []
-        
+
         group = Group()
         group.title = "group 0"
         self.groups.append(group)
