@@ -16,9 +16,6 @@ from pyLong.toolbox.energyLine import EnergyLine
 from pyLong.toolbox.rickenmann import Rickenmann
 from pyLong.toolbox.flowR import FlowR
 from pyLong.toolbox.corominas import Corominas
-from pyLong.toolbox.mezap import Mezap
-
-from pyLong.reminderLine import ReminderLine
 
 from pyLong.dictionaries import lineStyles, colors, legendPlacements
 
