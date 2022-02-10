@@ -260,10 +260,10 @@ def createActions(self):
     #self.groupsManagerAction.triggered.connect(self.groupsManager)
     self.annotationToolBar.addAction(self.groupsManagerAction)
 
-    self.deleteAnnotationAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)
-    #self.deleteAnnotationAction.triggered.connect(self.deleteAnnotation)
-    self.deleteAnnotationAction.setShortcut(QKeySequence("Alt+A"))
-    self.annotationToolBar.addAction(self.deleteAnnotationAction)
+    self.annotationDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)
+    #self.deleteAnnotationAction.triggered.connect(self.annotationDelete)
+    self.annotationDeleteAction.setShortcut(QKeySequence("Alt+A"))
+    self.annotationToolBar.addAction(self.annotationDeleteAction)
 
     self.annotationToolBar.addSeparator()
 
@@ -293,10 +293,10 @@ def createActions(self):
     #self.calculationAction.triggered.connect(self.calculation)
     self.toolboxToolBar.addAction(self.calculationAction)
 
-    self.deleteCalculationAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)
-    #self.deleteCalculationAction.triggered.connect(self.deleteCalculation)
-    self.deleteCalculationAction.setShortcut(QKeySequence("Alt+C"))
-    self.toolboxToolBar.addAction(self.deleteCalculationAction)
+    self.calculationDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)
+    #self.deleteCalculationAction.triggered.connect(self.calculationDelete)
+    self.calculationDeleteAction.setShortcut(QKeySequence("Alt+C"))
+    self.toolboxToolBar.addAction(self.calculationDeleteAction)
 
     self.toolboxToolBar.addSeparator()
 
@@ -312,10 +312,10 @@ def createActions(self):
     #self.action_styleDonnees.triggered.connect(self.dataStyle)
     self.otherDataToolBar.addAction(self.dataStyleAction)
 
-    self.deleteDataAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)
-    #self.action_supprimerDonnees.triggered.connect(self.supprimerDonnees)
-    self.deleteDataAction.setShortcut(QKeySequence("Alt+D"))
-    self.otherDataToolBar.addAction(self.deleteDataAction)
+    self.dataDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)
+    #self.action_supprimerDonnees.triggered.connect(self.dataDelete)
+    self.dataDeleteAction.setShortcut(QKeySequence("Alt+D"))
+    self.otherDataToolBar.addAction(self.dataDeleteAction)
 
     self.otherDataToolBar.addSeparator()
 
@@ -444,7 +444,7 @@ def createActions(self):
 
     self.annotationMenu.addAction(self.groupsManagerAction)
     self.annotationMenu.addSeparator()
-    self.annotationMenu.addAction(self.deleteAnnotationAction)
+    self.annotationMenu.addAction(self.annotationDeleteAction)
 
     self.reminderLineMenu = menu.addMenu("Reminder line")
     self.reminderLineMenu.addAction(self.annotation2reminderLineAction)
@@ -456,14 +456,14 @@ def createActions(self):
     self.toolboxMenu.addSeparator()
     self.toolboxMenu.addAction(self.calculationAction)
     self.toolboxMenu.addSeparator()
-    self.toolboxMenu.addAction(self.deleteCalculationAction)
+    self.toolboxMenu.addAction(self.calculationDeleteAction)
 
     self.otherDataMenu = menu.addMenu("Other data")
     self.otherDataMenu.addAction(self.addDataAction)
     self.otherDataMenu.addSeparator()
     self.otherDataMenu.addAction(self.dataStyleAction)
     self.otherDataMenu.addSeparator()
-    self.otherDataMenu.addAction(self.deleteDataAction)
+    self.otherDataMenu.addAction(self.dataDeleteAction)
 
     self.resourceMenu = menu.addMenu("Resources")
     self.resourceMenu.addAction(self.documentationAction)

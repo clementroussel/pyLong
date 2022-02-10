@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QMenu
 from PyQt5.QtCore import Qt
 
 from interface.list import List
@@ -25,15 +25,15 @@ class CalculationsList(List):
         # self.liste.doubleClicked.connect(self.ouvrirCalcul)
         # self.liste.itemChanged.connect(self.activer)
 
-        # self.liste.setContextMenuPolicy(Qt.CustomContextMenu)
-        # self.liste.customContextMenuRequested.connect(self.contextMenu)
+        self.list.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.list.customContextMenuRequested.connect(self.contextMenu)
 
-        # self.popMenu = QMenu(self)
-        # self.popMenu.addAction(self.pyLong.action_toolbox)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_calcul)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_supprimerCalculs)
+        self.popMenu = QMenu(self)
+        self.popMenu.addAction(self.pyLong.toolboxAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.calculationAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.calculationDeleteAction)
 
         layout = QVBoxLayout()
 

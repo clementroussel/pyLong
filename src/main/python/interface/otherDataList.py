@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QMenu
 from PyQt5.QtCore import Qt
 
 from interface.list import List
@@ -13,15 +13,15 @@ class OtherDataList(List):
         # self.liste.doubleClicked.connect(self.pyLong.optionsDonnees)
         # self.liste.itemChanged.connect(self.activer)
 
-        # self.liste.setContextMenuPolicy(Qt.CustomContextMenu)
-        # self.liste.customContextMenuRequested.connect(self.contextMenu)
+        self.list.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.list.customContextMenuRequested.connect(self.contextMenu)
 
-        # self.popMenu = QMenu(self)
-        # self.popMenu.addAction(self.pyLong.action_ajouterDonnees)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_styleDonnees)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_supprimerDonnees)
+        self.popMenu = QMenu(self)
+        self.popMenu.addAction(self.pyLong.addDataAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.dataStyleAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.dataDeleteAction)
 
         layout = QVBoxLayout()
 

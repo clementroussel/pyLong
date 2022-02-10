@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QMenu
 from PyQt5.QtCore import Qt
 
 from interface.list import List
@@ -12,25 +12,24 @@ class ProfilesList(List):
         # self.liste.doubleClicked.connect(self.pyLong.optionsProfil)
         # self.liste.itemChanged.connect(self.activer)
 
-        # self.liste.setContextMenuPolicy(Qt.CustomContextMenu)
-        # self.liste.customContextMenuRequested.connect(self.contextMenu)
+        self.list.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.list.customContextMenuRequested.connect(self.contextMenu)
 
-        # self.popMenu = QMenu(self)
-        # self.popMenu.addAction(self.pyLong.action_ajouterProfil)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_tableauProfil)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_styleProfil)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_trierProfil)
-        # self.popMenu.addAction(self.pyLong.action_filtrerProfil)
-        # self.popMenu.addAction(self.pyLong.action_simplifierProfil)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_exporterProfil)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_supprimerProfils)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_editerProfils)
+        self.popMenu = QMenu(self)
+        self.popMenu.addAction(self.pyLong.addProfileAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.tableAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.profileStyleAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.sortAction)
+        self.popMenu.addAction(self.pyLong.filterAction)
+        self.popMenu.addAction(self.pyLong.simplifyAction)
+        self.popMenu.addAction(self.pyLong.exportAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.profileDeleteAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.editingAction)
 
         layout = QVBoxLayout()
 

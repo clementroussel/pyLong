@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QHBoxLayout
+from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QHBoxLayout, QMenu
 from PyQt5.QtCore import Qt
 
 from interface.list import List
@@ -33,31 +33,31 @@ class AnnotationsList(List):
         # self.liste.doubleClicked.connect(self.ouvrirAnnotation)
         # self.liste.itemChanged.connect(self.activerAnnotation)
 
-        # self.liste.setContextMenuPolicy(Qt.CustomContextMenu)
-        # self.liste.customContextMenuRequested.connect(self.contextMenu)
+        self.list.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.list.customContextMenuRequested.connect(self.contextMenu)
 
-        # self.popMenu = QMenu(self)
-        # self.popMenu.addAction(self.pyLong.action_texte)
-        # self.popMenu.addAction(self.pyLong.action_annotationPonctuelle)
-        # self.popMenu.addAction(self.pyLong.action_annotationLineaire)
-        # self.popMenu.addAction(self.pyLong.action_zoneProfil)
-        # self.popMenu.addAction(self.pyLong.action_formeRectangulaire)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_styleAnnotation)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_copierPropriete)
-        # self.popMenu.addAction(self.pyLong.action_collerPropriete)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_ajusterAnnotations)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_dupliquerAnnotation)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_gestionGroupes)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_supprimerAnnotations)
-        # self.popMenu.addSeparator()
-        # self.popMenu.addAction(self.pyLong.action_annotations2ligneRappel)
-        # self.popMenu.addAction(self.pyLong.action_lignesRappel)
+        self.popMenu = QMenu(self)
+        self.popMenu.addAction(self.pyLong.addTextAction)
+        self.popMenu.addAction(self.pyLong.addVerticalAnnotationAction)
+        self.popMenu.addAction(self.pyLong.addLinearAnnotationAction)
+        self.popMenu.addAction(self.pyLong.addIntervalAction)
+        self.popMenu.addAction(self.pyLong.addRectangleAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.annotationStyleAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.copyStyleAction)
+        self.popMenu.addAction(self.pyLong.pasteStyleAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.adjustVerticalAnnotationAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.duplicateAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.groupsManagerAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.annotationDeleteAction)
+        self.popMenu.addSeparator()
+        self.popMenu.addAction(self.pyLong.annotation2reminderLineAction)
+        self.popMenu.addAction(self.pyLong.reminderLinesManagerAction)
 
         layout = QVBoxLayout()
 
@@ -125,7 +125,7 @@ class AnnotationsList(List):
         self.setLayout(layout)
 
     def contextMenu(self, point):
-        self.popMenu.exec_(self.liste.mapToGlobal(point))
+        self.popMenu.exec_(self.list.mapToGlobal(point))
 
     def cacher(self):
         if self.isChecked():
