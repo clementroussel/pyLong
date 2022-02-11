@@ -1,11 +1,12 @@
-from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QMenu
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QMenu, QHBoxLayout, QPushButton, QLabel
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QIcon
 
 from interface.list import List
 
 class ProfilesList(List):
     def __init__(self, title, parent):
-        super().__init__(title)
+        super().__init__(title, parent)
 
         self.pyLong = parent
 
@@ -32,6 +33,23 @@ class ProfilesList(List):
         self.popMenu.addAction(self.pyLong.editingAction)
 
         layout = QVBoxLayout()
+
+        sublayout = QHBoxLayout()
+
+        sublayout.addWidget(QLabel())
+        # self.goUp.clicked.connect(self.goTop)
+        sublayout.addWidget(self.goTop)
+
+        # moveUp.clicked.connect(self.moveUp)
+        sublayout.addWidget(self.moveUp)
+
+        # moveDown.clicked.connect(self.moveDown)
+        sublayout.addWidget(self.moveDown)
+
+        # self.goDown.clicked.connect(self.goDown)
+        sublayout.addWidget(self.goBottom)
+
+        layout.addLayout(sublayout)
 
         layout.addWidget(self.list)
         self.setLayout(layout)

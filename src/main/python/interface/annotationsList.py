@@ -1,5 +1,6 @@
-from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QHBoxLayout, QMenu
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QVBoxLayout, QListWidgetItem, QMessageBox, QHBoxLayout, QMenu, QPushButton
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QIcon
 
 from interface.list import List
 from interface.checkableComboBox import CheckableComboBox
@@ -26,7 +27,7 @@ from pyLong.reminderLine import ReminderLine
 
 class AnnotationsList(List):
     def __init__(self, title, parent):
-        super().__init__(title)
+        super().__init__(title, parent)
 
         self.pyLong = parent
 
@@ -63,62 +64,37 @@ class AnnotationsList(List):
 
         sublayout = QHBoxLayout()
 
-        # self.groupes = CheckableComboBox()
-        # for i, groupe in enumerate(self.pyLong.projet.groupes):
-        #     self.groupes.addItem(groupe.intitule)
-        #     self.groupes.setItemChecked(i, groupe.actif)
+        self.groups = CheckableComboBox()
+        for i, group in enumerate(self.pyLong.project.groups):
+            self.groups.addItem(group.title)
+            self.groups.setItemChecked(i, group.active)
 
         # self.groupes.activated.connect(self.activerGroupe)
         # self.groupes.currentIndexChanged.connect(self.updateListe)
-        # self.groupes.setContextMenuPolicy(Qt.CustomContextMenu)
-        # self.groupes.customContextMenuRequested.connect(self.contextMenuGroupes)
+        self.groups.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.groups.customContextMenuRequested.connect(self.contextMenuGroups)
 
-        # self.popMenuGroupes = QMenu(self)
-        # ajouterGroupe = QAction('Ajouter un groupe', self)
-        # renommerGroupe = QAction('Renommer le groupe', self)
-        # supprimerGroupe = QAction('Supprimer des groupes', self)
-        # ajouterGroupe.triggered.connect(self.ajouterGroupe)
-        # renommerGroupe.triggered.connect(self.renommerGroupe)
-        # supprimerGroupe.triggered.connect(self.supprimerGroupes)
-        # self.popMenuGroupes.addAction(ajouterGroupe)
-        # self.popMenuGroupes.addSeparator()
-        # self.popMenuGroupes.addAction(renommerGroupe)
-        # self.popMenuGroupes.addSeparator()
-        # self.popMenuGroupes.addAction(supprimerGroupe)
+        self.popMenuGroups = QMenu(self)
 
-        # sublayout.addWidget(self.groupes)
+        self.popMenuGroups.addAction(self.pyLong.addGroupAction)
+        self.popMenuGroups.addSeparator()
+        self.popMenuGroups.addAction(self.pyLong.renameGroupAction)
+        self.popMenuGroups.addSeparator()
+        self.popMenuGroups.addAction(self.pyLong.deleteGroupAction)
 
-        # self.goTop = QPushButton()
-        # self.goTop.setToolTip("Monter l'annotation en première position")
-        # self.goTop.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/top.png')))
-        # self.goTop.setIconSize(QSize(12, 12))
-        # self.goTop.setMaximumWidth(25)
-        # self.goTop.clicked.connect(self.deplacerVersHaut)
-        # sublayout.addWidget(self.goTop)
+        sublayout.addWidget(self.groups)
 
-        # self.monter = QPushButton()
-        # self.monter.setToolTip("Monter l'annotation d'un rang")
-        # self.monter.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/monter.png')))
-        # self.monter.setIconSize(QSize(12, 12))
-        # self.monter.setMaximumWidth(25)
-        # self.monter.clicked.connect(self.monterAnnotation)
-        # sublayout.addWidget(self.monter)
+        # self.goUp.clicked.connect(self.goTop)
+        sublayout.addWidget(self.goTop)
 
-        # self.descendre = QPushButton()
-        # self.descendre.setToolTip("Descendre l'annotation d'un rang")
-        # self.descendre.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/descendre.png')))
-        # self.descendre.setIconSize(QSize(12, 12))
-        # self.descendre.setMaximumWidth(25)
-        # self.descendre.clicked.connect(self.descendreAnnotation)
-        # sublayout.addWidget(self.descendre)
+        # moveUp.clicked.connect(self.moveUp)
+        sublayout.addWidget(self.moveUp)
 
-        # self.goDown = QPushButton()
-        # self.goDown.setToolTip("Descendre l'annotation en dernière position")
-        # self.goDown.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/down.png')))
-        # self.goDown.setIconSize(QSize(12, 12))
-        # self.goDown.setMaximumWidth(25)
-        # self.goDown.clicked.connect(self.deplacerVersBas)
-        # sublayout.addWidget(self.goDown)
+        # moveDown.clicked.connect(self.moveDown)
+        sublayout.addWidget(self.moveDown)
+
+        # self.goDown.clicked.connect(self.goDown)
+        sublayout.addWidget(self.goBottom)
 
         layout.addLayout(sublayout)
         layout.addWidget(self.list)
@@ -127,24 +103,25 @@ class AnnotationsList(List):
     def contextMenu(self, point):
         self.popMenu.exec_(self.list.mapToGlobal(point))
 
-    def cacher(self):
+    def hide(self):
         if self.isChecked():
-            self.liste.setVisible(True)
-            self.groupes.setVisible(True)
+            self.list.setVisible(True)
+            self.groups.setVisible(True)
             self.goTop.setVisible(True)
-            self.goDown.setVisible(True)
-            self.monter.setVisible(True)
-            self.descendre.setVisible(True)
-        else:
-            self.liste.setVisible(False)
-            self.groupes.setVisible(False)
-            self.goTop.setVisible(False)
-            self.goDown.setVisible(False)
-            self.monter.setVisible(False)
-            self.descendre.setVisible(False)
+            self.moveUp.setVisible(True)
+            self.moveDown.setVisible(True)
+            self.goBottom.setVisible(True)
 
-    def contextMenuGroupes(self, point):
-        self.popMenuGroupes.exec_(self.groupes.mapToGlobal(point))
+        else:
+            self.list.setVisible(False)
+            self.groups.setVisible(False)
+            self.goTop.setVisible(False)
+            self.moveUp.setVisible(False)
+            self.moveDown.setVisible(False)
+            self.goBottom.setVisible(False)
+
+    def contextMenuGroups(self, point):
+        self.popMenuGroups.exec_(self.groups.mapToGlobal(point))
 
     def selection(self):
         n = self.liste.count()

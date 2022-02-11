@@ -29,7 +29,7 @@ from interface.dialogLayout import DialogLayout
 
 # from DialogGestionSubplots import *
 
-# from DialogAjoutProfil import *
+from interface.dialogAddProfile import DialogAddProfile
 # from DialogOptionsProfils import *
 # from DialogTableauValeurs import *
 # from DialogTrier import *
@@ -894,8 +894,8 @@ class MainWindow(QMainWindow):
 #             alerte.setIcon(QMessageBox.Warning)
 #             alerte.exec_()
 
-#     def ajouterProfil(self):
-#         DialogAjoutProfil(parent=self).exec_()
+    def addProfile(self):
+        DialogAddProfile(parent=self).exec_()
 
 #     def ajouterTexte(self):
 #         txt = Texte()
@@ -980,8 +980,8 @@ class MainWindow(QMainWindow):
 #         self.controleOutilsNavigation()
 #         self.canvas.dessiner()
 
-#     def contextMenuLayouts(self, point):
-#         self.popMenuLayouts.exec_(self.listeLayouts.mapToGlobal(point))
+    def contextMenuLayouts(self, point):
+        self.popMenuLayouts.exec_(self.layoutsList.mapToGlobal(point))
 
 #     def copierFigure(self):
 #         self.controleOutilsNavigation()

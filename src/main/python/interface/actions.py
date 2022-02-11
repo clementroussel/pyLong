@@ -78,10 +78,10 @@ def createActions(self):
     # self.layoutsList.currentIndexChanged.connect(self.canvas.plot)
 
     self.layoutsList.setContextMenuPolicy(Qt.CustomContextMenu)
-    # self.layoutsList.customContextMenuRequested.connect(self.contextMenuLayouts)
+    self.layoutsList.customContextMenuRequested.connect(self.contextMenuLayouts)
 
     self.popMenuLayouts = QMenu(self)
-    self.addLayoutAction = QAction('Add new layout', self)
+    self.addLayoutAction = QAction('Add a new layout', self)
     self.renameLayoutAction = QAction('Rename current layout', self)
     self.deleteLayoutAction = QAction('Delete layouts', self)
     # addLayout.triggered.connect(self.addLayout)
@@ -136,7 +136,7 @@ def createActions(self):
     self.profileToolBar.setIconSize(QSize(20, 20))
 
     self.addProfileAction = QAction(QIcon(self.appctxt.get_resource('icons/addProfile.png')), "Add a new profile", self)
-    #self.addProfileAction.triggered.connect(self.addProfile)
+    self.addProfileAction.triggered.connect(self.addProfile)
     self.profileToolBar.addAction(self.addProfileAction)
 
     self.tableAction = QAction(QIcon(self.appctxt.get_resource('icons/table.png')), "Profile Values ​​Table", self)
@@ -267,7 +267,7 @@ def createActions(self):
 
     self.annotationToolBar.addSeparator()
 
-    self.reminderLineToolBar = self.addToolBar("Reminder lines")
+    self.reminderLineToolBar = self.addToolBar("Reminder line")
     self.reminderLineToolBar.setMovable(False)
     self.reminderLineToolBar.setIconSize(QSize(20, 20))
 
@@ -435,9 +435,9 @@ def createActions(self):
     self.addGroupAction = QAction('Add a new group', self)
     #self.addGroupAction.triggered.connect(self.addGroup)
     self.annotationMenu.addAction(self.addGroupAction)
-    self.renameGroup = QAction('Rename current group', self)
+    self.renameGroupAction = QAction('Rename current group', self)
     #self.renameGroup.triggered.connect(self.renameGroup)
-    self.annotationMenu.addAction(self.renameGroup)
+    self.annotationMenu.addAction(self.renameGroupAction)
     self.deleteGroupAction = QAction('Delete groups', self)
     #self.deleteGroupAction.triggered.connect(self.self.deleteGroup)
     self.annotationMenu.addAction(self.deleteGroupAction)
