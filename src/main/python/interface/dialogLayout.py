@@ -183,12 +183,12 @@ class DialogLayout(QDialog):
         if self.slopeSymbol == "%":
             self.sMin.setSuffix(" %")
             self.sMin.setRange(-9999.9, 9999.9)
-            self.sMin.setValue(self.layout.slopeAxisProperties['min %'])
+            self.sMin.setValue(self.layout.slopesAxisProperties['min %'])
 
         else:
             self.sMin.setSuffix(" °")
             self.sMin.setRange(-90, 90)
-            self.sMin.setValue(self.layout.slopeAxisProperties['min °'])
+            self.sMin.setValue(self.layout.slopesAxisProperties['min °'])
 
         self.sMin.valueChanged.connect(self.updateSlopesAxis)
         layout.addWidget(self.sMin, 4, 1)
@@ -202,12 +202,12 @@ class DialogLayout(QDialog):
         if self.slopeSymbol == "%":
             self.sMax.setSuffix(" %")
             self.sMax.setRange(-9999.9, 9999.9)
-            self.sMax.setValue(self.layout.slopeAxisProperties['max %'])
+            self.sMax.setValue(self.layout.slopesAxisProperties['max %'])
 
         else:
             self.sMax.setSuffix(" °")
             self.sMax.setRange(-90, 90)
-            self.sMax.setValue(self.layout.slopeAxisProperties['max °'])
+            self.sMax.setValue(self.layout.slopesAxisProperties['max °'])
 
         self.sMax.valueChanged.connect(self.updateSlopesAxis)
         layout.addWidget(self.sMax, 4, 2)
@@ -219,10 +219,10 @@ class DialogLayout(QDialog):
         self.sIntervals.valueChanged.connect(self.updateSlopesAxis)
 
         if self.slopeSymbol == "%":
-            self.sIntervals.setValue(self.layout.slopeAxisProperties['intervals %'])
+            self.sIntervals.setValue(self.layout.slopesAxisProperties['intervals %'])
 
         else:
-            self.sIntervals.setValue(self.layout.slopeAxisProperties['intervals °'])
+            self.sIntervals.setValue(self.layout.slopesAxisProperties['intervals °'])
 
         layout.addWidget(self.sIntervals, 4, 3)
 
@@ -403,21 +403,21 @@ class DialogLayout(QDialog):
         self.pyLong.canvas.draw()
 
     def updateSlopesAxis(self):
-        self.layout.slopeAxisProperties['min {}'.format(self.slopeSymbol)] = self.sMin.value()
-        self.layout.slopeAxisProperties['max {}'.format(self.slopeSymbol)] = self.sMax.value()
-        self.layout.slopeAxisProperties['intervals {}'.format(self.slopeSymbol)] = self.sIntervals.value()
+        self.layout.slopesAxisProperties['min {}'.format(self.slopeSymbol)] = self.sMin.value()
+        self.layout.slopesAxisProperties['max {}'.format(self.slopeSymbol)] = self.sMax.value()
+        self.layout.slopesAxisProperties['intervals {}'.format(self.slopeSymbol)] = self.sIntervals.value()
 
         self.pyLong.canvas.ax_p.set_ylim(
-            (self.layout.slopeAxisProperties['min {}'.format(self.slopeSymbol)] - self.layout.slopeAxisProperties['lower shift {}'.format(self.slopeSymbol)],
-             self.layout.slopeAxisProperties['max {}'.format(self.slopeSymbol)] + self.layout.slopeAxisProperties['upper shift {}'.format(self.slopeSymbol)]))
+            (self.layout.slopesAxisProperties['min {}'.format(self.slopeSymbol)] - self.layout.slopesAxisProperties['lower shift {}'.format(self.slopeSymbol)],
+             self.layout.slopesAxisProperties['max {}'.format(self.slopeSymbol)] + self.layout.slopesAxisProperties['upper shift {}'.format(self.slopeSymbol)]))
 
-        self.pyLong.canvas.ax_p.set_yticks(np.linspace(self.layout.slopeAxisProperties['min {}'.format(self.slopeSymbol)],
-                                                       self.layout.slopeAxisProperties['max {}'.format(self.slopeSymbol)],
-                                                       self.layout.slopeAxisProperties['intervals {}'.format(self.slopeSymbol)] + 1))
+        self.pyLong.canvas.ax_p.set_yticks(np.linspace(self.layout.slopesAxisProperties['min {}'.format(self.slopeSymbol)],
+                                                       self.layout.slopesAxisProperties['max {}'.format(self.slopeSymbol)],
+                                                       self.layout.slopesAxisProperties['intervals {}'.format(self.slopeSymbol)] + 1))
 
-        slopeLabels = [str(np.round(p, 1)) + '{}'.format(self.slopeSymbol) for p in np.linspace(self.layout.slopeAxisProperties['min {}'.format(self.slopeSymbol)],
-                                                                                                self.layout.slopeAxisProperties['max {}'.format(self.slopeSymbol)],
-                                                                                                self.layout.slopeAxisProperties['intervals {}'.format(self.slopeSymbol)] + 1)]
+        slopeLabels = [str(np.round(p, 1)) + '{}'.format(self.slopeSymbol) for p in np.linspace(self.layout.slopesAxisProperties['min {}'.format(self.slopeSymbol)],
+                                                                                                self.layout.slopesAxisProperties['max {}'.format(self.slopeSymbol)],
+                                                                                                self.layout.slopesAxisProperties['intervals {}'.format(self.slopeSymbol)] + 1)]
 
         self.pyLong.canvas.ax_p.set_yticklabels(slopeLabels)
 

@@ -214,7 +214,7 @@ class DialogAxisOptions(QDialog):
         layout.addWidget(label, 0, 0)
         
         self.sAxisLabel = QLineEdit()
-        self.sAxisLabel.setText(self.layout.slopeAxisProperties['label'])
+        self.sAxisLabel.setText(self.layout.slopesAxisProperties['label'])
         self.sAxisLabel.textEdited.connect(self.updateSlopesAxis)
         layout.addWidget(self.sAxisLabel, 0, 1)
         
@@ -228,7 +228,7 @@ class DialogAxisOptions(QDialog):
         self.sAxisLabelSize.setRange(0, 99.9)
         self.sAxisLabelSize.setSingleStep(0.1)
         self.sAxisLabelSize.setDecimals(1)
-        self.sAxisLabelSize.setValue(self.layout.slopeAxisProperties['label size'])
+        self.sAxisLabelSize.setValue(self.layout.slopesAxisProperties['label size'])
         self.sAxisLabelSize.valueChanged.connect(self.updateSlopesAxis)
         layout.addWidget(self.sAxisLabelSize, 1, 1)
         
@@ -237,7 +237,7 @@ class DialogAxisOptions(QDialog):
         layout.addWidget(label, 2, 0)
         
         self.sAxisLabelColor = ColorsComboBox(self.pyLong.appctxt)
-        self.sAxisLabelColor.setCurrentText(self.layout.slopeAxisProperties['label color'])
+        self.sAxisLabelColor.setCurrentText(self.layout.slopesAxisProperties['label color'])
         self.sAxisLabelColor.currentTextChanged.connect(self.updateSlopesAxis)
         layout.addWidget(self.sAxisLabelColor, 2, 1)
         
@@ -253,7 +253,7 @@ class DialogAxisOptions(QDialog):
         self.sAxisValueSize.setRange(0, 99.9)
         self.sAxisValueSize.setSingleStep(0.1)
         self.sAxisValueSize.setDecimals(1)
-        self.sAxisValueSize.setValue(self.layout.slopeAxisProperties['value size'])
+        self.sAxisValueSize.setValue(self.layout.slopesAxisProperties['value size'])
         self.sAxisValueSize.valueChanged.connect(self.updateSlopesAxis)
         layout.addWidget(self.sAxisValueSize, 4, 1)
         
@@ -262,7 +262,7 @@ class DialogAxisOptions(QDialog):
         layout.addWidget(label, 5, 0)
         
         self.sAxisValueColor = ColorsComboBox(self.pyLong.appctxt)
-        self.sAxisValueColor.setCurrentText(self.layout.slopeAxisProperties['value color'])
+        self.sAxisValueColor.setCurrentText(self.layout.slopesAxisProperties['value color'])
         self.sAxisValueColor.currentTextChanged.connect(self.updateSlopesAxis)
         layout.addWidget(self.sAxisValueColor, 5, 1)
         
@@ -281,7 +281,7 @@ class DialogAxisOptions(QDialog):
             self.sAxisLowerShift.setFixedWidth(45)
             self.sAxisLowerShift.setRange(0, 90)
         self.sAxisLowerShift.setSingleStep(1)
-        self.sAxisLowerShift.setValue(self.layout.slopeAxisProperties['lower shift {}'.format(self.slopeSymbol)])
+        self.sAxisLowerShift.setValue(self.layout.slopesAxisProperties['lower shift {}'.format(self.slopeSymbol)])
 
         self.sAxisLowerShift.valueChanged.connect(self.updateSlopesAxis)
         layout.addWidget(self.sAxisLowerShift, 7, 1)
@@ -299,7 +299,7 @@ class DialogAxisOptions(QDialog):
             self.sAxisUpperShift.setFixedWidth(45)
             self.sAxisUpperShift.setRange(0, 90)
         self.sAxisUpperShift.setSingleStep(1)
-        self.sAxisUpperShift.setValue(self.layout.slopeAxisProperties['upper shift {}'.format(self.slopeSymbol)])
+        self.sAxisUpperShift.setValue(self.layout.slopesAxisProperties['upper shift {}'.format(self.slopeSymbol)])
 
         self.sAxisUpperShift.valueChanged.connect(self.updateSlopesAxis)
         layout.addWidget(self.sAxisUpperShift, 8, 1)
@@ -405,26 +405,26 @@ class DialogAxisOptions(QDialog):
 
 
     def updateSlopesAxis(self):
-        self.layout.slopeAxisProperties['label'] = self.sAxisLabel.text()
-        self.layout.slopeAxisProperties['label size'] = self.sAxisLabelSize.value()
-        self.layout.slopeAxisProperties['label color'] = self.sAxisLabelColor.currentText()
-        self.layout.slopeAxisProperties['value size'] = self.sAxisValueSize.value()
-        self.layout.slopeAxisProperties['value color'] = self.sAxisValueColor.currentText()
+        self.layout.slopesAxisProperties['label'] = self.sAxisLabel.text()
+        self.layout.slopesAxisProperties['label size'] = self.sAxisLabelSize.value()
+        self.layout.slopesAxisProperties['label color'] = self.sAxisLabelColor.currentText()
+        self.layout.slopesAxisProperties['value size'] = self.sAxisValueSize.value()
+        self.layout.slopesAxisProperties['value color'] = self.sAxisValueColor.currentText()
 
 
-        self.layout.slopeAxisProperties['lower shift {}'.format(self.slopeSymbol)] = self.sAxisLowerShift.value()
-        self.layout.slopeAxisProperties['upper shift {}'.format(self.slopeSymbol)] = self.sAxisUpperShift.value()
+        self.layout.slopesAxisProperties['lower shift {}'.format(self.slopeSymbol)] = self.sAxisLowerShift.value()
+        self.layout.slopesAxisProperties['upper shift {}'.format(self.slopeSymbol)] = self.sAxisUpperShift.value()
 
-        self.pyLong.canvas.ax_p.set_ylim((self.layout.slopeAxisProperties['min {}'.format(self.slopeSymbol)] - self.layout.slopeAxisProperties['lower shift {}'.format(self.slopeSymbol)],
-                                          self.layout.slopeAxisProperties['max {}'.format(self.slopeSymbol)] + self.layout.slopeAxisProperties['upper shift {}'.format(self.slopeSymbol)]))
+        self.pyLong.canvas.ax_p.set_ylim((self.layout.slopesAxisProperties['min {}'.format(self.slopeSymbol)] - self.layout.slopesAxisProperties['lower shift {}'.format(self.slopeSymbol)],
+                                          self.layout.slopesAxisProperties['max {}'.format(self.slopeSymbol)] + self.layout.slopesAxisProperties['upper shift {}'.format(self.slopeSymbol)]))
 
-        self.pyLong.canvas.ax_p.set_ylabel(self.layout.slopeAxisProperties['label'],
-                                           {'color': colors[self.layout.slopeAxisProperties['label color']],
-                                            'fontsize': self.layout.slopeAxisProperties['label size']})
+        self.pyLong.canvas.ax_p.set_ylabel(self.layout.slopesAxisProperties['label'],
+                                           {'color': colors[self.layout.slopesAxisProperties['label color']],
+                                            'fontsize': self.layout.slopesAxisProperties['label size']})
 
         self.pyLong.canvas.ax_p.tick_params(axis='y',
-                                            colors=colors[self.layout.slopeAxisProperties['value color']],
-                                            labelsize=self.layout.slopeAxisProperties['value size'])
+                                            colors=colors[self.layout.slopesAxisProperties['value color']],
+                                            labelsize=self.layout.slopesAxisProperties['value size'])
 
         self.pyLong.canvas.figure.tight_layout(pad=1.75)
         self.pyLong.canvas.figure.subplots_adjust(hspace=self.layout.hspace)

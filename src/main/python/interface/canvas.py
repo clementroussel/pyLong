@@ -128,24 +128,24 @@ class Canvas(FigureCanvas):
                            zorder=layout.grid['order'])
 
             self.ax_p.set_ylim(
-                (layout.slopeAxisProperties['min {}'.format(slopeSymbol)] - layout.slopeAxisProperties['lower shift {}'.format(slopeSymbol)],
-                 layout.slopeAxisProperties['max {}'.format(slopeSymbol)] + layout.slopeAxisProperties['upper shift {}'.format(slopeSymbol)]))
+                (layout.slopesAxisProperties['min {}'.format(slopeSymbol)] - layout.slopesAxisProperties['lower shift {}'.format(slopeSymbol)],
+                 layout.slopesAxisProperties['max {}'.format(slopeSymbol)] + layout.slopesAxisProperties['upper shift {}'.format(slopeSymbol)]))
 
-            self.ax_p.set_ylabel(layout.slopeAxisProperties['label'],
-                                 {'color': colors[layout.slopeAxisProperties['label color']],
-                                  'fontsize': layout.slopeAxisProperties['label size']})
+            self.ax_p.set_ylabel(layout.slopesAxisProperties['label'],
+                                 {'color': colors[layout.slopesAxisProperties['label color']],
+                                  'fontsize': layout.slopesAxisProperties['label size']})
 
             self.ax_p.tick_params(axis='y',
-                                  colors=colors[layout.slopeAxisProperties['value color']],
-                                  labelsize=layout.slopeAxisProperties['value size'])
+                                  colors=colors[layout.slopesAxisProperties['value color']],
+                                  labelsize=layout.slopesAxisProperties['value size'])
 
-            self.ax_p.set_yticks(np.linspace(layout.slopeAxisProperties['min {}'.format(slopeSymbol)],
-                                             layout.slopeAxisProperties['max {}'.format(slopeSymbol)],
-                                             layout.slopeAxisProperties['intervals {}'.format(slopeSymbol)] + 1))
+            self.ax_p.set_yticks(np.linspace(layout.slopesAxisProperties['min {}'.format(slopeSymbol)],
+                                             layout.slopesAxisProperties['max {}'.format(slopeSymbol)],
+                                             layout.slopesAxisProperties['intervals {}'.format(slopeSymbol)] + 1))
 
-            slopeLabels = [str(np.round(p, 1)) + '{}'.format(slopeSymbol) for p in np.linspace(layout.slopeAxisProperties['min {}'.format(slopeSymbol)],
-                                                                                               layout.slopeAxisProperties['max {}'.format(slopeSymbol)],
-                                                                                               layout.slopeAxisProperties['intervals {}'.format(slopeSymbol)] + 1)]
+            slopeLabels = [str(np.round(p, 1)) + '{}'.format(slopeSymbol) for p in np.linspace(layout.slopesAxisProperties['min {}'.format(slopeSymbol)],
+                                                                                               layout.slopesAxisProperties['max {}'.format(slopeSymbol)],
+                                                                                               layout.slopesAxisProperties['intervals {}'.format(slopeSymbol)] + 1)]
 
             self.ax_p.set_yticklabels(slopeLabels)
 
@@ -329,7 +329,7 @@ class Canvas(FigureCanvas):
                     else:
                         if slopeSymbol == "%":
                             for i in range(len(sprofile.slopes)):
-                                if layout.slopeAxisProperties['min %'] <= sprofile.slopesPercents[i] <= layout.slopeAxisProperties['max %']:
+                                if layout.slopesAxisProperties['min %'] <= sprofile.slopesPercents[i] <= layout.slopesAxisProperties['max %']:
                                     self.ax_p.text(sprofile.x[i],
                                                    sprofile.slopesPercents[i] + sprofile.annotationProperties['s shift %'],
                                                    s="{}%".format(str(np.round(sprofile.slopesPercents[i], 1))),
@@ -342,7 +342,7 @@ class Canvas(FigureCanvas):
 
                         else:
                             for i in range(len(sprofile.slopes)):
-                                if layout.slopeAxisProperties['min °'] <= sprofile.slopesDegrees[i] <= layout.slopeAxisProperties['max °']:
+                                if layout.slopesAxisProperties['min °'] <= sprofile.slopesDegrees[i] <= layout.slopesAxisProperties['max °']:
                                     self.ax_p.text(sprofile.x[i],
                                                    sprofile.slopesDegrees[i] + sprofile.annotationProperties['s shift °'],
                                                    s="{}%".format(str(np.round(sprofile.slopesDegrees[i], 1))),
