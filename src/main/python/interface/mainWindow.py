@@ -1019,9 +1019,10 @@ class MainWindow(QMainWindow):
                "damien.kuss@onf.fr<br/><br/>" \
                "Support : Clément ROUSSEL<br/>" \
                "clement.roussel@onf.fr<\p>"
-        dialogue = QMessageBox()
-        # dialogue.setWindowIcon(QIcon(self.appctxt.get_resource('icones/propos.png')))
-        dialogue.about(self, "About pyLong", text)
+               
+        dialogue = QMessageBox(self)
+        dialogue.setText(text)
+        dialogue.exec_()
 
     def onf(self):
         cmd = r"start https://www.onf.fr/onf"
