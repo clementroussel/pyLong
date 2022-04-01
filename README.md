@@ -4,7 +4,7 @@ Visit the online documentation to learn more about **pyLong** : https://pylong.r
 
 ## Instructions to build **pyLong** from sources
 
-### On Windows
+### On Windows 10
 
 #### Python installation
 
@@ -51,6 +51,7 @@ Beaucune *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly 
 #### About *fbs*
 
 To learn more about *fbs* module, visit https://build-system.fman.io/.
+
 
 
 
