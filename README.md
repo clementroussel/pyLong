@@ -24,11 +24,11 @@ Beaucune *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly 
 
    ```cd path/to/pyLong-main/folder```
 
-* Use *pypi* to install *virtualenv module*
+* Use *pypi* to install *virtualenv* module
 
    ```py -3.6 -m pip install virtualenv```
 
-* Create a virtual environment with *python virtualenv module*:
+* Create a virtual environment with *python* *virtualenv* module:
 
     ```py -3.6 -m virtualenv venv```
 
@@ -47,6 +47,10 @@ Beaucune *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly 
 * Use *fbs run* command to run *pyLong*
 
    ```fbs run```
+
+#### About *fbs*
+
+To learn more about *fbs* module, visit https://build-system.fman.io/.
 
 
 
