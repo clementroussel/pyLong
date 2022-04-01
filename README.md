@@ -22,9 +22,9 @@ Beaucune *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly 
 
 * Launch a terminal and use *cd* command:
 
-   cd path/to/pyLong/folder
+   cd path/to/pyLong-main/folder
 
-* Use *python pip module* to install *virtualenv module*
+* Use *pypi* to install *virtualenv module*
 
    py -3.6 -m pip install virtualenv
 
@@ -38,9 +38,15 @@ Beaucune *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly 
 
 #### Install *pyLong* dependancies
 
-* Use *python pip module* to install the required dependancies:
+* Use *pypi* to install the required dependancies:
 
    pip install -r requirements/base.txt
+
+#### Launch *pyLong*
+
+* Use *fbs run* command to run *pyLong*
+
+   fbs run
 
 
 
