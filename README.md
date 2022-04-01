@@ -8,7 +8,7 @@ Visit the online documentation to learn more about **pyLong** : https://pylong.r
 
 * Install *python 3.6.8* : https://www.python.org/downloads/release/python-368/
 
-.. image:: ./captures/install_python.png
+![install python](./captures/install_python.png)
 
 * Download *pyLong repository* : https://github.com/clementroussel/pyLong/archive/refs/heads/main.zip
 * Unzip the archive and keep only *src* and *requirements* folders
