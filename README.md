@@ -6,22 +6,43 @@ Visit the online documentation to learn more about **pyLong** : https://pylong.r
 
 ### On Windows
 
-* Install *python 3.6.8* : https://www.python.org/downloads/release/python-368/
+### Python installation
 
-![install python](./captures/install_python.png)
+Beaucune *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly configured.  
+
+* Download *python 3.6.8* : https://www.python.org/downloads/release/python-368/
+* Launch the installer and watch to activate *Add Python 3.6 to PATH* checkbox
+
+### Download *pyLong* repository
 
 * Download *pyLong repository* : https://github.com/clementroussel/pyLong/archive/refs/heads/main.zip
-* Unzip the archive and keep only *src* and *requirements* folders
-* Launch a terminal by typing *cmd* in the address bar
-* Create a virtual environment with *python venv module*
+* Unzip the archive and keep only the *src* and *requirements* folders
 
-    >>> py -3.6 -m venv pyLong-env
+### Create a virtual environment
 
-* Activate it with
+* Launch a terminal and use *cd* command:
 
-   >>> pyLong-venv\Scripts\activated
+   cd path/to/pyLong/folder
 
-* Install *pyLong* dependancies using *pip*
+* Use *python pip module* to install *virtualenv module*
+
+   py -3.6 -m pip install virtualenv
+
+* Create a virtual environment with *python virtualenv module*:
+
+    py -3.6 -m virtualenv venv
+
+* Activate the virtual environment with:
+
+   venv\Scripts\activated
+
+### Install *pyLong* dependancies
+
+* Use *python pip module* to install the required dependancies:
+
+   pip install -r requirements/base.txt
+
+
 
 
 
