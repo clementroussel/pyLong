@@ -26,27 +26,27 @@ Beaucune *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly 
 
 * Use *pypi* to install *virtualenv module*
 
-   py -3.6 -m pip install virtualenv
+   ```py -3.6 -m pip install virtualenv```
 
 * Create a virtual environment with *python virtualenv module*:
 
-    py -3.6 -m virtualenv venv
+    ```py -3.6 -m virtualenv venv```
 
 * Activate the virtual environment with:
 
-   venv\Scripts\activated
+   ```venv\Scripts\activated```
 
 #### Install *pyLong* dependancies
 
 * Use *pypi* to install the required dependancies:
 
-   pip install -r requirements/base.txt
+   ```pip install -r requirements/base.txt```
 
 #### Launch *pyLong*
 
 * Use *fbs run* command to run *pyLong*
 
-   fbs run
+   ```fbs run```
 
 
 
