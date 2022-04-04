@@ -38,7 +38,7 @@ Beaucune *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly 
 
 #### Install *pyLong* dependancies
 
-* Use *PyPI* to install the required dependancies:
+* Use *PyPI* to install the required dependencies:
 
    ```pip install -r requirements/base.txt```
 
