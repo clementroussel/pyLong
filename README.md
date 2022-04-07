@@ -34,7 +34,7 @@ Beaucune *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly 
 
 * Activate the virtual environment with:
 
-   ```venv\Scripts\activated```
+   ```venv\Scripts\activate```
 
 #### Install *pyLong* dependancies
 
