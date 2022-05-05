@@ -8,7 +8,7 @@ Visit the online documentation to learn more about **pyLong** : https://pylong.r
 
 #### Python installation
 
-Beaucune *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly configured.  
+Because *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly configured.  
 
 * Download *python 3.6.8* : https://www.python.org/downloads/release/python-368/
 * Launch the installer and watch to activate *Add Python 3.6 to PATH* checkbox
