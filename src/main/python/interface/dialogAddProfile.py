@@ -40,30 +40,38 @@ class DialogAddProfile(QDialog):
         
         self.separator = QComboBox()
         self.separator.insertItems(0, list(separators.keys()))
+        self.separator.setCurrentText("point")
         layout.addWidget(self.separator, 1, 1)
         
-        self.importAnnotations = QCheckBox("Import annotations")
-        layout.addWidget(self.importAnnotations, 2, 0, 1, 2)
+        self.profileOnly = QRadioButton("Import profile only")
+        self.profileOnly.setChecked(True)
+        layout.addWidget(self.profileOnly, 2, 0, 1, 2)
+
+        self.annotationsWithProfile = QRadioButton("Import profile with annotations")
+        layout.addWidget(self.annotationsWithProfile, 3, 0, 1, 2)
+
+        self.annotationsOnly = QRadioButton("Import annotations only")
+        layout.addWidget(self.annotationsOnly, 4, 0, 1, 2)
         
         label = QLabel("Path :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        layout.addWidget(label, 3, 0)
+        layout.addWidget(label, 5, 0)
         
         self.path = QLineEdit()
-        layout.addWidget(self.path, 3, 1)
+        layout.addWidget(self.path, 5, 1)
         
         browse = QPushButton("...")
         browse.setFixedWidth(20)
         browse.clicked.connect(self.browse)
-        layout.addWidget(browse, 3, 2)
+        layout.addWidget(browse, 5, 2)
         
         label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        layout.addWidget(label, 4, 0)
+        layout.addWidget(label, 6, 0)
         
         self.title = QLineEdit()
         self.title.setText("profile n°{}".format(zProfile.counter + 1))
-        layout.addWidget(self.title, 4, 1)
+        layout.addWidget(self.title, 6, 1)
     
         group.setLayout(layout)
         mainLayout.addWidget(group)
@@ -124,9 +132,9 @@ class DialogAddProfile(QDialog):
             xz = np.array(profile[:,:2].astype('float'))
 
             if np.shape(xz[:,0])[0] < 2:
-                alerte = QMessageBox(self)
-                alerte.setText("Import failed : Profile must contain at least 2 points.")
-                alerte.exec_()
+                alert = QMessageBox(self)
+                alert.setText("Import failed : Profile must contain at least 2 points.")
+                alert.exec_()
                 return 0
 
             else:
@@ -148,10 +156,11 @@ class DialogAddProfile(QDialog):
                 sprofile.updateData(zprofile.x, zprofile.z)
                 sprofile.update()
 
-                self.pyLong.project.profiles.append((zprofile, sprofile))
-                self.pyLong.profilesList.update()
-                self.pyLong.canvas.ax_z.add_line(zprofile.line)
-                self.pyLong.canvas.updateLegends()
+                if self.profileOnly.isChecked() or self.annotationsWithProfile.isChecked():
+                    self.pyLong.project.profiles.append((zprofile, sprofile))
+                    self.pyLong.profilesList.update()
+                    self.pyLong.canvas.ax_z.add_line(zprofile.line)
+                    self.pyLong.canvas.updateLegends()
 
                 if len(self.pyLong.project.profiles) == 1:
                     i = self.pyLong.layoutsList.currentIndex()
@@ -165,7 +174,7 @@ class DialogAddProfile(QDialog):
 
                     self.updateAxis()
 
-            if self.importAnnotations.isChecked():
+            if self.annotationsOnly.isChecked() or self.annotationsWithProfile.isChecked():
                 try:
                     annotations = list(profile[:, 2])
                     for i, label in enumerate(annotations):
