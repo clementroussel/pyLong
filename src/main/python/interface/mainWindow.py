@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QScrollArea, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QScrollArea, QMessageBox, QApplication
 from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtGui import QPalette
+from PyQt5.QtGui import QPalette, QImage
 
 # PyQt5 custom modules
 # from barreOutils import *
@@ -69,7 +69,7 @@ from pyLong.project import Project
 class NavigationBar(NavigationToolbar):
     # only display the buttons we need
     toolitems = [t for t in NavigationToolbar.toolitems if
-                 t[0] in ('Pan', 'Zoom')]
+                 t[0] in ('Back', 'Forward', 'Pan', 'Zoom')]
 
 
 class MainWindow(QMainWindow):
@@ -959,47 +959,47 @@ class MainWindow(QMainWindow):
 #     def ajouterGroupe(self):
 #         self.listeAnnotations.ajouterGroupe()
 
-#     def supprimerLayouts(self):
-#         DialogSupprimerLayouts(parent=self).exec_()
+    def deleteLayouts(self):
+        print("Delete layouts")
+        # DialogDeleteLayouts(parent=self).exec_()
 
-#     def renommerLayout(self):
-#         i = self.listeLayouts.currentIndex()
-#         if i != 0:
-#             DialogRenommerLayout(parent=self).exec_()
+    def renameLayout(self):
+        print("Rename layout")
+        # i = self.listLayouts.currentIndex()
+        # if i != 0:
+        #     DialogRenameLayout(parent=self).exec_()
 
-#     def ajouterLayout(self):
-#         DialogAjoutLayout(parent=self).exec_()
+    def addLayout(self):
+        print("Add layout")
+        # DialogAddLayout(parent=self).exec_()
 
-#     def gestionPreferences(self):
-#         DialogPreferences(parent=self).exec_()
+    def settings(self):
+        print("Settings")
+        # DialogSettings(parent=self).exec_()
 
     def layout(self):
         DialogLayout(self).exec_()
 
-#     def rafraichir(self):
-#         self.controleOutilsNavigation()
-#         self.canvas.dessiner()
+    def refresh(self):
+        self.checkNavigationTools()
+        self.canvas.updateFigure()
 
     def contextMenuLayouts(self, point):
         self.popMenuLayouts.exec_(self.layoutsList.mapToGlobal(point))
 
-#     def copierFigure(self):
-#         self.controleOutilsNavigation()
-#         clipBoard = QApplication.clipboard()
-#         figure = QImage(self.canvas.grab())
-#         clipBoard.setImage(figure)
+    def copyFigure(self):
+        self.checkNavigationTools()
+        clipBoard = QApplication.clipboard()
+        figure = QImage(self.canvas.grab())
+        clipBoard.setImage(figure)
 
-
-
-
-
-#     def controleOutilsNavigation(self):
-#         if self.barreDeNavigation._actions['pan'].isChecked():
-#             self.barreDeNavigation.pan()
-#         elif self.barreDeNavigation._actions['zoom'].isChecked():
-#             self.barreDeNavigation.zoom()
-#         else:
-#             pass
+    def checkNavigationTools(self):
+        if self.navigationBar._actions['pan'].isChecked():
+            self.navigationBar.pan()
+        elif self.navigationBar._actions['zoom'].isChecked():
+            self.navigationBar.zoom()
+        else:
+            pass
 
     def documentation(self):
         cmd = r"start https://pyLong-doc.readthedocs.io/fr/latest/#"

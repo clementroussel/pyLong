@@ -28,7 +28,7 @@ def createActions(self):
     self.projectToolBar.addAction(self.saveProjectAsAction)
 
     self.settingsAction = QAction(QIcon(self.appctxt.get_resource('icons/settings.png')), "Settings", self)
-    #self.settingsAction.triggered.connect(self.settings)
+    self.settingsAction.triggered.connect(self.settings)
     self.projectToolBar.addAction(self.settingsAction)
 
     self.projectToolBar.addSeparator() 
@@ -83,15 +83,15 @@ def createActions(self):
     self.popMenuLayouts = QMenu(self)
     self.addLayoutAction = QAction('Add a new layout', self)
     self.renameLayoutAction = QAction('Rename current layout', self)
-    self.deleteLayoutAction = QAction('Delete layouts', self)
-    # addLayout.triggered.connect(self.addLayout)
-    # renameLayout.triggered.connect(self.renameLayout)
-    # deleteLayout.triggered.connect(self.deleteLayout)
+    self.deleteLayoutsAction = QAction('Delete layouts', self)
+    self.addLayoutAction.triggered.connect(self.addLayout)
+    self.renameLayoutAction.triggered.connect(self.renameLayout)
+    self.deleteLayoutsAction.triggered.connect(self.deleteLayouts)
     self.popMenuLayouts.addAction(self.addLayoutAction)
     self.popMenuLayouts.addSeparator()
     self.popMenuLayouts.addAction(self.renameLayoutAction)
     self.popMenuLayouts.addSeparator()
-    self.popMenuLayouts.addAction(self.deleteLayoutAction)
+    self.popMenuLayouts.addAction(self.deleteLayoutsAction)
 
     self.figureToolBar.addWidget(self.layoutsList)
     ##################################################
@@ -106,7 +106,7 @@ def createActions(self):
 
     self.refreshAction = QAction(QIcon(self.appctxt.get_resource('icons/refresh.png')), "Refresh", self)
     self.refreshAction.setShortcut(QKeySequence("Ctrl+R"))
-    #self.rafraichirFigure.triggered.connect(self.refreshAction)
+    self.refreshAction.triggered.connect(self.refresh)
     self.figureToolBar.addAction(self.refreshAction)
 
     self.printAction = QAction(QIcon(self.appctxt.get_resource('icons/print.png')), "Print", self)
@@ -116,7 +116,7 @@ def createActions(self):
 
     self.copyFigureAction = QAction(QIcon(self.appctxt.get_resource('icons/copyFigure.png')), "Copy", self)
     self.copyFigureAction.setShortcut(QKeySequence("Ctrl+C"))
-    #self.copyFigureAction.triggered.connect(self.copyFigure)
+    self.copyFigureAction.triggered.connect(self.copyFigure)
     self.figureToolBar.addAction(self.copyFigureAction)
 
     self.figureToolBar.addSeparator()
@@ -374,7 +374,7 @@ def createActions(self):
 
     self.figureMenu.addAction(self.addLayoutAction)
     self.figureMenu.addAction(self.renameLayoutAction)
-    self.figureMenu.addAction(self.deleteLayoutAction)
+    self.figureMenu.addAction(self.deleteLayoutsAction)
     self.figureMenu.addSeparator()
     self.figureMenu.addAction(self.layoutAction)
     self.figureMenu.addAction(self.advancedLayoutAction)

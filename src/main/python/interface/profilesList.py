@@ -11,7 +11,7 @@ class ProfilesList(List):
         self.pyLong = parent
 
         # self.liste.doubleClicked.connect(self.pyLong.optionsProfil)
-        # self.liste.itemChanged.connect(self.activer)
+        self.list.itemChanged.connect(self.activate)
 
         self.list.setContextMenuPolicy(Qt.CustomContextMenu)
         self.list.customContextMenuRequested.connect(self.contextMenu)
@@ -32,26 +32,21 @@ class ProfilesList(List):
         self.popMenu.addSeparator()
         self.popMenu.addAction(self.pyLong.editingAction)
 
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
 
-        sublayout = QHBoxLayout()
+        sublayout = QVBoxLayout()
 
-        sublayout.addWidget(QLabel())
-        # self.goUp.clicked.connect(self.goTop)
         sublayout.addWidget(self.goTop)
 
-        # moveUp.clicked.connect(self.moveUp)
         sublayout.addWidget(self.moveUp)
 
-        # moveDown.clicked.connect(self.moveDown)
         sublayout.addWidget(self.moveDown)
 
-        # self.goDown.clicked.connect(self.goDown)
         sublayout.addWidget(self.goBottom)
 
+        layout.addWidget(self.list)
         layout.addLayout(sublayout)
 
-        layout.addWidget(self.list)
         self.setLayout(layout)
 
     def contextMenu(self, point):
@@ -177,7 +172,7 @@ class ProfilesList(List):
 
         else:
             alerte = QMessageBox(self)
-            alerte.setText("Select one or more profile(s) before running this command.")
+            alerte.setText("Select at least one profile before running this command.")
             alerte.setIcon(QMessageBox.Warning)
             alerte.exec_()
 
