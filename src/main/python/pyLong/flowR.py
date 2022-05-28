@@ -2,44 +2,44 @@ from matplotlib.lines import Line2D
 import numpy as np
 from scipy import interpolate
 
-from pyLong.dictionnaires import *
+from pyLong.dictionaries import *
 
 
 class FlowR():
-    compteur = 0
+    counter = 0
 
     def __init__(self):
-        FlowR.compteur += 1
+        FlowR.counter += 1
         
-        self.actif = True
+        self.active = True
         
-        self.intitule = "Flow-R n°{}".format(FlowR.compteur)
+        self.title = "Flow-R n°{}".format(FlowR.counter)
         
-        self.legende = ""
+        self.label = ""
         
-        self.ligne = {'style': 'solide',
-                      'couleur': 'Black',
-                      'épaisseur': 0.8}
+        self.lineProperties = {'style': 'solid',
+                               'color': 'Black',
+                               'thickness': 1}
         
-        self.opacite = 1.
+        self.opacity = 1.
         
-        self.ordre = 1
+        self.order = 1
         
-        self.parametres = {'profil': -1,
-                           'abscisse départ': 0,
-                           'altitude départ': 0,
-                           'abscisse arrivée': 0,
-                           'altitude arrivée': 0,
+        self.parameters = {'profile': -1,
+                           'x start': 0,
+                           'z start': 0,
+                           'x end': 0,
+                           'z end': 0,
                            'angle': 0,
-                           'vitesse initiale': 0,
-                           'vitesse maximale': 0,
-                           'pas de calcul': 1}
+                           'initial speed': 0,
+                           'maximum speed': 0,
+                           'step': 1}
         
-        self.resultats = {'abscisses': [],
-                          'vitesses': [],
-                          'énergies': []}
+        self.results = {'x': [],
+                        'v': [],
+                        'z': []}
         
-        self.calculReussi = False
+        self.success = False
         
         self.line = Line2D([], [])
 
@@ -47,166 +47,166 @@ class FlowR():
         self.line = Line2D([], [])
         
     def update(self):
-        self.line.set_data(self.resultats['abscisses'], self.resultats['énergies'])
-        if self.actif:
-            self.line.set_label(self.legende)
+        self.line.set_data(self.results['x'], self.results['z'])
+        if self.active:
+            self.line.set_label(self.label)
         else:
             self.line.set_label("")
-        self.line.set_linestyle(styles2ligne[self.ligne['style']])
-        self.line.set_color(couleurs[self.ligne['couleur']])
-        self.line.set_linewidth(self.ligne['épaisseur'])
-        self.line.set_alpha(self.opacite)
-        self.line.set_zorder(self.ordre)
-        self.line.set_visible(self.actif and self.calculReussi)
+        self.line.set_linestyle(lineStyles[self.lineProperties['style']])
+        self.line.set_color(colors[self.lineProperties['color']])
+        self.line.set_linewidth(self.lineProperties['thickness'])
+        self.line.set_alpha(self.opacity)
+        self.line.set_zorder(self.order)
+        self.line.set_visible(self.active and self.success)
         
     def __del__(self):
-        FlowR.compteur -= 1
+        FlowR.counter -= 1
         
-    def calculer(self, pyLong):
-        if self.parametres['profil'] == -1:
-            self.calculReussi = False
+    def run(self, pyLong):
+        if self.parameters['profile'] == -1:
+            self.success = False
             return 0
         
-        # récupération du profil
-        i = self.parametres['profil']
-        zprofil, pprofil = pyLong.projet.profils[i]
+        # getting hands on profile
+        i = self.parameters['profile']
+        zprofile, sprofile = pyLong.project.profiles[i]
         
-        xmin = np.min(zprofil.abscisses)
-        xmax = np.max(zprofil.abscisses)
+        xmin = np.min(zprofile.x)
+        xmax = np.max(zprofile.x)
         
-        i = list(zprofil.abscisses).index(xmin)
-        zxmin = zprofil.altitudes[i]
-        i = list(zprofil.abscisses).index(xmax)
-        zxmax = zprofil.altitudes[i]
+        i = list(zprofile.x).index(xmin)
+        zxmin = zprofile.z[i]
+        i = list(zprofile.x).index(xmax)
+        zxmax = zprofile.z[i]
         
-        # tri du profil
+        # sorting
         if zxmin > zxmax:
-            descendant = True
-            zprofil.trier(mode="descendant")
-            pprofil.updateData(zprofil.abscisses, zprofil.altitudes)
+            descending = True
+            zprofile.sort(mode="descending")
+            sprofile.updateData(zprofile.x, zprofile.z)
             
         else:
-            descendant = False
-            zprofil.trier(mode="ascendant")
-            pprofil.updateData(zprofil.abscisses, zprofil.altitudes)               
+            descending = False
+            zprofile.sort(mode="ascending")
+            sprofile.updateData(zprofile.x, zprofile.z)               
 
-        # récupération des paramètres dans des variables locales
-        abscisses = zprofil.abscisses
-        altitudes = zprofil.altitudes
-        abscisse2debut = self.parametres['abscisse départ']
-        angle = self.parametres['angle']
-        vitesseIni = self.parametres['vitesse initiale']
-        vitesseMax = self.parametres['vitesse maximale']
-        pas = self.parametres['pas de calcul']
+        # getting hands on parameters
+        x = zprofile.x
+        z = zprofile.z
+        xStart = self.parameters['x start']
+        angle = self.parameters['angle']
+        initSpeed = self.parameters['initial speed']
+        maxSpeed = self.parameters['maximum speed']
+        step = self.parameters['step']
         
-        # accélération de la pesanteur
+        # gravity value
         g = 9.81
             
-        # calcul dans le cas ascendant
-        if not descendant:
-            # calcul de l'altitude du point de départ
-            if xmin < abscisse2debut < xmax:
-                altitude2debut = zprofil.interpoler(abscisse2debut)
-                self.parametres['altitude départ'] = altitude2debut
-            elif abscisse2debut == xmin or abscisse2debut == xmax:
-                k = list(zprofil.abscisses).index(abscisse2debut)
-                altitude2debut = zprofil.altitudes[k]
-                self.parametres['altitude départ'] = altitude2debut
+        # ascending case
+        if not descending:
+            # altitude of starting point
+            if xmin < xStart < xmax:
+                zStart = zprofile.interpolate(xStart)
+                self.parameters['z start'] = zStart
+            elif xStart == xmin or xStart == xmax:
+                k = list(zprofile.x).index(xStart)
+                zStart = zprofile.z[k]
+                self.parameters['z start'] = zStart
             else:
-                self.calculReussi = False
+                self.success = False
                 return 0
             
-            # fonction d'interpolation du profil en long
-            f = interpolate.interp1d(np.array(abscisses), np.array(altitudes))
+            # interpolation function
+            f = interpolate.interp1d(np.array(x), np.array(z))
 
-            abscissesLave = list(np.arange(xmin, abscisse2debut, pas))
-            abscissesLave.append(abscisse2debut)
-            altitudesLave = list(f(np.array(abscissesLave)))
+            xDebrisFlow = list(np.arange(xmin, xStart, step))
+            xDebrisFlow.append(xStart)
+            zDebrisFlow = list(f(np.array(xDebrisFlow)))
 
-            n = len(abscissesLave)
-            vitessesLave = list(-1 * np.ones(n))
-            energiesLave = list(np.zeros(n))
+            n = len(xDebrisFlow)
+            speedDebrisFlow = list(-1 * np.ones(n))
+            energyDebrisFlow = list(np.zeros(n))
             
-            vitessesLave[-1] = vitesseIni
-            energiesLave[-1] = altitude2debut + vitesseIni**2 / (2 * g)
+            speedDebrisFlow[-1] = initSpeed
+            energyDebrisFlow[-1] = zStart + initSpeed**2 / (2 * g)
 
             for i in range(1, n):
-                expr = vitessesLave[-i]**2 + 2*g*(altitudesLave[-i] - altitudesLave[-i-1]) - 2*g*(abscissesLave[-i] - abscissesLave[-i-1])*np.tan(np.radians(angle))
+                expr = speedDebrisFlow[-i]**2 + 2*g*(zDebrisFlow[-i] - zDebrisFlow[-i-1]) - 2*g*(xDebrisFlow[-i] - xDebrisFlow[-i-1])*np.tan(np.radians(angle))
                 if expr > 0:
-                    vitessesLave[-i-1] = min(np.sqrt(expr), vitesseMax)
+                    speedDebrisFlow[-i-1] = min(np.sqrt(expr), maxSpeed)
                 else:
-                    vitessesLave[-i-1] = 0
+                    speedDebrisFlow[-i-1] = 0
                     k = -i-1
-                    energiesLave[-i-1] = altitudesLave[-i-1]
+                    energyDebrisFlow[-i-1] = zDebrisFlow[-i-1]
                     break
-                energiesLave[-i-1] = altitudesLave[-i-1] + vitessesLave[-i-1]**2 / (2 * g)
+                energyDebrisFlow[-i-1] = zDebrisFlow[-i-1] + speedDebrisFlow[-i-1]**2 / (2 * g)
             
             try:
-                k = np.argwhere(np.array(vitessesLave) == 0.)[0][0]
+                k = np.argwhere(np.array(speedDebrisFlow) == 0.)[0][0]
             except:
-                self.calculReussi = False
+                self.success = False
                 return 0
                 
-            self.parametres['abscisse arrivée'] = abscissesLave[k]
-            self.parametres['altitude arrivée'] = altitudesLave[k]
-            self.resultats['vitesses'] = vitessesLave[k:]
-            self.resultats['abscisses'] = abscissesLave[k:]
-            self.resultats['énergies'] = energiesLave[k:]
+            self.parameters['x end'] = xDebrisFlow[k]
+            self.parameters['z end'] = zDebrisFlow[k]
+            self.results['v'] = speedDebrisFlow[k:]
+            self.results['x'] = xDebrisFlow[k:]
+            self.results['z'] = energyDebrisFlow[k:]
             
-            self.calculReussi = True
+            self.success = True
         
-        # calcul dans le cas descendant
+        # descending case
         else:
-            # calcul de l'altitude du point de départ
-            if xmin < abscisse2debut < xmax:
-                altitude2debut = zprofil.interpoler(abscisse2debut)
-                self.parametres['altitude départ'] = altitude2debut
-            elif abscisse2debut == xmin or abscisse2debut == xmax:
-                k = list(zprofil.abscisses).index(abscisse2debut)
-                altitude2debut = zprofil.altitudes[k]
-                self.parametres['altitude départ'] = altitude2debut
+            # altitude of starting point
+            if xmin < xStart < xmax:
+                zStart = zprofile.interpolate(xStart)
+                self.parameters['z start'] = zStart
+            elif xStart == xmin or xStart == xmax:
+                k = list(zprofile.x).index(xStart)
+                zStart = zprofile.z[k]
+                self.parameters['z start'] = zStart
             else:
-                self.calculReussi = False
+                self.success = False
                 return 0
             
-            # fonction d'interpolation du profil en long
-            f = interpolate.interp1d(np.array(abscisses), np.array(altitudes))
+            # interpolation function
+            f = interpolate.interp1d(np.array(x), np.array(z))
 
-            abscissesLave = list(np.arange(abscisse2debut, xmax, pas))
-            abscissesLave.append(xmax)
-            altitudesLave = list(f(np.array(abscissesLave)))
+            xDebrisFlow = list(np.arange(xStart, xmax, step))
+            xDebrisFlow.append(xmax)
+            zDebrisFlow = list(f(np.array(xDebrisFlow)))
 
-            n = len(abscissesLave)
-            vitessesLave = list(-1 * np.ones(n))
-            energiesLave = list(np.zeros(n))
+            n = len(xDebrisFlow)
+            speedDebrisFlow = list(-1 * np.ones(n))
+            energyDebrisFlow = list(np.zeros(n))
             
-            vitessesLave[0] = vitesseIni
-            energiesLave[0] = altitude2debut + vitesseIni**2 / (2 * g)
+            speedDebrisFlow[0] = initSpeed
+            energyDebrisFlow[0] = zStart + initSpeed**2 / (2 * g)
 
             for i in range(1,n):
-                expr = vitessesLave[i-1]**2 + 2*g*(altitudesLave[i-1] - altitudesLave[i]) - 2*g*(abscissesLave[i] - abscissesLave[i-1])*np.tan(np.radians(angle))
+                expr = speedDebrisFlow[i-1]**2 + 2*g*(zDebrisFlow[i-1] - zDebrisFlow[i]) - 2*g*(xDebrisFlow[i] - xDebrisFlow[i-1])*np.tan(np.radians(angle))
                 if expr > 0:
-                    vitessesLave[i] = min(np.sqrt(expr), vitesseMax)
+                    speedDebrisFlow[i] = min(np.sqrt(expr), maxSpeed)
                 else:
-                    vitessesLave[i] = 0
+                    speedDebrisFlow[i] = 0
                     k = i
-                    energiesLave[i] = altitudesLave[i]
+                    energyDebrisFlow[i] = zDebrisFlow[i]
                     break
-                energiesLave[i] = altitudesLave[i] + vitessesLave[i]**2 / (2 * g)
+                energyDebrisFlow[i] = zDebrisFlow[i] + speedDebrisFlow[i]**2 / (2 * g)
             
             try:
-                k = np.argwhere(np.array(vitessesLave) == 0.)[0][0]
+                k = np.argwhere(np.array(speedDebrisFlow) == 0.)[0][0]
             except:
-                self.calculReussi = False
+                self.success = False
                 return 0
                 
-            self.parametres['abscisse arrivée'] = abscissesLave[k]
-            self.parametres['altitude arrivée'] = altitudesLave[k]
-            self.resultats['vitesses'] = vitessesLave[:k+1]
-            self.resultats['abscisses'] = abscissesLave[:k+1]
-            self.resultats['énergies'] = energiesLave[:k+1]
+            self.parameters['x end'] = xDebrisFlow[k]
+            self.parameters['z end'] = zDebrisFlow[k]
+            self.results['v'] = speedDebrisFlow[:k+1]
+            self.results['x'] = xDebrisFlow[:k+1]
+            self.results['z'] = energyDebrisFlow[:k+1]
             
-            self.calculReussi = True
+            self.success = True
 
     def __getstate__(self):
         dict_attr = dict(self.__dict__)
