@@ -18,7 +18,7 @@ class EnergyLine():
         
         self.lineProperties = {'style': 'solid',
                                'color': 'Black',
-                               'thickness': 0.8}
+                               'thickness': 1}
         
         self.opacity = 1.
         
