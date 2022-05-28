@@ -30,7 +30,7 @@ from interface.dialogLayout import DialogLayout
 # from DialogGestionSubplots import *
 
 from interface.dialogAddProfile import DialogAddProfile
-# from DialogOptionsProfils import *
+from interface.dialogProfileOptions import *
 # from DialogTableauValeurs import *
 # from DialogTrier import *
 # from DialogFiltrer import *
@@ -585,14 +585,14 @@ class MainWindow(QMainWindow):
 #     def onDoubleClick(self, event):
 #         pass
 
-#     def optionsProfil(self):
-#         if self.listeProfils.selection():
-#             DialogOptionsProfils(parent=self).exec_()
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez un profil avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+    def profileStyle(self):
+        if self.profilesList.selection():
+            DialogProfileOptions(parent=self).exec_()
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select a profile before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
 #     def addPoint(self, checked):
 #         self.controleOutilsNavigation()

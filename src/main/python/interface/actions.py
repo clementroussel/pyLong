@@ -144,7 +144,7 @@ def createActions(self):
     self.profileToolBar.addAction(self.tableAction)
 
     self.profileStyleAction = QAction(QIcon(self.appctxt.get_resource('icons/style.png')), "Profile style", self)
-    #self.profileStyleAction.triggered.connect(self.profileStyle)
+    self.profileStyleAction.triggered.connect(self.profileStyle)
     self.profileToolBar.addAction(self.profileStyleAction)
 
     self.sortAction = QAction(QIcon(self.appctxt.get_resource('icons/sort.png')), "Sort", self)

@@ -446,7 +446,6 @@ class Canvas(FigureCanvas):
             i = pyLong.layoutsList.currentIndex()
             layout = pyLong.project.layouts[i]
 
-            # if not layout.secondaryAxis:
             try:
                 self.ax_z.get_legend().remove()
             except:
@@ -454,11 +453,11 @@ class Canvas(FigureCanvas):
 
             if layout.legend['active']:
                 self.ax_z.legend(loc=legendPlacements[layout.legend['position']][0],
-                                    ncol=layout.legend['columns'],
-                                    fontsize=layout.legend['size'],
-                                    frameon=layout.legend['frame'],
-                                    bbox_to_anchor=legendPlacements[layout.legend['position']][1],
-                                    bbox_transform=self.ax_z.transAxes)
+                                ncol=layout.legend['columns'],
+                                fontsize=layout.legend['size'],
+                                frameon=layout.legend['frame'],
+                                bbox_to_anchor=legendPlacements[layout.legend['position']][1],
+                                bbox_transform=self.ax_z.transAxes)
 
             for i in range(len(self.subplots)):
                 try:

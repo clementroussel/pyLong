@@ -1,431 +1,450 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from matplotlib import lines
 
-from ColorsComboBox import *
+from interface.colorsComboBox import *
 
-from pyLong.dictionnaires import *
+from pyLong.dictionaries import *
 
 
-class DialogOptionsProfils(QDialog):
+class DialogProfileOptions(QDialog):
     def __init__(self, parent):
         super().__init__()
     
         self.pyLong = parent
         
-        i = self.pyLong.listeLayouts.currentIndex()
-        self.axeSecondaire = self.pyLong.projet.layouts[i].axeSecondaire
+        i = self.pyLong.layoutsList.currentIndex()
+        self.secondaryAxis = self.pyLong.project.layouts[i].secondaryAxis
         
-        i = self.pyLong.listeProfils.liste.currentRow()
-        self.zprofil, self.pprofil = self.pyLong.projet.profils[i]
+        i = self.pyLong.profilesList.list.currentRow()
+        self.zprofile, self.sprofile = self.pyLong.project.profiles[i]
         
-        self.setWindowTitle("Propriétés graphiques du profil \"{}\"".format(self.zprofil.intitule))
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/style.png')))
+        self.setWindowTitle("Graphic properties <{}>".format(self.zprofile.title))
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/style.png')))
         
-        self.symbolePente = self.pyLong.projet.preferences['pente']
+        self.slopeSymbol = self.pyLong.project.settings.slopeSymbol
         
-        self.intitule = QLineEdit()
-        self.intitule.setText(self.zprofil.intitule)
-        self.intitule.textChanged.connect(self.update_intituleProfil)
+        self.title = QLineEdit()
+        self.title.setText(self.zprofile.title)
+        self.title.textChanged.connect(self.updateProfileTitle)
             
         tableWidget = QTabWidget()
-        onglet_zprofil = QWidget()
-        onglet_pprofil = QWidget()
+        zprofileTab = QWidget()
+        sprofileTab = QWidget()
         
-        tableWidget.addTab(onglet_zprofil, "profil en long")
-        tableWidget.addTab(onglet_pprofil, "pentes")
+        tableWidget.addTab(zprofileTab, "profile")
+        tableWidget.addTab(sprofileTab, "slopes")
         
-        # onglet profil en long
+        # profile tab
         layout = QGridLayout()
 
-        self.tracerProfil = QCheckBox("Dessiner le profil en long")
-        self.tracerProfil.setChecked(self.zprofil.visible)
-        self.tracerProfil.stateChanged.connect(self.update_visibiliteProfil)
-        layout.addWidget(self.tracerProfil, 0, 0, 1, 2)
+        self.drawProfile = QCheckBox("Draw profile")
+        self.drawProfile.setChecked(self.zprofile.visible)
+        self.drawProfile.stateChanged.connect(self.updateProfileVisible)
+        layout.addWidget(self.drawProfile, 0, 0, 1, 2)
         
-        label = QLabel("Légende :")
+        label = QLabel("Label :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.legendeProfil = QLineEdit()
-        self.legendeProfil.setText(self.zprofil.legende)
-        self.legendeProfil.textChanged.connect(self.update_legendeProfil)
-        layout.addWidget(self.legendeProfil, 1, 1)
+        self.profileLabel = QLineEdit()
+        self.profileLabel.setText(self.zprofile.label)
+        self.profileLabel.textChanged.connect(self.updateProfileLabel)
+        layout.addWidget(self.profileLabel, 1, 1)
         
-        label = QLabel("Style de ligne :")
+        label = QLabel("Line style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 2, 0)
         
-        self.style2ligneProfil = QComboBox()
-        self.style2ligneProfil.insertItems(0, list(styles2ligne.keys()))
-        self.style2ligneProfil.setCurrentText(self.zprofil.ligne['style'])
-        self.style2ligneProfil.currentTextChanged.connect(self.update_style2ligneProfil)
-        layout.addWidget(self.style2ligneProfil, 2, 1)
+        self.profileLineStyle = QComboBox()
+        self.profileLineStyle.insertItems(0, list(lineStyles.keys()))
+        self.profileLineStyle.setCurrentText(self.zprofile.lineProperties['style'])
+        self.profileLineStyle.currentTextChanged.connect(self.updateProfileLineStyle)
+        layout.addWidget(self.profileLineStyle, 2, 1)
         
-        label = QLabel("Couleur de ligne :")
+        label = QLabel("Line color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)              
         layout.addWidget(label, 3, 0)
         
-        self.couleur2ligneProfil = ColorsComboBox(self.pyLong.appctxt)
-        self.couleur2ligneProfil.setCurrentText(self.zprofil.ligne['couleur'])
-        self.couleur2ligneProfil.currentTextChanged.connect(self.update_couleur2ligneProfil)
-        layout.addWidget(self.couleur2ligneProfil, 3, 1)
+        self.profileLineColor = ColorsComboBox(self.pyLong.appctxt)
+        self.profileLineColor.setCurrentText(self.zprofile.lineProperties['color'])
+        self.profileLineColor.currentTextChanged.connect(self.updateProfileLineColor)
+        layout.addWidget(self.profileLineColor, 3, 1)
         
-        label = QLabel("Épaisseur de ligne :")
+        label = QLabel("Line thickness :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)  
         layout.addWidget(label, 4, 0)
         
-        self.epaisseur2ligneProfil = QDoubleSpinBox()
-        self.epaisseur2ligneProfil.setMaximumWidth(50)
-        self.epaisseur2ligneProfil.setLocale(QLocale('English'))
-        self.epaisseur2ligneProfil.setRange(0, 99.9)
-        self.epaisseur2ligneProfil.setDecimals(1)
-        self.epaisseur2ligneProfil.setSingleStep(0.1)
-        self.epaisseur2ligneProfil.setValue(self.zprofil.ligne['épaisseur'])
-        self.epaisseur2ligneProfil.valueChanged.connect(self.update_epaisseur2ligneProfil)
-        layout.addWidget(self.epaisseur2ligneProfil, 4, 1)
+        self.profileLineThickness = QDoubleSpinBox()
+        self.profileLineThickness.setMaximumWidth(50)
+        self.profileLineThickness.setLocale(QLocale('English'))
+        self.profileLineThickness.setRange(0, 99.9)
+        self.profileLineThickness.setDecimals(1)
+        self.profileLineThickness.setSingleStep(0.1)
+        self.profileLineThickness.setValue(self.zprofile.lineProperties['thickness'])
+        self.profileLineThickness.valueChanged.connect(self.updateProfileLineThickness)
+        layout.addWidget(self.profileLineThickness, 4, 1)
 
-        label = QLabel("Style de marqueur :")
+        label = QLabel("Marker style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)  
         layout.addWidget(label, 5, 0)
         
-        self.style2marqueurProfil = QComboBox()
-        self.style2marqueurProfil.insertItems(0, list(styles2marqueur.keys()))
-        self.style2marqueurProfil.setCurrentText(self.zprofil.marqueur['style'])
-        self.style2marqueurProfil.currentTextChanged.connect(self.update_style2marqueurProfil)
-        layout.addWidget(self.style2marqueurProfil, 5, 1)
+        self.profileMarkerStyle = QComboBox()
+        self.profileMarkerStyle.insertItems(0, list(markerStyles.keys()))
+        self.profileMarkerStyle.setCurrentText(self.zprofile.markerProperties['style'])
+        self.profileMarkerStyle.currentTextChanged.connect(self.updateProfileMarkerStyle)
+        layout.addWidget(self.profileMarkerStyle, 5, 1)
         
-        label = QLabel("Couleur du marqueur :")
+        label = QLabel("Marker color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 6, 0)
         
-        self.couleur2marqueurProfil = ColorsComboBox(self.pyLong.appctxt)
-        self.couleur2marqueurProfil.setCurrentText(self.zprofil.marqueur['couleur'])
-        self.couleur2marqueurProfil.currentTextChanged.connect(self.update_couleur2marqueurProfil)
-        layout.addWidget(self.couleur2marqueurProfil, 6, 1)
+        self.profileMarkerColor = ColorsComboBox(self.pyLong.appctxt)
+        self.profileMarkerColor.setCurrentText(self.zprofile.markerProperties['color'])
+        self.profileMarkerColor.currentTextChanged.connect(self.updateProfileMarkerColor)
+        layout.addWidget(self.profileMarkerColor, 6, 1)
         
-        label = QLabel("Taille du marqueur :")
+        label = QLabel("Marker size :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 7, 0)
         
-        self.taille2marqueurProfil = QDoubleSpinBox()
-        self.taille2marqueurProfil.setMaximumWidth(50)
-        self.taille2marqueurProfil.setLocale(QLocale('English'))
-        self.taille2marqueurProfil.setRange(0, 99.9)
-        self.taille2marqueurProfil.setSingleStep(0.1)
-        self.taille2marqueurProfil.setDecimals(1)
-        self.taille2marqueurProfil.setValue(self.zprofil.marqueur['taille'])
-        self.taille2marqueurProfil.valueChanged.connect(self.update_taille2marqueurProfil)
-        layout.addWidget(self.taille2marqueurProfil, 7, 1)
+        self.profileMarkerSize = QDoubleSpinBox()
+        self.profileMarkerSize.setMaximumWidth(50)
+        self.profileMarkerSize.setLocale(QLocale('English'))
+        self.profileMarkerSize.setRange(0, 99.9)
+        self.profileMarkerSize.setSingleStep(0.1)
+        self.profileMarkerSize.setDecimals(1)
+        self.profileMarkerSize.setValue(self.zprofile.markerProperties['size'])
+        self.profileMarkerSize.valueChanged.connect(self.updateProfileMarkerSize)
+        layout.addWidget(self.profileMarkerSize, 7, 1)
         
-        label = QLabel("Opacité :")
+        label = QLabel("Opacity :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 8, 0)
         
-        self.opaciteProfil = QDoubleSpinBox()
-        self.opaciteProfil.setFixedWidth(45)
-        self.opaciteProfil.setLocale(QLocale('English'))
-        self.opaciteProfil.setRange(0, 1)
-        self.opaciteProfil.setDecimals(1)
-        self.opaciteProfil.setSingleStep(0.1)
-        self.opaciteProfil.setValue(self.zprofil.opacite)
-        self.opaciteProfil.valueChanged.connect(self.update_opaciteProfil)
-        layout.addWidget(self.opaciteProfil, 8, 1)
+        self.profileOpacity = QDoubleSpinBox()
+        self.profileOpacity.setFixedWidth(45)
+        self.profileOpacity.setLocale(QLocale('English'))
+        self.profileOpacity.setRange(0, 1)
+        self.profileOpacity.setDecimals(1)
+        self.profileOpacity.setSingleStep(0.1)
+        self.profileOpacity.setValue(self.zprofile.opacity)
+        self.profileOpacity.valueChanged.connect(self.updateProfileOpacity)
+        layout.addWidget(self.profileOpacity, 8, 1)
         
-        label = QLabel("Ordre :")
+        label = QLabel("Order :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 9, 0)
         
-        self.ordreProfil = QSpinBox()
-        self.ordreProfil.setFixedWidth(45)
-        self.ordreProfil.setRange(0, 99)
-        self.ordreProfil.setValue(self.zprofil.ordre)
-        self.ordreProfil.valueChanged.connect(self.update_ordreProfil)
-        layout.addWidget(self.ordreProfil, 9, 1)
+        self.profileOrder = QSpinBox()
+        self.profileOrder.setFixedWidth(45)
+        self.profileOrder.setRange(0, 99)
+        self.profileOrder.setValue(self.zprofile.order)
+        self.profileOrder.valueChanged.connect(self.updateProfileOrder)
+        layout.addWidget(self.profileOrder, 9, 1)
 
         layout.addWidget(QLabel(), 10, 0)
 
-        onglet_zprofil.setLayout(layout)
+        zprofileTab.setLayout(layout)
         
-        # onglet pentes
+        # slopes tab
         layout = QGridLayout()
 
-        self.tracerMarqueursPente = QCheckBox("Dessiner les marqueurs")
-        self.tracerMarqueursPente.setChecked(self.pprofil.marqueursVisibles)
-        self.tracerMarqueursPente.stateChanged.connect(self.update_visibiliteMarqueursPente)
-        layout.addWidget(self.tracerMarqueursPente, 0, 0, 1, 2)
+        self.drawSlopeMarkers = QCheckBox("Draw markers")
+        self.drawSlopeMarkers.setChecked(self.sprofile.markersVisible)
+        self.drawSlopeMarkers.stateChanged.connect(self.updateSlopeMarkersVisible)
+        layout.addWidget(self.drawSlopeMarkers, 0, 0, 1, 2)
 
-        label = QLabel("Légende :")
+        label = QLabel("Label :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 1, 0)
 
-        self.legendePente = QLineEdit()
-        self.legendePente.setText(self.pprofil.legende)
-        self.legendePente.textChanged.connect(self.update_legendePente)
-        layout.addWidget(self.legendePente, 1, 1)
+        self.slopeLabel = QLineEdit()
+        self.slopeLabel.setText(self.sprofile.label)
+        self.slopeLabel.textChanged.connect(self.updateSlopeLabel)
+        layout.addWidget(self.slopeLabel, 1, 1)
         
-        label = QLabel("Style de marqueur :")
+        label = QLabel("Marker style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 2, 0)
         
-        self.style2marqueurPente = QComboBox()
-        self.style2marqueurPente.insertItems(0, list(styles2marqueur.keys()))
-        self.style2marqueurPente.setCurrentText(self.pprofil.marqueur['style'])
-        self.style2marqueurPente.currentTextChanged.connect(self.update_style2marqueurPente)
-        layout.addWidget(self.style2marqueurPente, 2, 1)
+        self.slopeMarkerStyle = QComboBox()
+        self.slopeMarkerStyle.insertItems(0, list(markerStyles.keys()))
+        self.slopeMarkerStyle.setCurrentText(self.sprofile.markerProperties['style'])
+        self.slopeMarkerStyle.currentTextChanged.connect(self.updateSlopeMarkerStyle)
+        layout.addWidget(self.slopeMarkerStyle, 2, 1)
         
-        label = QLabel("Couleur du marqueur :")
+        label = QLabel("Marker color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 3, 0)
         
-        self.couleur2marqueurPente = ColorsComboBox(self.pyLong.appctxt)
-        self.couleur2marqueurPente.setCurrentText(self.pprofil.marqueur['couleur'])
-        self.couleur2marqueurPente.currentTextChanged.connect(self.update_couleur2marqueurPente)
-        layout.addWidget(self.couleur2marqueurPente, 3, 1)
+        self.slopeMarkerColor = ColorsComboBox(self.pyLong.appctxt)
+        self.slopeMarkerColor.setCurrentText(self.sprofile.markerProperties['color'])
+        self.slopeMarkerColor.currentTextChanged.connect(self.updateSlopeMarkerColor)
+        layout.addWidget(self.slopeMarkerColor, 3, 1)
         
-        label = QLabel("Taille du marqueur :")
+        label = QLabel("Marker size :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 4, 0)
         
-        self.taille2marqueurPente = QDoubleSpinBox()
-        self.taille2marqueurPente.setMaximumWidth(50)
-        self.taille2marqueurPente.setRange(0, 99.9)
-        self.taille2marqueurPente.setSingleStep(0.1)
-        self.taille2marqueurPente.setDecimals(1)
-        self.taille2marqueurPente.setLocale(QLocale('English'))
-        self.taille2marqueurPente.setValue(self.pprofil.marqueur['taille'])
-        self.taille2marqueurPente.valueChanged.connect(self.update_taille2marqueurPente)
-        layout.addWidget(self.taille2marqueurPente, 4, 1)
+        self.slopeMarkerSize = QDoubleSpinBox()
+        self.slopeMarkerSize.setMaximumWidth(50)
+        self.slopeMarkerSize.setRange(0, 99.9)
+        self.slopeMarkerSize.setSingleStep(0.1)
+        self.slopeMarkerSize.setDecimals(1)
+        self.slopeMarkerSize.setLocale(QLocale('English'))
+        self.slopeMarkerSize.setValue(self.sprofile.markerProperties['size'])
+        self.slopeMarkerSize.valueChanged.connect(self.updateSlopeMarkerSize)
+        layout.addWidget(self.slopeMarkerSize, 4, 1)
 
-        self.tracerValeursPente = QCheckBox("Ecrire les valeurs de pente")
-        self.tracerValeursPente.setChecked(self.pprofil.pentesVisibles)
-        self.tracerValeursPente.stateChanged.connect(self.update_visibiliteValeursPente)
-        layout.addWidget(self.tracerValeursPente, 5, 0, 1, 2)
+        self.drawSlopeAnnotations = QCheckBox("Draw values")
+        self.drawSlopeAnnotations.setChecked(self.sprofile.annotationsVisible)
+        self.drawSlopeAnnotations.stateChanged.connect(self.updateSlopeAnnotationsVisible)
+        layout.addWidget(self.drawSlopeAnnotations, 5, 0, 1, 2)
         
-        label = QLabel("Taille du libellé :")
+        label = QLabel("Text size :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 6, 0)
         
-        self.taillePente = QDoubleSpinBox()
-        self.taillePente.setMaximumWidth(50)
-        self.taillePente.setLocale(QLocale('English'))
-        self.taillePente.setRange(0, 99.9)
-        self.taillePente.setDecimals(1)
-        self.taillePente.setSingleStep(0.1)
-        self.taillePente.setValue(self.pprofil.annotation["taille"])
-        self.taillePente.valueChanged.connect(self.update_taillePente)
-        layout.addWidget(self.taillePente, 6, 1)
+        self.slopeSize = QDoubleSpinBox()
+        self.slopeSize.setMaximumWidth(50)
+        self.slopeSize.setLocale(QLocale('English'))
+        self.slopeSize.setRange(0, 99.9)
+        self.slopeSize.setDecimals(1)
+        self.slopeSize.setSingleStep(0.1)
+        self.slopeSize.setValue(self.sprofile.annotationProperties["size"])
+        self.slopeSize.valueChanged.connect(self.updateSlopeSize)
+        layout.addWidget(self.slopeSize, 6, 1)
         
-        label = QLabel("Couleur du libellé :")
+        label = QLabel("Text color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 7, 0)
         
-        self.couleurPente = ColorsComboBox(self.pyLong.appctxt)
-        self.couleurPente.setCurrentText(self.pprofil.annotation["couleur"])
-        self.couleurPente.currentTextChanged.connect(self.update_couleurPente)
-        layout.addWidget(self.couleurPente, 7, 1)
+        self.slopeColor = ColorsComboBox(self.pyLong.appctxt)
+        self.slopeColor.setCurrentText(self.sprofile.annotationProperties["color"])
+        self.slopeColor.currentTextChanged.connect(self.updateSlopeColor)
+        layout.addWidget(self.slopeColor, 7, 1)
         
-        label = QLabel("Décalage vert. :")
+        label = QLabel("Offset :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 8, 0)
         
-        self.decalagePente = QDoubleSpinBox()
-        self.decalagePente.setLocale(QLocale('English'))
-        self.decalagePente.setMaximumWidth(65)
-        if self.axeSecondaire:
-            if self.symbolePente == "%":
-                self.decalagePente.setRange(-99.9, 99.9)
-                self.decalagePente.setValue(self.pprofil.annotation['décalage p %'])
+        self.slopeShift = QDoubleSpinBox()
+        self.slopeShift.setLocale(QLocale('English'))
+        self.slopeShift.setMaximumWidth(65)
+        if self.secondaryAxis:
+            if self.slopeSymbol == "%":
+                self.slopeShift.setRange(-99.9, 99.9)
+                self.slopeShift.setValue(self.sprofile.annotationProperties['s shift %'])
             else:
-                self.decalagePente.setRange(-45.0, 45.0)
-                self.decalagePente.setValue(self.pprofil.annotation['décalage p °'])
-            self.decalagePente.setSuffix(" {}".format(self.symbolePente))
+                self.slopeShift.setRange(-45.0, 45.0)
+                self.slopeShift.setValue(self.sprofile.annotationProperties['s shift °'])
+            self.slopeShift.setSuffix(" {}".format(self.slopeSymbol))
         else:
-            self.decalagePente.setSuffix(" m")
-            self.decalagePente.setRange(-99.9,99.9)
-            self.decalagePente.setValue(self.pprofil.annotation['décalage z'])
-        self.decalagePente.setSingleStep(0.1)
-        self.decalagePente.setDecimals(1)
-        self.decalagePente.valueChanged.connect(self.update_decalagePente)
-        layout.addWidget(self.decalagePente, 8, 1)
+            self.slopeShift.setSuffix(" m")
+            self.slopeShift.setRange(-99.9, 99.9)
+            self.slopeShift.setValue(self.sprofile.annotationProperties['z shift'])
+        self.slopeShift.setSingleStep(0.1)
+        self.slopeShift.setDecimals(1)
+        self.slopeShift.valueChanged.connect(self.updateSlopeShift)
+        layout.addWidget(self.slopeShift, 8, 1)
             
-        label = QLabel("Opacité :")
+        label = QLabel("Opacity :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 9, 0)
         
-        self.opacitePente = QDoubleSpinBox()
-        self.opacitePente.setFixedWidth(45)
-        self.opacitePente.setLocale(QLocale('English'))
-        self.opacitePente.setRange(0,1)
-        self.opacitePente.setDecimals(1)
-        self.opacitePente.setSingleStep(0.1)
-        self.opacitePente.setValue(self.pprofil.opacite)
-        self.opacitePente.valueChanged.connect(self.update_opacitePente)
-        layout.addWidget(self.opacitePente, 9, 1)
+        self.slopeOpacity = QDoubleSpinBox()
+        self.slopeOpacity.setFixedWidth(45)
+        self.slopeOpacity.setLocale(QLocale('English'))
+        self.slopeOpacity.setRange(0,1)
+        self.slopeOpacity.setDecimals(1)
+        self.slopeOpacity.setSingleStep(0.1)
+        self.slopeOpacity.setValue(self.sprofile.opacity)
+        self.slopeOpacity.valueChanged.connect(self.updateSlopeOpacity)
+        layout.addWidget(self.slopeOpacity, 9, 1)
         
-        label = QLabel("Ordre :")
+        label = QLabel("Order :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 10, 0)
         
-        self.ordrePente = QSpinBox()
-        self.ordrePente.setFixedWidth(45)
-        self.ordrePente.setRange(0,99)
-        self.ordrePente.setValue(self.pprofil.ordre)
-        self.ordrePente.valueChanged.connect(self.update_ordrePente)
-        layout.addWidget(self.ordrePente, 10, 1)
+        self.slopeOrder = QSpinBox()
+        self.slopeOrder.setFixedWidth(45)
+        self.slopeOrder.setRange(0,99)
+        self.slopeOrder.setValue(self.sprofile.order)
+        self.slopeOrder.valueChanged.connect(self.updateSlopeOrder)
+        layout.addWidget(self.slopeOrder, 10, 1)
         
-        onglet_pprofil.setLayout(layout)
+        sprofileTab.setLayout(layout)
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Ok)
-        buttonBox.button(QDialogButtonBox.Apply).setText("Actualiser")
-        buttonBox.button(QDialogButtonBox.Apply).setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rafraichir.png')))
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
-        buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(False)
-        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.appliquer)
-        buttonBox.button(QDialogButtonBox.Apply).setAutoDefault(True)
-        buttonBox.button(QDialogButtonBox.Apply).setDefault(True)
+        # buttonBox = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Ok)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        # buttonBox.button(QDialogButtonBox.Apply).setText("Actualiser")
+        # buttonBox.button(QDialogButtonBox.Apply).setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rafraichir.png')))
+        # buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.accept)
+        buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(True)
+        buttonBox.button(QDialogButtonBox.Ok).setDefault(True)
+        # buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.appliquer)
+        # buttonBox.button(QDialogButtonBox.Apply).setAutoDefault(True)
+        # buttonBox.button(QDialogButtonBox.Apply).setDefault(True)
         
-        label = QLabel("Intitulé :")
+        label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         
         layout = QGridLayout()
         layout.addWidget(label, 0, 0)
-        layout.addWidget(self.intitule, 0, 1)
+        layout.addWidget(self.title, 0, 1)
         layout.addWidget(tableWidget, 1, 0, 1, 2)
         layout.addWidget(buttonBox, 2, 0, 1, 2)
         
         self.setLayout(layout)
         
-    def valider(self):
-        self.appliquer()
-        self.accept()
+    # def validate(self):
+    #     # self.appliquer()
+    #     self.accept()
         
-    def appliquer(self):
-        self.pyLong.canvas.dessiner()
+    # def appliquer(self):
+    #     self.pyLong.canvas.dessiner()
 
-    def update_intituleProfil(self, value):
-        self.zprofil.intitule = value
-        self.setWindowTitle("Propriétés graphiques du profil \"{}\"".format(value))
-        self.pyLong.listeProfils.update()
+    def updateProfileTitle(self, value):
+        self.zprofile.title = value
+        self.setWindowTitle("Graphic properties <{}>".format(value))
+        self.pyLong.profilesList.update()
 
-    def update_legendeProfil(self, value):
-        self.zprofil.legende = value
-        self.zprofil.line.set_label(value)
-        self.pyLong.canvas.updateLegendes()
+    def updateProfileLabel(self, value):
+        self.zprofile.label = value
+        self.zprofile.line.set_label(value)
+        self.pyLong.canvas.updateLegends()
 
-    def update_visibiliteProfil(self, value):
-        self.zprofil.visible = value
-        self.zprofil.line.set_visible(value and self.zprofil.actif)
-        self.pyLong.canvas.updateLegendes()
+    def updateProfileVisible(self, value):
+        self.zprofile.visible = value
+        self.zprofile.update()
+        # self.zprofile.line.set_visible(value and self.zprofile.active)
+        self.pyLong.canvas.updateLegends()
 
-    def update_style2ligneProfil(self, value):
-        self.zprofil.ligne['style'] = value
-        self.zprofil.line.set_linestyle(styles2ligne[value])
-        self.pyLong.canvas.updateLegendes()
+    def updateProfileLineStyle(self, value):
+        self.zprofile.lineProperties['style'] = value
+        self.zprofile.line.set_linestyle(lineStyles[value])
+        self.pyLong.canvas.updateLegends()
 
-    def update_couleur2ligneProfil(self, value):
-        self.zprofil.ligne['couleur'] = value
-        self.zprofil.line.set_color(couleurs[value])
-        self.pyLong.canvas.updateLegendes()
+    def updateProfileLineColor(self, value):
+        self.zprofile.lineProperties['color'] = value
+        self.zprofile.line.set_color(colors[value])
+        self.pyLong.canvas.updateLegends()
 
-    def update_epaisseur2ligneProfil(self, value):
-        self.zprofil.ligne['épaisseur'] = value
-        self.zprofil.line.set_linewidth(value)
-        self.pyLong.canvas.updateLegendes()
+    def updateProfileLineThickness(self, value):
+        self.zprofile.lineProperties['thickness'] = value
+        self.zprofile.line.set_linewidth(value)
+        self.pyLong.canvas.updateLegends()
 
-    def update_style2marqueurProfil(self, value):
-        self.zprofil.marqueur['style'] = value
-        self.zprofil.line.set_marker(styles2marqueur[value])
-        self.pyLong.canvas.updateLegendes()
+    def updateProfileMarkerStyle(self, value):
+        self.zprofile.markerProperties['style'] = value
+        self.zprofile.line.set_marker(markerStyles[value])
+        self.pyLong.canvas.updateLegends()
 
-    def update_couleur2marqueurProfil(self, value):
-        self.zprofil.marqueur['couleur'] = value
-        self.zprofil.line.set_markeredgecolor(couleurs[value])
-        self.zprofil.line.set_markerfacecolor(couleurs[value])
-        self.pyLong.canvas.updateLegendes()
+    def updateProfileMarkerColor(self, value):
+        self.zprofile.markerProperties['color'] = value
+        self.zprofile.line.set_markeredgecolor(colors[value])
+        self.zprofile.line.set_markerfacecolor(colors[value])
+        self.pyLong.canvas.updateLegends()
 
-    def update_taille2marqueurProfil(self, value):
-        self.zprofil.marqueur['taille'] = value
-        self.zprofil.line.set_markersize(value)
-        self.pyLong.canvas.updateLegendes()
+    def updateProfileMarkerSize(self, value):
+        self.zprofile.markerProperties['size'] = value
+        self.zprofile.line.set_markersize(value)
+        self.pyLong.canvas.updateLegends()
 
-    def update_opaciteProfil(self, value):
-        self.zprofil.opacite = value
-        self.zprofil.line.set_alpha(value)
-        self.pyLong.canvas.updateLegendes()
+    def updateProfileOpacity(self, value):
+        self.zprofile.opacit = value
+        self.zprofile.line.set_alpha(value)
+        self.pyLong.canvas.updateLegends()
 
-    def update_ordreProfil(self, value):
-        self.zprofil.ordre = value
-        self.zprofil.line.set_zorder(value)
-        self.pyLong.canvas.updateLegendes()
+    def updateProfileOrder(self, value):
+        self.zprofile.order = value
+        self.zprofile.line.set_zorder(value)
+        self.pyLong.canvas.updateLegends()
 
-    def update_visibiliteMarqueursPente(self, value):
-        self.pprofil.marqueursVisibles = value
-        self.pprofil.line.set_visible(value and self.pprofil.actif)
-        self.pprofil.line_pourcents.set_visible(value and self.pprofil.actif)
-        self.pprofil.line_degres.set_visible(value and self.pprofil.actif)
-        self.pyLong.canvas.updateLegendes()
+    def updateSlopeMarkersVisible(self, value):
+        self.sprofile.markersVisible = value
+        self.sprofile.line.set_visible(value and self.sprofile.active)
+        self.sprofile.linePercents.set_visible(value and self.sprofile.active)
+        self.sprofile.lineDegrees.set_visible(value and self.sprofile.active)
+        self.sprofile.trickLine.set_visible(value and self.sprofile.active)
+        self.pyLong.canvas.updateLegends()
 
-    def update_legendePente(self, value):
-        self.pprofil.legende = value
-        self.pprofil.line.set_label(value)
-        self.pprofil.line_pourcents.set_label(value)
-        self.pprofil.line_degres.set_label(value)
+    def updateSlopeLabel(self, value):
+        self.sprofile.label = value
+        self.sprofile.trickLine.set_label(value)
 
-        self.pyLong.canvas.updateLegendes()
+        self.pyLong.canvas.updateLegends()
 
-    def update_style2marqueurPente(self, value):
-        self.pprofil.marqueur['style'] = value
-        self.pprofil.line.set_marker(styles2marqueur[value])
-        self.pprofil.line_pourcents.set_marker(styles2marqueur[value])
-        self.pprofil.line_degres.set_marker(styles2marqueur[value])
-        self.pyLong.canvas.updateLegendes()
+    def updateSlopeMarkerStyle(self, value):
+        self.sprofile.markerProperties['style'] = value
+        self.sprofile.line.set_marker(markerStyles[value])
+        self.sprofile.linePercents.set_marker(markerStyles[value])
+        self.sprofile.lineDegrees.set_marker(markerStyles[value])
+        self.sprofile.trickLine.set_marker(markerStyles[value])
+        self.pyLong.canvas.updateLegends()
 
-    def update_couleur2marqueurPente(self, value):
-        self.pprofil.marqueur['couleur'] = value
-        self.pprofil.line.set_markeredgecolor(couleurs[value])
-        self.pprofil.line_pourcents.set_markeredgecolor(couleurs[value])
-        self.pprofil.line_degres.set_markeredgecolor(couleurs[value])
-        self.pprofil.line.set_markerfacecolor(couleurs[value])
-        self.pprofil.line_pourcents.set_markerfacecolor(couleurs[value])
-        self.pprofil.line_degres.set_markerfacecolor(couleurs[value])
-        self.pyLong.canvas.updateLegendes()
+    def updateSlopeMarkerColor(self, value):
+        self.sprofile.markerProperties['color'] = value
+        self.sprofile.line.set_markeredgecolor(colors[value])
+        self.sprofile.linePercents.set_markeredgecolor(colors[value])
+        self.sprofile.lineDegrees.set_markeredgecolor(colors[value])
+        self.sprofile.trickLine.set_markeredgecolor(colors[value])
+        self.sprofile.line.set_markerfacecolor(colors[value])
+        self.sprofile.linePercents.set_markerfacecolor(colors[value])
+        self.sprofile.lineDegrees.set_markerfacecolor(colors[value])
+        self.sprofile.trickLine.set_markerfacecolor(colors[value])
+        self.pyLong.canvas.updateLegends()
 
-    def update_taille2marqueurPente(self, value):
-        self.pprofil.marqueur['taille'] = value
-        self.pprofil.line.set_markersize(value)
-        self.pprofil.line_pourcents.set_markersize(value)
-        self.pprofil.line_degres.set_markersize(value)
-        self.pyLong.canvas.updateLegendes()
+    def updateSlopeMarkerSize(self, value):
+        self.sprofile.markerProperties['size'] = value
+        self.sprofile.line.set_markersize(value)
+        self.sprofile.linePercents.set_markersize(value)
+        self.sprofile.lineDegrees.set_markersize(value)
+        self.sprofile.trickLine.set_markersize(value)
+        self.pyLong.canvas.updateLegends()
 
-    def update_opacitePente(self, value):
-        self.pprofil.opacite = value
-        self.pprofil.line.set_alpha(value)
-        self.pprofil.line_pourcents.set_alpha(value)
-        self.pprofil.line_degres.set_alpha(value)
-        self.pyLong.canvas.updateLegendes()
+    def updateSlopeOpacity(self, value):
+        self.sprofile.opacity = value
+        self.sprofile.line.set_alpha(value)
+        self.sprofile.linePercents.set_alpha(value)
+        self.sprofile.lineDegrees.set_alpha(value)
+        self.sprofile.trickLine.set_alpha(value)
+        self.pyLong.canvas.updateLegends()
 
-    def update_ordrePente(self, value):
-        self.pprofil.ordre = value
-        self.pprofil.line.set_zorder(value)
-        self.pprofil.line_pourcents.set_zorder(value)
-        self.pprofil.line_degres.set_zorder(value)
-        self.pyLong.canvas.updateLegendes()
+    def updateSlopeOrder(self, value):
+        self.sprofile.order = value
+        self.sprofile.line.set_zorder(value)
+        self.sprofile.linePercents.set_zorder(value)
+        self.sprofile.lineDegrees.set_zorder(value)
+        self.sprofile.trickLine.set_zorder(value)
+        self.pyLong.canvas.updateLegends()
 
-    def update_visibiliteValeursPente(self, value):
-        self.pprofil.pentesVisibles = value
+    def updateSlopeAnnotationsVisible(self, value):
+        self.sprofile.annotationsVisible = value
+        self.sprofile.update()
+        self.pyLong.canvas.updateFigure()
 
-    def update_taillePente(self, value):
-        self.pprofil.annotation['taille'] = value
+    def updateSlopeSize(self, value):
+        self.sprofile.annotationProperties['size'] = value
+        self.sprofile.update()
+        self.pyLong.canvas.updateFigure()
 
-    def update_couleurPente(self, value):
-        self.pprofil.annotation['couleur'] = value
+    def updateSlopeColor(self, value):
+        self.sprofile.annotationProperties['color'] = value
+        self.sprofile.update()
+        self.pyLong.canvas.updateFigure()
 
-    def update_decalagePente(self, value):
-        if self.axeSecondaire:
-            if self.symbolePente == "%":
-                self.pprofil.annotation['décalage p %'] = value
+    def updateSlopeShift(self, value):
+        if self.secondaryAxis:
+            if self.slopeSymbol == "%":
+                self.sprofile.annotationProperties['s shift %'] = value
             else:
-                self.pprofil.annotation['décalage p °'] = value
+                self.sprofile.annotationProperties['s shift °'] = value
         else:
-            self.pprofil.annotation['décalage z'] = value
+            self.sprofile.annotationProperties['z shift'] = value
+
+        self.sprofile.update()
+        self.pyLong.canvas.updateFigure()
