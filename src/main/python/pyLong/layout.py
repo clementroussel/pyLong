@@ -41,7 +41,7 @@ class Layout:
                                      'max %': 100.,
                                      'min °': 0,
                                      'max °': 90,
-                                     'label': 'slopes',
+                                     'label': 'slope',
                                      'intervals %': 10,
                                      'intervals °': 9,
                                      'label size': 9.,
