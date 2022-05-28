@@ -1,44 +1,44 @@
 from matplotlib.lines import Line2D
 import numpy as np
 
-from pyLong.dictionnaires import *
+from pyLong.dictionaries import *
 
 from pyLong.intersect import *
 
 
 class Corominas():
-    compteur = 0
+    counter = 0
     
     def __init__(self):
-        Corominas.compteur += 1
+        Corominas.counter += 1
         
-        self.actif = True
+        self.active = True
         
-        self.intitule = "Corominas n°{}".format(Corominas.compteur)
+        self.title = "Corominas n°{}".format(Corominas.counter)
         
-        self.legende = ""
+        self.label = ""
         
-        self.ligne = {'style': 'solide',
-                      'couleur': 'Black',
-                      'épaisseur': 0.8}
+        self.lineProperties = {'style': 'solid',
+                               'color': 'Black',
+                               'thickness': 1}
         
-        self.opacite = 1.
+        self.opacity = 1.
         
-        self.ordre = 1
+        self.order = 1
         
-        self.parametres = {'profil': -1,
-                           'abscisse départ': 0,
-                           'altitude départ': 0,
-                           'abscisse arrivée': 0,
-                           'altitude arrivée': 0,
+        self.parameters = {'profile': -1,
+                           'x start': 0,
+                           'z start': 0,
+                           'x end': 0,
+                           'z end': 0,
                            'volume': 0,
-                           'pas de calcul': 5,
-                           'modèle': 'Debris flows - All'}
+                           'step': 5,
+                           'model': 'Debris flows - All'}
         
-        self.resultats = {'abscisses': [],
-                          'énergies': []}
+        self.results = {'x': [],
+                        'z': []}
         
-        self.calculReussi = False
+        self.success = False
         
         self.line = Line2D([], [])
 
@@ -46,177 +46,177 @@ class Corominas():
         self.line = Line2D([], [])
         
     def update(self):
-        self.line.set_data(self.resultats['abscisses'], self.resultats['énergies'])
-        if self.actif:
-            self.line.set_label(self.legende)
+        self.line.set_data(self.results['x'], self.results['z'])
+        if self.active:
+            self.line.set_label(self.label)
         else:
             self.line.set_label("")
-        self.line.set_linestyle(styles2ligne[self.ligne['style']])
-        self.line.set_color(couleurs[self.ligne['couleur']])
-        self.line.set_linewidth(self.ligne['épaisseur'])
-        self.line.set_alpha(self.opacite)
-        self.line.set_zorder(self.ordre)
-        self.line.set_visible(self.actif and self.calculReussi)
+        self.line.set_linestyle(lineStyles[self.lineProperties['style']])
+        self.line.set_color(colors[self.lineProperties['color']])
+        self.line.set_linewidth(self.lineProperties['thickness'])
+        self.line.set_alpha(self.opacity)
+        self.line.set_zorder(self.order)
+        self.line.set_visible(self.active and self.success)
         
     def __del__(self):
-        Corominas.compteur -= 1
+        Corominas.counter -= 1
         
-    def calculer(self, pyLong):
-        if self.parametres['profil'] == -1:
-            self.calculReussi = False
+    def run(self, pyLong):
+        if self.parameters['profile'] == -1:
+            self.success = False
             return 0
         
-        # récupération du profil
-        i = self.parametres['profil']
-        zprofil, pprofil = pyLong.projet.profils[i]
+        # getting hands on profile
+        i = self.parameters['profile']
+        zprofile, sprofile = pyLong.project.profiles[i]
         
-        xmin = np.min(zprofil.abscisses)
-        xmax = np.max(zprofil.abscisses)
+        xmin = np.min(zprofile.x)
+        xmax = np.max(zprofile.x)
         
-        i = list(zprofil.abscisses).index(xmin)
-        zxmin = zprofil.altitudes[i]
-        i = list(zprofil.abscisses).index(xmax)
-        zxmax = zprofil.altitudes[i]
+        i = list(zprofile.x).index(xmin)
+        zxmin = zprofile.z[i]
+        i = list(zprofile.x).index(xmax)
+        zxmax = zprofile.z[i]
         
-        # tri du profil
+        # sorting
         if zxmin > zxmax:
-            descendant = True
-            zprofil.trier(mode="descendant")
-            pprofil.updateData(zprofil.abscisses, zprofil.altitudes)
+            descending = True
+            zprofile.sort(mode="descending")
             
         else:
-            descendant = False
-            zprofil.trier(mode="ascendant")
-            pprofil.updateData(zprofil.abscisses, zprofil.altitudes)               
+            descending = False
+            zprofile.sort(mode="ascending")
+        
+        sprofile.updateData(zprofile.x, zprofile.z)               
 
-        # récupération des paramètres dans des variables locales
-        abscisses = zprofil.abscisses
-        altitudes = zprofil.altitudes
-        abscisse2debut = self.parametres['abscisse départ']
-        volume = self.parametres['volume']
-        pas = self.parametres['pas de calcul']
+        # getting hands on parameters
+        x = zprofile.x
+        z = zprofile.z
+        xStart = self.parameters['x start']
+        volume = self.parameters['volume']
+        step = self.parameters['step']
             
-        # calcul dans le cas ascendant
-        if not descendant:
-            # calcul de l'altitude du point de départ
-            if xmin < abscisse2debut < xmax:
-                altitude2debut = zprofil.interpoler(abscisse2debut)
-                self.parametres['altitude départ'] = altitude2debut
-            elif abscisse2debut == xmin or abscisse2debut == xmax:
-                k = list(zprofil.abscisses).index(abscisse2debut)
-                altitude2debut = zprofil.altitudes[k]
-                self.parametres['altitude départ'] = altitude2debut
+        # ascending case
+        if not descending:
+            # z of starting point
+            if xmin < xStart < xmax:
+                zStart = zprofile.interpolate(xStart)
+                self.parameters['z start'] = zStart
+            elif xStart == xmin or xStart == xmax:
+                k = list(zprofile.x).index(xStart)
+                zStart = zprofile.z[k]
+                self.parameters['z start'] = zStart
             else:
-                self.calculReussi = False
+                self.success = False
                 return 0
             
-            altitudesLave = list(np.arange(altitude2debut, zxmin, -pas))
-            altitudesLave.append(zxmin)
+            zDebrisFlow = list(np.arange(zStart, zxmin, -step))
+            zDebrisFlow.append(zxmin)
             
-            if self.parametres['modèle'] == 'Debris flows - All':
-                abscissesLave = [abscisse2debut - 10**0.012 * volume**0.105 * (altitude2debut - z) for z in altitudesLave]
-            elif self.parametres['modèle'] == 'Debris flows - Obstructed':
-                abscissesLave = [abscisse2debut - 10**0.049 * volume**0.108 * (altitude2debut - z) for z in altitudesLave]
-            elif self.parametres['modèle'] == 'Debris flows - Channelized':
-                abscissesLave = [abscisse2debut - 10**0.077 * volume**0.109 * (altitude2debut - z) for z in altitudesLave]
-            elif self.parametres['modèle'] == 'Debris flows - Unobstructed':
-                abscissesLave = [abscisse2debut - 10**0.031 * volume**0.102 * (altitude2debut - z) for z in altitudesLave]
-            elif self.parametres['modèle'] == 'Mud flows - All':
-                abscissesLave = [abscisse2debut - 10**0.214 * volume**0.070 * (altitude2debut - z) for z in altitudesLave]
+            if self.parameters['model'] == 'Debris flows - All':
+                xDebrisFlow = [xStart - 10**0.012 * volume**0.105 * (zStart - z) for z in zDebrisFlow]
+            elif self.parameters['model'] == 'Debris flows - Obstructed':
+                xDebrisFlow = [xStart - 10**0.049 * volume**0.108 * (zStart - z) for z in zDebrisFlow]
+            elif self.parameters['model'] == 'Debris flows - Channelized':
+                xDebrisFlow = [xStart - 10**0.077 * volume**0.109 * (zStart - z) for z in zDebrisFlow]
+            elif self.parameters['model'] == 'Debris flows - Unobstructed':
+                xDebrisFlow = [xStart - 10**0.031 * volume**0.102 * (zStart - z) for z in zDebrisFlow]
+            elif self.parameters['model'] == 'Mud flows - All':
+                xDebrisFlow = [xStart - 10**0.214 * volume**0.070 * (zStart - z) for z in zDebrisFlow]
             else:
-                abscissesLave = [abscisse2debut - 10**0.220 * volume**0.138 * (altitude2debut - z) for z in altitudesLave]
+                xDebrisFlow = [xStart - 10**0.220 * volume**0.138 * (zStart - z) for z in zDebrisFlow]
 
             try:
-                xInter, zInter = intersection(np.array(abscisses), np.array(altitudes), np.array(abscissesLave), np.array(altitudesLave))
+                xInter, zInter = intersection(np.array(x), np.array(z), np.array(xDebrisFlow), np.array(zDebrisFlow))
                 xInter = xInter[0]
                 zInter = zInter[0]
                 
-                if np.abs(xInter - self.parametres['abscisse départ']) < 0.001:
-                    xInter = abscissesLave[-1]
-                    zInter = altitudesLave[-1]
+                if np.abs(xInter - self.parameters['x start']) < 0.01:
+                    xInter = xDebrisFlow[-1]
+                    zInter = zDebrisFlow[-1]
                 else:
-                    abscissesLave.append(xInter)
-                    abscissesLave.sort()
-                    abscissesLave.reverse()
+                    xDebrisFlow.append(xInter)
+                    xDebrisFlow.sort()
+                    xDebrisFlow.reverse()
                     
-                    k = abscissesLave.index(xInter)
-                    abscissesLave = abscissesLave[:k+1]
+                    k = xDebrisFlow.index(xInter)
+                    xDebrisFlow = xDebrisFlow[:k+1]
                     
-                    altitudesLave = altitudesLave[:k+1]
-                    altitudesLave[-1] = zInter
+                    zDebrisFlow = zDebrisFlow[:k+1]
+                    zDebrisFlow[-1] = zInter
                             
             except:
-                self.calculReussi = False
+                self.success = False
                 return 0     
 
-            self.parametres['abscisse arrivée'] = xInter
-            self.parametres['altitude arrivée'] = zInter
+            self.parameters['x end'] = xInter
+            self.parameters['z end'] = zInter
 
-            self.resultats['abscisses'] = abscissesLave
-            self.resultats['énergies'] = altitudesLave
+            self.results['x'] = xDebrisFlow
+            self.results['z'] = zDebrisFlow
             
-            if np.abs(self.parametres['abscisse départ'] - self.parametres['abscisse arrivée']) < 0.01:
-                self.calculReussi = False
+            if np.abs(self.parameters['x start'] - self.parameters['x end']) < 0.01:
+                self.success = False
             else:
-                self.calculReussi = True
+                self.success = True
                 
-        # calcul dans le cas descendant
+        # descending case
         else:
-            # calcul de l'altitude du point de départ
-            if xmin < abscisse2debut < xmax:
-                altitude2debut = zprofil.interpoler(abscisse2debut)
-                self.parametres['altitude départ'] = altitude2debut
-            elif abscisse2debut == xmin or abscisse2debut == xmax:
-                k = list(zprofil.abscisses).index(abscisse2debut)
-                altitude2debut = zprofil.altitudes[k]
-                self.parametres['altitude départ'] = altitude2debut
+            # z of starting point
+            if xmin < xStart < xmax:
+                zStart = zprofile.interpolate(xStart)
+                self.parameters['z start'] = zStart
+            elif xStart == xmin or xStart == xmax:
+                k = list(zprofile.x).index(xStart)
+                zStart = zprofile.z[k]
+                self.parameters['z start'] = zStart
             else:
-                self.calculReussi = False
+                self.success = False
                 return 0
             
-            altitudesLave = list(np.arange(altitude2debut, zxmax, -pas))
-            altitudesLave.append(zxmax)
+            zDebrisFlow = list(np.arange(zStart, zxmax, -step))
+            zDebrisFlow.append(zxmax)
 
-            if self.parametres['modèle'] == 'Debris flows - All':
-                abscissesLave = [abscisse2debut + 10**0.012 * volume**0.105 * (altitude2debut - z) for z in altitudesLave]
-            elif self.parametres['modèle'] == 'Debris flows - Obstructed':
-                abscissesLave = [abscisse2debut + 10**0.049 * volume**0.108 * (altitude2debut - z) for z in altitudesLave]
-            elif self.parametres['modèle'] == 'Debris flows - Channelized':
-                abscissesLave = [abscisse2debut + 10**0.077 * volume**0.109 * (altitude2debut - z) for z in altitudesLave]
-            elif self.parametres['modèle'] == 'Debris flows - Unobstructed':
-                abscissesLave = [abscisse2debut + 10**0.031 * volume**0.102 * (altitude2debut - z) for z in altitudesLave]
-            elif self.parametres['modèle'] == 'Mud flows - All':
-                abscissesLave = [abscisse2debut + 10**0.214 * volume**0.070 * (altitude2debut - z) for z in altitudesLave]
+            if self.parameters['model'] == 'Debris flows - All':
+                xDebrisFlow = [xStart + 10**0.012 * volume**0.105 * (zStart - z) for z in zDebrisFlow]
+            elif self.parameters['model'] == 'Debris flows - Obstructed':
+                xDebrisFlow = [xStart + 10**0.049 * volume**0.108 * (zStart - z) for z in zDebrisFlow]
+            elif self.parameters['model'] == 'Debris flows - Channelized':
+                xDebrisFlow = [xStart + 10**0.077 * volume**0.109 * (zStart - z) for z in zDebrisFlow]
+            elif self.parameters['model'] == 'Debris flows - Unobstructed':
+                xDebrisFlow = [xStart + 10**0.031 * volume**0.102 * (zStart - z) for z in zDebrisFlow]
+            elif self.parameters['model'] == 'Mud flows - All':
+                xDebrisFlow = [xStart + 10**0.214 * volume**0.070 * (zStart - z) for z in zDebrisFlow]
             else:
-                abscissesLave = [abscisse2debut + 10**0.220 * volume**0.138 * (altitude2debut - z) for z in altitudesLave]
+                xDebrisFlow = [xStart + 10**0.220 * volume**0.138 * (zStart - z) for z in zDebrisFlow]
                 
             try:
-                xInter, zInter = intersection(np.array(abscisses), np.array(altitudes), np.array(abscissesLave[1:]), np.array(altitudesLave[1:]))
+                xInter, zInter = intersection(np.array(x), np.array(z), np.array(xDebrisFlow[1:]), np.array(zDebrisFlow[1:]))
                 xInter = xInter[0]
                 zInter = zInter[0]
                 
-                abscissesLave.append(xInter)
-                abscissesLave.sort()
+                xDebrisFlow.append(xInter)
+                xDebrisFlow.sort()
                 
-                k = abscissesLave.index(xInter)
-                abscissesLave = abscissesLave[:k+1]
+                k = xDebrisFlow.index(xInter)
+                xDebrisFlow = xDebrisFlow[:k+1]
                 
-                altitudesLave = altitudesLave[:k+1]
-                altitudesLave[-1] = zInter
+                zDebrisFlow = zDebrisFlow[:k+1]
+                zDebrisFlow[-1] = zInter
             except:
-                xInter = abscissesLave[-1]
-                zInter = altitudesLave[-1]
+                xInter = xDebrisFlow[-1]
+                zInter = zDebrisFlow[-1]
             
-            self.parametres['abscisse arrivée'] = xInter
-            self.parametres['altitude arrivée'] = zInter
+            self.parameters['x end'] = xInter
+            self.parameters['z end'] = zInter
 
-            self.resultats['abscisses'] = abscissesLave
-            self.resultats['énergies'] = altitudesLave
+            self.results['x'] = xDebrisFlow
+            self.results['z'] = zDebrisFlow
             
-            if np.abs(self.parametres['abscisse départ'] - self.parametres['abscisse arrivée']) < 0.001:
-                self.calculReussi = False
+            if np.abs(self.parameters['x start'] - self.parameters['x end']) < 0.01:
+                self.success = False
             else:
-                self.calculReussi = True
+                self.success = True
 
     def __getstate__(self):
         dict_attr = dict(self.__dict__)
