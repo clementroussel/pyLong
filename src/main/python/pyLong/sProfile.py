@@ -30,12 +30,12 @@ class sProfile:
         
         self.order = 1
         
-        self.markerProperties = {'style': random.choice(list(markerStyles.keys())),
-                                 'color': random.choice(list(colors.keys())),
-                                 'size': random.randint(1,5)}
+        self.markerProperties = {'style': 'point',
+                                 'color': 'Black',
+                                 'size': 1}
         
         self.annotationProperties = {'size': 9.,
-                                     'color': random.choice(list(colors.keys())),
+                                     'color': 'Black',
                                      'z shift': 0,
                                      's shift %': 0,
                                      's shift °': 0}

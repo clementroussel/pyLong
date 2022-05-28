@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QGroupBox, QGridLayout, QLabel, QComboBox, QRadioButton, QLineEdit, QPushButton, QHBoxLayout, QDialogButtonBox, QFileDialog, QMessageBox
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt
 
 import pandas as pd
 import numpy as np
