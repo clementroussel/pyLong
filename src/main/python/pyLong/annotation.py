@@ -1,5 +1,6 @@
 class Annotation:
-    def __init__(self) :   
+    
+    def __init__(self):   
         self.active = True
 
         self.group = 0

@@ -30,13 +30,13 @@ class OtherData:
 
         self.subplot = "0"
         
-        self.lineProperties = {'style': random.choice(list(lineStyles.keys())),
-                               'color': random.choice(list(colors.keys())),
-                               'thickness': random.randint(1, 5)}
+        self.lineProperties = {'style': 'solid',
+                               'color': 'Black',
+                               'thickness': 1}
         
         self.markerProperties = {'style': 'aucun',
-                                 'color': random.choice(list(colors.keys())),
-                                 'size': random.randint(1, 5)}
+                                 'color': 'Black',
+                                 'size': 1}
         
         self.clear()
 
