@@ -73,20 +73,14 @@ class sProfile:
         self.linePercents.set_data(self.x, self.slopesPercents)
         self.lineDegrees.set_data(self.x, self.slopesDegrees)
 
-        # if not self.active or not self.markersVisible:
-        #     self.line.set_label("")
-        #     self.linePercents.set_label("")
-        #     self.lineDegrees.set_label("")
-            
-        # else:
-        #     self.line.set_label(self.label)
-        #     self.linePercents.set_label(self.label)
-        #     self.lineDegrees.set_label(self.label)
-
         self.line.set_label("")
         self.linePercents.set_label("")
         self.lineDegrees.set_label("")
-        self.trickLine.set_label(self.label)
+
+        if self.active == False or self.markersVisible == False:
+            self.trickLine.set_label("")
+        else:
+            self.trickLine.set_label(self.label)
 
         self.line.set_linestyle("None")
         self.linePercents.set_linestyle("None")

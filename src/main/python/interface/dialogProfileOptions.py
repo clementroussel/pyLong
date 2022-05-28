@@ -154,7 +154,15 @@ class DialogProfileOptions(QDialog):
         self.drawSlopeMarkers = QCheckBox("Draw markers")
         self.drawSlopeMarkers.setChecked(self.sprofile.markersVisible)
         self.drawSlopeMarkers.stateChanged.connect(self.updateSlopeMarkersVisible)
-        layout.addWidget(self.drawSlopeMarkers, 0, 0, 1, 2)
+        layout.addWidget(self.drawSlopeMarkers, 0, 0)
+
+        refresh = QPushButton()
+        refresh.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/refresh.png')))
+        refresh.setMaximumWidth(25)
+        refresh.setAutoDefault(False)
+        refresh.setDefault(False)
+        refresh.clicked.connect(self.refresh)
+        layout.addWidget(refresh, 0, 1)
 
         label = QLabel("Label :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
@@ -300,12 +308,23 @@ class DialogProfileOptions(QDialog):
         
         self.setLayout(layout)
         
-    # def validate(self):
-    #     # self.appliquer()
-    #     self.accept()
-        
-    # def appliquer(self):
-    #     self.pyLong.canvas.dessiner()
+    def refresh(self):
+        self.sprofile.update()
+
+        i = self.pyLong.layoutsList.currentIndex()
+        secondaryAxis = self.pyLong.project.layouts[i].secondaryAxis
+        slopeSymbol = self.pyLong.project.settings.slopeSymbol
+
+        if secondaryAxis:
+            if slopeSymbol == "%":
+                self.pyLong.canvas.ax_p.add_line(self.sprofile.linePercents)
+            else:
+                self.pyLong.canvas.ax_p.add_line(self.sprofile.lineDegrees)
+        else:
+            self.pyLong.canvas.ax_z.add_line(self.sprofile.line)
+
+        self.pyLong.canvas.updateLegends()
+
 
     def updateProfileTitle(self, value):
         self.zprofile.title = value
@@ -315,12 +334,13 @@ class DialogProfileOptions(QDialog):
     def updateProfileLabel(self, value):
         self.zprofile.label = value
         self.zprofile.line.set_label(value)
-        self.pyLong.canvas.updateLegends()
+
+        if self.zprofile.visible:
+            self.pyLong.canvas.updateLegends()
 
     def updateProfileVisible(self, value):
         self.zprofile.visible = value
         self.zprofile.update()
-        # self.zprofile.line.set_visible(value and self.zprofile.active)
         self.pyLong.canvas.updateLegends()
 
     def updateProfileLineStyle(self, value):
@@ -366,17 +386,15 @@ class DialogProfileOptions(QDialog):
 
     def updateSlopeMarkersVisible(self, value):
         self.sprofile.markersVisible = value
-        self.sprofile.line.set_visible(value and self.sprofile.active)
-        self.sprofile.linePercents.set_visible(value and self.sprofile.active)
-        self.sprofile.lineDegrees.set_visible(value and self.sprofile.active)
-        self.sprofile.trickLine.set_visible(value and self.sprofile.active)
+        self.sprofile.update()
         self.pyLong.canvas.updateLegends()
 
     def updateSlopeLabel(self, value):
         self.sprofile.label = value
         self.sprofile.trickLine.set_label(value)
 
-        self.pyLong.canvas.updateLegends()
+        if self.sprofile.markersVisible:
+            self.pyLong.canvas.updateLegends()
 
     def updateSlopeMarkerStyle(self, value):
         self.sprofile.markerProperties['style'] = value

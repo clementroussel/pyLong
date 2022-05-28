@@ -586,6 +586,7 @@ class MainWindow(QMainWindow):
 #         pass
 
     def profileStyle(self):
+        self.checkNavigationTools()
         if self.profilesList.selection():
             DialogProfileOptions(parent=self).exec_()
         else:

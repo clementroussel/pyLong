@@ -161,19 +161,6 @@ class DialogAddProfile(QDialog):
                     self.pyLong.profilesList.update()
                     self.pyLong.canvas.ax_z.add_line(zprofile.line)
                     self.pyLong.canvas.ax_z.add_line(sprofile.trickLine)
-                    
-                    i = self.pyLong.layoutsList.currentIndex()
-                    secondaryAxis = self.pyLong.project.layouts[i].secondaryAxis
-                    slopeSymbol = self.pyLong.project.settings.slopeSymbol
-
-                    if secondaryAxis:
-                        if slopeSymbol == "%":
-                            self.pyLong.canvas.ax_p.add_line(sprofile.linePercents)
-                        else:
-                            self.pyLong.canvas.ax_p.add_line(sprofile.lineDegrees)
-                    else:
-                        self.pyLong.canvas.ax_z.add_line(sprofile.line)
-
                     self.pyLong.canvas.updateLegends()
 
                 if len(self.pyLong.project.profiles) == 1:
