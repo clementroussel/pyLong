@@ -202,14 +202,14 @@ class DialogAddProfile(QDialog):
                     self.accept()
 
                 except:
-                    alerte = QMessageBox(self)
-                    alerte.setText("Annotations import failed.")
-                    alerte.exec_()
+                    alert = QMessageBox(self)
+                    alert.setText("Annotations import failed.")
+                    alert.exec_()
 
             else:
                 self.accept()
 
         except:
-            alerte = QMessageBox(self)
-            alerte.setText("Import failed.")
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Import failed.")
+            alert.exec_()
