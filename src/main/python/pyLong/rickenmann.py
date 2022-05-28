@@ -202,7 +202,7 @@ class Rickenmann() :
                 self.success = True
 
     def __getstate__(self):
-        dict_attr = dict(self.__dict__)
-        dict_attr["line"] = Line2D([], [])
+        attributes = dict(self.__dict__)
+        attributes["line"] = Line2D([], [])
 
-        return dict_attr
+        return attributes
