@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-from matplotlib import lines
 
 from interface.colorsComboBox import *
 
@@ -285,17 +284,10 @@ class DialogProfileOptions(QDialog):
         
         sprofileTab.setLayout(layout)
         
-        # buttonBox = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Ok)
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
-        # buttonBox.button(QDialogButtonBox.Apply).setText("Actualiser")
-        # buttonBox.button(QDialogButtonBox.Apply).setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rafraichir.png')))
-        # buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.accept)
         buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(True)
         buttonBox.button(QDialogButtonBox.Ok).setDefault(True)
-        # buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.appliquer)
-        # buttonBox.button(QDialogButtonBox.Apply).setAutoDefault(True)
-        # buttonBox.button(QDialogButtonBox.Apply).setDefault(True)
         
         label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
