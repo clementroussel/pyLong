@@ -5,12 +5,12 @@ from PyQt5.QtCore import *
 import pandas as pd
 import numpy as np
 
-from pyLong.dictionnaires import *
-from pyLong.zProfil import *
-from pyLong.pProfil import *
+from pyLong.dictionaries import *
+from pyLong.zProfile import *
+from pyLong.sProfile import *
 
 
-class DialogFiltrer(QDialog):
+class DialogFilter(QDialog):
     def __init__(self, parent):
         super().__init__()
         
@@ -18,99 +18,96 @@ class DialogFiltrer(QDialog):
         
         mainLayout = QVBoxLayout()
         
-        i = self.pyLong.listeProfils.liste.currentRow()
-        self.setWindowTitle("Filtrer le profil \"{}\"".format(self.pyLong.listeProfils.liste.item(i).text()))
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/filtrer.png')))
+        i = self.pyLong.profilesList.list.currentRow()
+        self.setWindowTitle("Filter <{}>".format(self.pyLong.profilesList.list.item(i).text()))
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/filter.png')))
         
-        self.zprofil, self.pprofil = self.pyLong.projet.profils[i]
+        self.zprofile, self.sprofile = self.pyLong.project.profiles[i]
         
-        groupe = QGroupBox("Paramètres")
+        group = QGroupBox("Parameters")
         layout = QGridLayout()
         
-        label = QLabel("Filtre :")
+        label = QLabel("Filter :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.filtres = QComboBox()
-        self.filtres.addItems(["Lowess", "Butterworth", "Savitsky-Golay"])
-        # self.filtres.addItems(["Lowess", "Butterworth"])
-        self.filtres.currentTextChanged.connect(self.updateParametresFiltre)
-        layout.addWidget(self.filtres, 0, 1)
+        self.filters = QComboBox()
+        self.filters.addItems(["Lowess", "Butterworth", "Savitsky-Golay"])
+        self.filters.currentTextChanged.connect(self.updateFilterParameters)
+        layout.addWidget(self.filters, 0, 1)
         
-        self.parametre1Nom = QLabel()
-        self.parametre1Nom.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        layout.addWidget(self.parametre1Nom, 1, 0)
+        self.parameter1Name = QLabel()
+        self.parameter1Name.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        layout.addWidget(self.parameter1Name, 1, 0)
         
-        self.parametre1 = QDoubleSpinBox()
-        self.parametre1.setLocale(QLocale('English'))
-        self.parametre1.setVisible(False)
-        self.parametre1.valueChanged.connect(self.controleParametres)
-        self.parametre1.valueChanged.connect(self.apercu)
-        layout.addWidget(self.parametre1, 1, 1)
+        self.parameter1 = QDoubleSpinBox()
+        self.parameter1.setLocale(QLocale('English'))
+        self.parameter1.setVisible(False)
+        self.parameter1.valueChanged.connect(self.controlParameters)
+        self.parameter1.valueChanged.connect(self.preview)
+        layout.addWidget(self.parameter1, 1, 1)
     
-        self.parametre2Nom = QLabel()
-        self.parametre2Nom.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        layout.addWidget(self.parametre2Nom, 2, 0)
+        self.parameter2Name = QLabel()
+        self.parameter2Name.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        layout.addWidget(self.parameter2Name, 2, 0)
         
-        self.parametre2 = QDoubleSpinBox()
-        self.parametre2.setLocale(QLocale('English'))
-        self.parametre2.setVisible(False)
-        self.parametre2.valueChanged.connect(self.controleParametres)
-        self.parametre2.valueChanged.connect(self.apercu)
-        layout.addWidget(self.parametre2, 2, 1)
+        self.parameter2 = QDoubleSpinBox()
+        self.parameter2.setLocale(QLocale('English'))
+        self.parameter2.setVisible(False)
+        self.parameter2.valueChanged.connect(self.controlParameters)
+        self.parameter2.valueChanged.connect(self.preview)
+        layout.addWidget(self.parameter2, 2, 1)
         
-        label = QLabel("Intitulé du profil à créer :")
+        label = QLabel("Output profile title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 3, 0)
         
-        self.intitule = QLineEdit()
-        self.intitule.setText("profil n°{}".format(zProfil.compteur + 1))
-        layout.addWidget(self.intitule, 3, 1) 
+        self.title = QLineEdit()
+        self.title.setText("profile n°{}".format(zProfile.counter + 1))
+        layout.addWidget(self.title, 3, 1) 
 
-        groupe.setLayout(layout)
-        mainLayout.addWidget(groupe)
+        group.setLayout(layout)
+        mainLayout.addWidget(group)
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
-        buttonBox.rejected.connect(self.reject)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         
         mainLayout.addWidget(buttonBox)
         
         self.setLayout(mainLayout)
         
-        self.updateParametresFiltre()
+        self.updateFilterParameters()
 
-        self.pyLong.projet.apercu.visible = True
-        self.pyLong.projet.apercu.abscisses = self.zprofil.abscisses
-        self.pyLong.projet.apercu.altitudes = self.zprofil.altitudes
-        self.pyLong.projet.apercu.update()
+        self.pyLong.project.preview.visible = True
+        self.pyLong.project.preview.x = self.zprofile.x
+        self.pyLong.project.preview.z = self.zprofile.z
+        self.pyLong.project.preview.update()
             
         self.pyLong.canvas.draw()
         
-        self.apercu()
+        self.preview()
         
-    def apercu(self):
-        if self.filtres.currentText() == "Lowess":
+    def preview(self):
+        if self.filters.currentText() == "Lowess":
             try:
-                x, z = self.zprofil.lowess(self.parametre1.value(), self.parametre2.value())
+                x, z = self.zprofile.lowess(self.parameter1.value(), self.parameter2.value())
                 
-                self.pyLong.projet.apercu.abscisses = x
-                self.pyLong.projet.apercu.altitudes = z
-                self.pyLong.projet.apercu.update()
+                self.pyLong.project.preview.x = x
+                self.pyLong.project.preview.z = z
+                self.pyLong.project.preview.update()
                 
                 self.pyLong.canvas.draw()
             
             except:
                 pass
             
-        elif self.filtres.currentText() == "Butterworth":
+        elif self.filters.currentText() == "Butterworth":
             try:
-                x, z = self.zprofil.butterworth(self.parametre1.value(), self.parametre2.value())
+                x, z = self.zprofile.butterworth(self.parameter1.value(), self.parameter2.value())
                 
-                self.pyLong.projet.apercu.abscisses = x
-                self.pyLong.projet.apercu.altitudes = z
-                self.pyLong.projet.apercu.update()
+                self.pyLong.project.preview.x = x
+                self.pyLong.project.preview.z = z
+                self.pyLong.project.preview.update()
                 
                 self.pyLong.canvas.draw()
             
@@ -119,151 +116,151 @@ class DialogFiltrer(QDialog):
             
         else:
             try:
-                x, z = self.zprofil.savitsky_golay(self.parametre1.value(), self.parametre2.value())
+                x, z = self.zprofile.savitsky_golay(self.parameter1.value(), self.parameter2.value())
                 
-                self.pyLong.projet.apercu.abscisses = x
-                self.pyLong.projet.apercu.altitudes = z
-                self.pyLong.projet.apercu.update()
+                self.pyLong.project.preview.x = x
+                self.pyLong.project.preview.z = z
+                self.pyLong.project.preview.update()
                 
                 self.pyLong.canvas.draw()
                 
             except:
                 pass
             
-    def valider(self):
-        if self.filtres.currentText() == "Lowess":
+    def validate(self):
+        if self.filters.currentText() == "Lowess":
             try:
-                x, z = self.zprofil.lowess(self.parametre1.value(), self.parametre2.value()) 
+                x, z = self.zprofile.lowess(self.parameter1.value(), self.parameter2.value()) 
                 
-                zprofil = zProfil()
-                pprofil = pProfil()
+                zprofile = zProfile()
+                sprofile = sProfile()
                 
-                zprofil.intitule = self.intitule.text()
-                zprofil.abscisses = x
-                zprofil.altitudes = z
-                zprofil.update()
+                zprofile.title = self.title.text()
+                zprofile.x = x
+                zprofile.z = z
+                zprofile.update()
                 
-                pprofil.updateData(x, z)
-                pprofil.update()
+                sprofile.updateData(x, z)
+                sprofile.update()
                 
-                self.pyLong.projet.profils.append((zprofil, pprofil))
-                self.pyLong.listeProfils.update()
+                self.pyLong.project.profiles.append((zprofile, sprofile))
+                self.pyLong.profilesList.update()
 
-                self.pyLong.canvas.ax_z.add_line(zprofil.line)
+                self.pyLong.canvas.ax_z.add_line(zprofile.line)
             
                 self.accept()
                 
             except:
-                alerte = QMessageBox(self)
-                alerte.setText("Le filtrage a échoué")
-                alerte.exec_()
+                alert = QMessageBox(self)
+                alert.setText("Processing failed. Sorry.")
+                alert.exec_()
             
-        elif self.filtres.currentText() == "Butterworth":
+        elif self.filters.currentText() == "Butterworth":
             try:
-                x, z = self.zprofil.butterworth(self.parametre1.value(), self.parametre2.value())
+                x, z = self.zprofile.butterworth(self.parameter1.value(), self.parameter2.value())
                 
-                zprofil = zProfil()
-                pprofil = pProfil()
+                zprofile = zProfile()
+                sprofile = sProfile()
                 
-                zprofil.intitule = self.intitule.text()
-                zprofil.abscisses = x
-                zprofil.altitudes = z
-                zprofil.update()
+                zprofile.title = self.title.text()
+                zprofile.x = x
+                zprofile.z = z
+                zprofile.update()
                 
-                pprofil.updateData(x, z)
-                pprofil.update()
+                sprofile.updateData(x, z)
+                sprofile.update()
                 
-                self.pyLong.projet.profils.append((zprofil, pprofil))
-                self.pyLong.listeProfils.update()
+                self.pyLong.project.profiles.append((zprofile, sprofile))
+                self.pyLong.profilesList.update()
 
-                self.pyLong.canvas.ax_z.add_line(zprofil.line)
+                self.pyLong.canvas.ax_z.add_line(zprofile.line)
             
                 self.accept()
                 
             except:
-                alerte = QMessageBox(self)
-                alerte.setText("Le filtrage a échoué")
-                alerte.exec_()
+                alert = QMessageBox(self)
+                alert.setText("Processing failed. Sorry.")
+                alert.exec_()
         
         else:
             try:
-                x, z = self.zprofil.savitsky_golay(self.parametre1.value(), self.parametre2.value())
+                x, z = self.zprofile.savitsky_golay(self.parameter1.value(), self.parameter2.value())
                 
-                zprofil = zProfil()
-                pprofil = pProfil()
+                zprofile = zProfile()
+                sprofile = sProfile()
                 
-                zprofil.intitule = self.intitule.text()
-                zprofil.abscisses = x
-                zprofil.altitudes = z
-                zprofil.update()
+                zprofile.title = self.title.text()
+                zprofile.x = x
+                zprofile.z = z
+                zprofile.update()
                 
-                pprofil.updateData(x, z)
-                pprofil.update()
+                sprofile.updateData(x, z)
+                sprofile.update()
                 
-                self.pyLong.projet.profils.append((zprofil, pprofil))
-                self.pyLong.listeProfils.update()
+                self.pyLong.project.profiles.append((zprofile, sprofile))
+                self.pyLong.profilesList.update()
 
-                self.pyLong.canvas.ax_z.add_line(zprofil.line)
+                self.pyLong.canvas.ax_z.add_line(zprofile.line)
             
                 self.accept()
                 
             except:
-                alerte = QMessageBox(self)
-                alerte.setText("Le filtrage a échoué")
-                alerte.exec_()
+                alert = QMessageBox(self)
+                alert.setText("Processing failed. Sorry.")
+                alert.exec_()
         
-    def controleParametres(self):
-        if self.filtres.currentText() == "Savitsky-Golay":
-            if int(self.parametre1.value()) >= int(self.parametre2.value()):
-                self.parametre1.setValue(self.parametre2.value() - 1)
+    def controlParameters(self):
+        if self.filters.currentText() == "Savitsky-Golay":
+            if int(self.parameter1.value()) >= int(self.parameter2.value()):
+                self.parameter1.setValue(self.parameter2.value() - 1)
         
-    def updateParametresFiltre(self):
-        if self.filtres.currentText() == "Lowess":
-            self.parametre1Nom.setText("Taille de la fenêtre :")
-            self.parametre1Nom.setVisible(True)
-            self.parametre1.setDecimals(0)
-            self.parametre1.setSingleStep(1)
-            self.parametre1.setRange(1, 99999)
-            self.parametre1.setValue(1)
-            self.parametre1.setVisible(True)
-            self.parametre2Nom.setText("Paramètre :")
-            self.parametre2Nom.setVisible(True)
-            self.parametre2.setDecimals(4)
-            self.parametre2.setSingleStep(0.0001)
-            self.parametre2.setRange(0.0001, 1)
-            self.parametre2.setValue(0.0001)
-            self.parametre2.setVisible(True)
+    def updateFilterParameters(self):
+        if self.filters.currentText() == "Lowess":
+            self.parameter1Name.setText("Window size :")
+            self.parameter1Name.setVisible(True)
+            self.parameter1.setDecimals(0)
+            self.parameter1.setSingleStep(1)
+            self.parameter1.setRange(1, 99999)
+            self.parameter1.setValue(1)
+            self.parameter1.setVisible(True)
+            self.parameter2Name.setText("Parameter :")
+            self.parameter2Name.setVisible(True)
+            self.parameter2.setDecimals(4)
+            self.parameter2.setSingleStep(0.0001)
+            self.parameter2.setRange(0.0001, 1)
+            self.parameter2.setValue(0.0001)
+            self.parameter2.setVisible(True)
             
-        elif self.filtres.currentText() == "Butterworth":
-            self.parametre1Nom.setText("Ordre du filtre :")
-            self.parametre1Nom.setVisible(True)
-            self.parametre1.setDecimals(0)
-            self.parametre1.setSingleStep(1)
-            self.parametre1.setRange(1, 99)
-            self.parametre1.setVisible(True)
-            self.parametre1.setValue(1)
-            self.parametre2Nom.setText("Fréquence critique :")
-            self.parametre2Nom.setVisible(True)
-            self.parametre2.setDecimals(3)
-            self.parametre2.setSingleStep(0.001)
-            self.parametre2.setRange(0.001, 0.999)
-            self.parametre2.setValue(0.5)
-            self.parametre2.setVisible(True)
+        elif self.filters.currentText() == "Butterworth":
+            self.parameter1Name.setText("Filter order :")
+            self.parameter1Name.setVisible(True)
+            self.parameter1.setDecimals(0)
+            self.parameter1.setSingleStep(1)
+            self.parameter1.setRange(1, 99)
+            self.parameter1.setVisible(True)
+            self.parameter1.setValue(1)
+            self.parameter2Name.setText("Critical frequency :")
+            self.parameter2Name.setVisible(True)
+            self.parameter2.setDecimals(3)
+            self.parameter2.setSingleStep(0.001)
+            self.parameter2.setRange(0.001, 0.999)
+            self.parameter2.setValue(0.5)
+            self.parameter2.setVisible(True)
             
         else:
-            self.parametre1Nom.setText("Ordre du polynôme :")
-            self.parametre1Nom.setVisible(True)
-            self.parametre1.setDecimals(0)
-            self.parametre1.setSingleStep(1)
-            self.parametre1.setRange(0, 99)
-            self.parametre1.setVisible(True)
-            self.parametre1.setValue(0)
-            self.parametre2Nom.setText("Taille de la fenêtre :")
-            self.parametre2Nom.setVisible(True)
-            self.parametre2.setDecimals(0)
-            self.parametre2.setSingleStep(2)
-            self.parametre2.setRange(1, 99999)
-            self.parametre2.setVisible(True)
-            self.parametre2.setValue(1)
+            self.parameter1Name.setText("Polynomial order :")
+            self.parameter1Name.setVisible(True)
+            self.parameter1.setDecimals(0)
+            self.parameter1.setSingleStep(1)
+            self.parameter1.setRange(0, 99)
+            self.parameter1.setVisible(True)
+            self.parameter1.setValue(0)
+            self.parameter2Name.setText("Window size :")
+            self.parameter2Name.setVisible(True)
+            self.parameter2.setDecimals(0)
+            self.parameter2.setSingleStep(2)
+            self.parameter2.setRange(1, 99999)
+            self.parameter2.setVisible(True)
+            self.parameter2.setValue(1)
             
-        self.apercu()
+        self.preview()

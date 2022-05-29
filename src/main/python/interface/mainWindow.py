@@ -32,8 +32,8 @@ from interface.dialogLayout import DialogLayout
 from interface.dialogAddProfile import DialogAddProfile
 from interface.dialogProfileOptions import *
 # from DialogTableauValeurs import *
-# from DialogTrier import *
-# from DialogFiltrer import *
+from interface.dialogSort import *
+from interface.dialogFilter import *
 # from DialogSimplifier import *
 # from DialogExporter import *
 
@@ -130,15 +130,12 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.navigationBar)
         mainLayout.addLayout(layout)
 
-#         self.canvas.initialiser()
-#         self.canvas.dessiner()
-
         centralWidget.setLayout(mainLayout)
         self.setCentralWidget(centralWidget)
         self.showMaximized()
 
         self.canvas.initialize()
-        self.canvas.updateLayout()
+        self.canvas.updateFigure()
 
     def createActions(self):
         createActions(self)
@@ -868,32 +865,32 @@ class MainWindow(QMainWindow):
 #             alerte.setIcon(QMessageBox.Warning)
 #             alerte.exec_()
 
-#     def filtrerProfil(self):
-#         if self.listeProfils.selection():
-#             DialogFiltrer(parent=self).exec_()
+    def filter(self):
+        if self.profilesList.selection():
+            DialogFilter(parent=self).exec_()
 
-#             self.projet.apercu.visible = False
-#             self.projet.apercu.update()
-#             self.canvas.updateLegendes()
+            self.project.preview.visible = False
+            self.project.preview.update()
+            self.canvas.draw()
 
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez un profil avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select a profile before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
-#     def trierProfil(self):
-#         if self.listeProfils.selection():
-#             DialogTrier(parent=self).exec_()
+    def sort(self):
+        if self.profilesList.selection():
+            DialogSort(parent=self).exec_()
 
-#             self.projet.apercu.visible = False
-#             self.projet.apercu.update()
-#             self.canvas.draw()
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez un profil avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+            self.project.preview.visible = False
+            self.project.preview.update()
+            self.canvas.draw()
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select a profile before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
     def addProfile(self):
         DialogAddProfile(parent=self).exec_()

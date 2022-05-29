@@ -148,11 +148,11 @@ def createActions(self):
     self.profileToolBar.addAction(self.profileStyleAction)
 
     self.sortAction = QAction(QIcon(self.appctxt.get_resource('icons/sort.png')), "Sort", self)
-    #self.sortAction.triggered.connect(self.sort)
+    self.sortAction.triggered.connect(self.sort)
     self.profileToolBar.addAction(self.sortAction)
 
     self.filterAction = QAction(QIcon(self.appctxt.get_resource('icons/filter.png')), "Filter", self)
-    #self.filterAction.triggered.connect(self.filter)
+    self.filterAction.triggered.connect(self.filter)
     self.profileToolBar.addAction(self.filterAction)
 
     self.simplifyAction = QAction(QIcon(self.appctxt.get_resource('icons/simplify.png')), "Simplify", self)
