@@ -10,7 +10,7 @@ class ProfilesList(List):
 
         self.pyLong = parent
 
-        # self.liste.doubleClicked.connect(self.pyLong.optionsProfil)
+        self.list.doubleClicked.connect(self.pyLong.profileStyle)
         self.list.itemChanged.connect(self.activate)
 
         self.list.setContextMenuPolicy(Qt.CustomContextMenu)

@@ -78,10 +78,8 @@ class DialogAddProfile(QDialog):
         
         layout = QHBoxLayout()
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Close")
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
         buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.importProfile)
-        buttonBox.rejected.connect(self.reject)
 
         layout.addWidget(buttonBox)
         mainLayout.addLayout(layout)

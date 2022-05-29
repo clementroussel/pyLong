@@ -20,7 +20,7 @@ class DialogProfileOptions(QDialog):
         i = self.pyLong.profilesList.list.currentRow()
         self.zprofile, self.sprofile = self.pyLong.project.profiles[i]
         
-        self.setWindowTitle("Graphic properties <{}>".format(self.zprofile.title))
+        self.setWindowTitle("Style <{}>".format(self.zprofile.title))
         self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/style.png')))
         
         self.slopeSymbol = self.pyLong.project.settings.slopeSymbol
@@ -328,7 +328,7 @@ class DialogProfileOptions(QDialog):
 
     def updateProfileTitle(self, value):
         self.zprofile.title = value
-        self.setWindowTitle("Graphic properties <{}>".format(value))
+        self.setWindowTitle("Style <{}>".format(value))
         self.pyLong.profilesList.update()
 
     def updateProfileLabel(self, value):
