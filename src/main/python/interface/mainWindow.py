@@ -34,7 +34,7 @@ from interface.dialogProfileOptions import *
 # from DialogTableauValeurs import *
 from interface.dialogSort import *
 from interface.dialogFilter import *
-# from DialogSimplifier import *
+from interface.dialogSimplify import *
 from interface.dialogExport import *
 
 # from DialogAjusterAnnotations import *
@@ -852,18 +852,18 @@ class MainWindow(QMainWindow):
             alert.setIcon(QMessageBox.Warning)
             alert.exec_()
 
-#     def simplifierProfil(self):
-#         if self.listeProfils.selection():
-#             DialogSimplifier(parent=self).exec_()
+    def simplify(self):
+        if self.profilesList.selection():
+            DialogSimplify(parent=self).exec_()
 
-#             self.projet.apercu.visible = False
-#             self.projet.apercu.update()
-#             self.canvas.updateLegendes()
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez un profil avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+            self.project.preview.visible = False
+            self.project.preview.update()
+            self.canvas.draw()
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select a profile before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
     def filter(self):
         if self.profilesList.selection():

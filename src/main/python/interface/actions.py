@@ -156,7 +156,7 @@ def createActions(self):
     self.profileToolBar.addAction(self.filterAction)
 
     self.simplifyAction = QAction(QIcon(self.appctxt.get_resource('icons/simplify.png')), "Simplify", self)
-    #self.simplifyAction.triggered.connect(self.simplify)
+    self.simplifyAction.triggered.connect(self.simplify)
     self.profileToolBar.addAction(self.simplifyAction)
 
     self.exportAction = QAction(QIcon(self.appctxt.get_resource('icons/export.png')), "Export", self)

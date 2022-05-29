@@ -4,12 +4,12 @@ from PyQt5.QtCore import *
 
 import numpy as np
 
-from pyLong.zProfil import *
-from pyLong.pProfil import *
-from pyLong.dictionnaires import *
+from pyLong.zProfile import *
+from pyLong.sProfile import *
+from pyLong.dictionaries import *
 
 
-class DialogSimplifier(QDialog):
+class DialogSimplify(QDialog):
     def __init__(self, parent):
         super().__init__()
     
@@ -17,16 +17,16 @@ class DialogSimplifier(QDialog):
  
         mainLayout = QVBoxLayout()
         
-        i = self.pyLong.listeProfils.liste.currentRow()
-        self.setWindowTitle("Simplifier le profil \"{}\"".format(self.pyLong.listeProfils.liste.item(i).text()))
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/simplifier.png')))
+        i = self.pyLong.profilesList.list.currentRow()
+        self.setWindowTitle("Simplify <{}>".format(self.pyLong.profilesList.list.item(i).text()))
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/simplify.png')))
         
-        self.zprofil, self.pprofil = self.pyLong.projet.profils[i]
+        self.zprofile, self.sprofile = self.pyLong.project.profiles[i]
         
-        groupe = QGroupBox("Paramètres")
+        group = QGroupBox("Parameters")
         layout = QGridLayout()
         
-        label = QLabel("Pourcentage de points à conserver :")
+        label = QLabel("Percentage of points to keep :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
@@ -38,75 +38,73 @@ class DialogSimplifier(QDialog):
         self.ratio.setDecimals(3)
         self.ratio.setValue(100)
         self.ratio.setLocale(QLocale('English'))
-        self.ratio.valueChanged.connect(self.apercu)
+        self.ratio.valueChanged.connect(self.preview)
         layout.addWidget(self.ratio, 0, 1)
         
-        label = QLabel("Intitulé du profil à créer :")
+        label = QLabel("Output profile title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.intitule = QLineEdit()
-        self.intitule.setText("profil n°{}".format(zProfil.compteur + 1))
-        layout.addWidget(self.intitule, 1, 1)
+        self.title = QLineEdit()
+        self.title.setText("profile n°{}".format(zProfile.counter + 1))
+        layout.addWidget(self.title, 1, 1)
 
         layout.addWidget(QLabel(), 2, 0, 1, 2)
 
-        label = QLabel("Avant simplification : {} sommets".format(np.shape(self.zprofil.abscisses)[0]))
+        label = QLabel("Before simplification : {} vertices".format(np.shape(self.zprofile.x)[0]))
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 3, 0, 1, 2)
 
-        self.info = QLabel("Après simplification : {} sommets".format(np.shape(self.zprofil.abscisses)[0]))
+        self.info = QLabel("After simplification : {} vertices".format(np.shape(self.zprofile.x)[0]))
         self.info.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(self.info, 4, 0, 1, 2)
 
-        groupe.setLayout(layout)
-        mainLayout.addWidget(groupe)
+        group.setLayout(layout)
+        mainLayout.addWidget(group)
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
-        buttonBox.rejected.connect(self.reject)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         mainLayout.addWidget(buttonBox)
         
         self.setLayout(mainLayout)
 
-        self.pyLong.projet.apercu.visible = True
-        self.pyLong.projet.apercu.abscisses = self.zprofil.abscisses
-        self.pyLong.projet.apercu.altitudes = self.zprofil.altitudes
-        self.pyLong.projet.apercu.update()
+        self.pyLong.project.preview.visible = True
+        self.pyLong.project.preview.x = self.zprofile.x
+        self.pyLong.project.preview.z = self.zprofile.z
+        self.pyLong.project.preview.update()
 
         self.pyLong.canvas.draw()
         
-        self.apercu()
+        self.preview()
         
-    def apercu(self):
-        x, z = self.zprofil.simplifier(ratio=self.ratio.value()/100)
+    def preview(self):
+        x, z = self.zprofile.simplify(ratio=self.ratio.value()/100)
 
-        self.pyLong.projet.apercu.abscisses = x
-        self.pyLong.projet.apercu.altitudes = z
-        self.pyLong.projet.apercu.update()
+        self.pyLong.project.preview.x = x
+        self.pyLong.project.preview.z = z
+        self.pyLong.project.preview.update()
         
         self.pyLong.canvas.draw()
 
-        self.info.setText("Après simplification : {} sommets".format(np.shape(x)[0]))
+        self.info.setText("After simplification : {} vertices".format(np.shape(x)[0]))
         
-    def valider(self):
-        x, z = self.zprofil.simplifier(ratio=self.ratio.value()/100)
+    def validate(self):
+        x, z = self.zprofile.simplify(ratio=self.ratio.value()/100)
         
-        zprofil = zProfil()
-        pprofil = pProfil()
+        zprofile = zProfile()
+        sprofile = sProfile()
         
-        zprofil.intitule = self.intitule.text()
-        zprofil.abscisses = x
-        zprofil.altitudes = z
-        zprofil.update()
+        zprofile.title = self.title.text()
+        zprofile.x = x
+        zprofile.z = z
+        zprofile.update()
         
-        pprofil.updateData(x, z)
-        pprofil.update()
+        sprofile.updateData(x, z)
+        sprofile.update()
 
-        self.pyLong.projet.profils.append((zprofil, pprofil))
-        self.pyLong.listeProfils.update()
+        self.pyLong.project.profiles.append((zprofile, sprofile))
+        self.pyLong.profilesList.update()
 
-        self.pyLong.canvas.ax_z.add_line(zprofil.line)
+        self.pyLong.canvas.ax_z.add_line(zprofile.line)
     
         self.accept()
