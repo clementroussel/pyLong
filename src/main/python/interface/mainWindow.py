@@ -35,7 +35,7 @@ from interface.dialogProfileOptions import *
 from interface.dialogSort import *
 from interface.dialogFilter import *
 # from DialogSimplifier import *
-# from DialogExporter import *
+from interface.dialogExport import *
 
 # from DialogAjusterAnnotations import *
 # from DialogGestionGroupes import *
@@ -843,14 +843,14 @@ class MainWindow(QMainWindow):
 #             except:
 #                 pass
 
-#     def exporterProfil(self):
-#         if self.listeProfils.selection():
-#             DialogExporter(parent=self).exec_()
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez un profil avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+    def export(self):
+        if self.profilesList.selection():
+            DialogExport(parent=self).exec_()
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select a profile before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
 #     def simplifierProfil(self):
 #         if self.listeProfils.selection():

@@ -160,7 +160,7 @@ def createActions(self):
     self.profileToolBar.addAction(self.simplifyAction)
 
     self.exportAction = QAction(QIcon(self.appctxt.get_resource('icons/export.png')), "Export", self)
-    #self.exportAction.triggered.connect(self.export)
+    self.exportAction.triggered.connect(self.export)
     self.profileToolBar.addAction(self.exportAction)
 
     self.profileDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)

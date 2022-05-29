@@ -2,91 +2,89 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from pyLong.dictionnaires import *
+from pyLong.dictionaries import *
 
 
-class DialogExporter(QDialog):
+class DialogExport(QDialog):
     def __init__(self, parent):
         super().__init__()
         
         self.pyLong = parent
         
-        i = self.pyLong.listeProfils.liste.currentRow()
+        i = self.pyLong.profilesList.list.currentRow()
         
-        self.setWindowTitle("Exporter le profil \"{}\"".format(self.pyLong.listeProfils.liste.item(i).text()))
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/exporter.png')))
+        self.setWindowTitle("Export <{}>".format(self.pyLong.profilesList.list.item(i).text()))
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/export.png')))
         
         mainLayout = QVBoxLayout()
         
-        groupe = QGroupBox("Paramètres")
+        group = QGroupBox("Parameters")
         layout = QGridLayout()
         
-        label = QLabel("Délimiteur :")
+        label = QLabel("Delimiter :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.delimiteur = QComboBox()
-        self.delimiteur.insertItems(0, list(delimiteurs.keys()))
-        self.delimiteur.setCurrentText("tabulation")
-        layout.addWidget(self.delimiteur, 0, 1)
+        self.delimiter = QComboBox()
+        self.delimiter.insertItems(0, list(delimiters.keys()))
+        self.delimiter.setCurrentText("tabulation")
+        layout.addWidget(self.delimiter, 0, 1)
         
-        label = QLabel("Séparateur décimal :")
+        label = QLabel("Decimal separator :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.separateur = QComboBox()
-        self.separateur.insertItems(0, list(separateurs.keys()))
-        layout.addWidget(self.separateur, 1, 1)
+        self.separator = QComboBox()
+        self.separator.insertItems(0, list(separators.keys()))
+        layout.addWidget(self.separator, 1, 1)
     
-        label = QLabel("Nombre de décimales :")
+        label = QLabel("Number of decimal places :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 2, 0)    
         
-        self.decimales = QSpinBox()
-        self.decimales.setFixedWidth(40)
-        self.decimales.setRange(0,99)
-        self.decimales.setValue(3)
-        layout.addWidget(self.decimales, 2, 1)
+        self.decimal = QSpinBox()
+        self.decimal.setFixedWidth(40)
+        self.decimal.setRange(0,99)
+        self.decimal.setValue(3)
+        layout.addWidget(self.decimal, 2, 1)
         
-        groupe.setLayout(layout)
-        mainLayout.addWidget(groupe)
+        group.setLayout(layout)
+        mainLayout.addWidget(group)
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.exporter)
-        buttonBox.rejected.connect(self.reject)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         
         mainLayout.addWidget(buttonBox)        
         self.setLayout(mainLayout)
         
-    def exporter(self):
+    def validate(self):
         try:
-            i = self.pyLong.listeProfils.liste.currentRow()
-            zprofil, pprofil = self.pyLong.projet.profils[i]
+            i = self.pyLong.profilesList.list.currentRow()
+            zprofile, sprofile = self.pyLong.project.profiles[i]
             
-            chemin = QFileDialog.getSaveFileName(caption="Exporter un profil",
-                                                 filter="fichier texte (*.txt)")[0]
+            path = QFileDialog.getSaveFileName(caption="Export",
+                                               filter="text file (*.txt)")[0]
             
-            if chemin == "":
+            if path == "":
                 return 0
 
             else:
-                nomFichier = QFileInfo(chemin).fileName()
-                repertoireFichier = QFileInfo(chemin).absolutePath()
-                nomFichier = nomFichier.split(".")[0]
-                nomFichier += ".txt"
-                chemin = repertoireFichier + "/" + nomFichier
+                fileName = QFileInfo(path).fileName()
+                fileFolder = QFileInfo(path).absolutePath()
+                fileName = fileName.split(".")[0]
+                fileName += ".txt"
+                path = fileFolder + "/" + fileName
 
-                delimiteur = delimiteurs[self.delimiteur.currentText()]
-                formatage = "%.{}f".format(self.decimales.value())
-                separateur = separateurs[self.separateur.currentText()]
+                delimiter = delimiters[self.delimiter.currentText()]
+                formatting = "%.{}f".format(self.decimal.value())
+                separator = separators[self.separator.currentText()]
                 
-                zprofil.exporter(chemin, delimiteur, formatage, separateur)
+                zprofile.export(path, delimiter, formatting, separator)
 
             self.accept()
             
         except:
-            alerte = QMessageBox(self)
-            alerte.setText("L'exportation a échoué !")
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Processing failed. Sorry.")
+            alert.exec_()
             pass
