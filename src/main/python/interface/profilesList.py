@@ -190,6 +190,6 @@ class ProfilesList(List):
             sprofile.update()
 
             if sprofile.annotationsVisible:
-                self.pyLong.canvas.plot()
+                self.pyLong.canvas.updateFigure()
             else:
                 self.pyLong.canvas.draw()
