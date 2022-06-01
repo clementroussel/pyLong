@@ -86,23 +86,24 @@ class ProfilesList(List):
                 i = indices[0]
                 zprofile, sprofile = self.pyLong.project.profiles[i]
 
-                dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Delete a profile")
-                dialogue.setText("Delete profile : {} ?".format(zprofile.title))
-                dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Yes")
-                dialogue.button(QMessageBox.No).setText("No")
-                dialogue.setIcon(QMessageBox.Question)
-                reponse = dialogue.exec_()
+                dialog = QMessageBox(self)
+                dialog.setWindowTitle("Delete a profile")
+                dialog.setText("Delete : {} ?".format(zprofile.title))
+                dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                dialog.button(QMessageBox.Yes).setText("Yes")
+                dialog.button(QMessageBox.No).setText("No")
+                dialog.setIcon(QMessageBox.Question)
+                answer = dialog.exec_()
 
-                if reponse == QMessageBox.Yes:
+                if answer == QMessageBox.Yes:
                     self.pyLong.project.profiles.pop(i)
                     self.update()
 
                     if sprofile.annotationsVisible:
-                        self.pyLong.canvas.plot()
+                        self.pyLong.canvas.updateFigure()
                     else:
                         zprofile.line.remove()
+                        sprofile.trickLine.remove()
 
                         try:
                             sprofile.line.remove()
@@ -127,16 +128,16 @@ class ProfilesList(List):
                     pass
 
             else:
-                dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Delete profiles")
-                dialogue.setText("Delete the {} selected profiles ?".format(len(indices)))
-                dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Yes")
-                dialogue.button(QMessageBox.No).setText("No")
-                dialogue.setIcon(QMessageBox.Question)
-                reponse = dialogue.exec_()
+                dialog = QMessageBox(self)
+                dialog.setWindowTitle("Delete profiles")
+                dialog.setText("Delete the {} selected profiles ?".format(len(indices)))
+                dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                dialog.button(QMessageBox.Yes).setText("Yes")
+                dialog.button(QMessageBox.No).setText("No")
+                dialog.setIcon(QMessageBox.Question)
+                answer = dialog.exec_()
 
-                if reponse == QMessageBox.Yes:
+                if answer == QMessageBox.Yes:
                     for i in indices:
                         zprofile, sprofile = self.pyLong.project.profiles[i]
 
@@ -144,9 +145,10 @@ class ProfilesList(List):
                         self.update()
 
                         if sprofile.annotationsVisible:
-                            self.pyLong.canvas.plot()
+                            self.pyLong.canvas.updateFigure()
                         else:
                             zprofile.line.remove()
+                            sprofile.trickLine.remove()
 
                             try:
                                 sprofile.line.remove()
@@ -171,10 +173,10 @@ class ProfilesList(List):
                         pass
 
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Select at least one profile before running this command.")
-            alerte.setIcon(QMessageBox.Warning)
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Select at least one profile before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
     def activate(self):
         for j in range(self.list.count()):

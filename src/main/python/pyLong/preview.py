@@ -60,24 +60,25 @@ class Preview:
             pass
         
     def addOnClickOnProfile(self, event):
-        try:
-            if event.inaxes != self.line.axes:
-                return 0
-            
-            xs = list(self.line.get_xdata())
-            ys = list(self.line.get_ydata())
-    
-            xs.append(event.xdata)
-            xs.sort()        
-    
-            i = xs.index(event.xdata)
-            ys.insert(i, self.profil.interpolate(event.xdata))
-            
-            self.line.set_data(xs, ys)
-            self.line.figure.canvas.draw()
+        # try:
+        if event.inaxes != self.line.axes:
+            return 0
+        
+        xs = list(self.line.get_xdata())
+        ys = list(self.line.get_ydata())
 
-        except:
-            pass
+        xs.append(event.xdata)
+        xs.sort()        
+
+        i = xs.index(event.xdata)
+        ys.insert(i, self.profile.interpolate(event.xdata))
+        
+        self.line.set_data(xs, ys)
+        self.line.figure.canvas.draw()
+
+        # except:
+        #     print("bug")
+        #     pass
         
     def deleteOnPick(self, event):
         try:

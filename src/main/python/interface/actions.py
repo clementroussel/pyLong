@@ -164,7 +164,7 @@ def createActions(self):
     self.profileToolBar.addAction(self.exportAction)
 
     self.profileDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)
-    #self.profileDeleteAction.triggered.connect(self.profileDelete)
+    self.profileDeleteAction.triggered.connect(self.profileDelete)
     self.profileDeleteAction.setShortcut(QKeySequence("Alt+P"))
     self.profileToolBar.addAction(self.profileDeleteAction)
 
@@ -176,28 +176,28 @@ def createActions(self):
 
     self.editingAction = QAction(QIcon(self.appctxt.get_resource('icons/editing.png')), "Interactive editing", self)
     self.editingAction.setCheckable(True)
-    #self.action_editerProfils.triggered.connect(self.edit)
+    self.editingAction.triggered.connect(self.edit)
     self.editingToolBar.addAction(self.editingAction)
 
     self.addPointAction = QAction(QIcon(self.appctxt.get_resource('icons/addPoint.png')), "Add a vertice", self)
     self.addPointAction.setCheckable(True)
-    #self.addPointAction.triggered.connect(self.addPoint)
+    self.addPointAction.triggered.connect(self.addPoint)
     self.addPointAction.setShortcut(QKeySequence("Shift+A"))
     self.editingToolBar.addAction(self.addPointAction)
     self.addPointAction.setVisible(False)
 
     self.deletePointAction = QAction(QIcon(self.appctxt.get_resource('icons/deletePoint.png')), "Delete a vertice", self)
     self.deletePointAction.setCheckable(True)
-    #self.deletePointAction.triggered.connect(self.removePoint)
+    self.deletePointAction.triggered.connect(self.removePoint)
     self.deletePointAction.setShortcut(QKeySequence("Shift+S"))
     self.editingToolBar.addAction(self.deletePointAction)
     self.deletePointAction.setVisible(False)
 
     self.magnetismAction = QAction(QIcon(self.appctxt.get_resource('icons/magnetism.png')), "Magnetism", self)
     self.magnetismAction.setCheckable(True)
+    self.magnetismAction.triggered.connect(self.updateProfilesList)
+    self.magnetismAction.triggered.connect(self.activateMagnetism)
     self.editingToolBar.addAction(self.magnetismAction)
-    #self.magnetismAction.triggered.connect(self.updateListingProfils)
-    #self.magnetismAction.triggered.connect(self.activerMagnetisme)
     self.magnetismAction.setVisible(False)
 
     self.profilesComboBox = QComboBox()

@@ -157,11 +157,11 @@ class MainWindow(QMainWindow):
 #             for layout in self.projet.layouts:
 #                 self.listeLayouts.addItem(layout.intitule)
 
-#             self.listeProfils.update()
-#             self.listeAnnotations.updateGroupes()
-#             self.listeAnnotations.updateListe()
-#             self.listeCalculs.update()
-#             self.listeAutresDonnees.update()
+#             self.profilesList.update()
+#             self.annotationsList.updateGroupes()
+#             self.annotationsList.updateListe()
+#             self.calculationsList.update()
+#             self.otherDataList.update()
 
 #             self.freeze = False
 #             self.canvas.dessiner()
@@ -192,13 +192,13 @@ class MainWindow(QMainWindow):
 #             self.menuRecent.addAction(f"{chemin}", lambda path=chemin: self.ouvrirProjetRecent(chemin=path))
 
 #     def ouvrirStyleCalcul(self):
-#         self.listeCalculs.ouvrirCalcul()
+#         self.calculationsList.ouvrirCalcul()
 
 #     def ouvrirStyleAnnotation(self):
-#         self.listeAnnotations.ouvrirAnnotation()
+#         self.annotationsList.ouvrirAnnotation()
 
 #     def annotations2ligneRappel(self):
-#         self.listeAnnotations.creerLigneRappel()
+#         self.annotationsList.creerLigneRappel()
 
 #     def lignesRappel(self):
 #         DialogLignesRappel(parent=self).exec_()
@@ -216,7 +216,7 @@ class MainWindow(QMainWindow):
         self.canvas.zoomOut()
 
 #     def optionsDonnees(self):
-#         if self.listeAutresDonnees.selection():
+#         if self.otherDataList.selection():
 #             DialogOptionsDonnees(parent=self).exec_()
 #         else:
 #             alerte = QMessageBox(self)
@@ -307,18 +307,18 @@ class MainWindow(QMainWindow):
 #         DialogGestionSubplots(parent=self).exec_()
 
 #     def gestionGroupes(self):
-#         i = self.listeAnnotations.groupes.currentIndex()
+#         i = self.annotationsList.groupes.currentIndex()
 #         DialogGestionGroupes(parent=self).exec_()
-#         self.listeAnnotations.updateGroupes()
-#         self.listeAnnotations.groupes.setCurrentIndex(i)
-#         self.listeAnnotations.updateListe()
+#         self.annotationsList.updateGroupes()
+#         self.annotationsList.groupes.setCurrentIndex(i)
+#         self.annotationsList.updateListe()
 #         self.canvas.dessiner()
 
 #     def dupliquerAnnotations(self):
-#         if self.listeAnnotations.selection():
-#             j = self.listeAnnotations.groupes.currentIndex()
+#         if self.annotationsList.selection():
+#             j = self.annotationsList.groupes.currentIndex()
 #             indices = []
-#             for item in self.listeAnnotations.liste.selectedIndexes():
+#             for item in self.annotationsList.liste.selectedIndexes():
 #                 indices.append(item.row())
 
 #             for i in indices:
@@ -347,7 +347,7 @@ class MainWindow(QMainWindow):
 #                     self.projet.groupes[j].annotations.append(rect)
 #                     self.canvas.ax_z.add_patch(rect.rectangle)
 
-#             self.listeAnnotations.updateListe()
+#             self.annotationsList.updateListe()
 #             self.canvas.updateLegendes()
 
 #         else:
@@ -357,9 +357,9 @@ class MainWindow(QMainWindow):
 #             alerte.exec_()
 
 #     def copierPropriete(self):
-#         if self.listeAnnotations.selection():
-#             i = self.listeAnnotations.groupes.currentIndex()
-#             j = self.listeAnnotations.liste.currentRow()
+#         if self.annotationsList.selection():
+#             i = self.annotationsList.groupes.currentIndex()
+#             j = self.annotationsList.liste.currentRow()
 #             self.projet.annotationModele = self.projet.groupes[i].annotations[j]
 #         else:
 #             alerte = QMessageBox(self)
@@ -368,10 +368,10 @@ class MainWindow(QMainWindow):
 #             alerte.exec_()
 
 #     def collerPropriete(self):
-#         if self.listeAnnotations.selection():
-#             j = self.listeAnnotations.groupes.currentIndex()
+#         if self.annotationsList.selection():
+#             j = self.annotationsList.groupes.currentIndex()
 #             indices = []
-#             for item in self.listeAnnotations.liste.selectedIndexes():
+#             for item in self.annotationsList.liste.selectedIndexes():
 #                 indices.append(item.row())
 
 #             for i in indices:
@@ -472,11 +472,11 @@ class MainWindow(QMainWindow):
 #                 for layout in self.projet.layouts:
 #                     self.listeLayouts.addItem(layout.intitule)
 
-#                 self.listeProfils.update()
-#                 self.listeAnnotations.updateGroupes()
-#                 self.listeAnnotations.updateListe()
-#                 self.listeCalculs.update()
-#                 self.listeAutresDonnees.update()
+#                 self.profilesList.update()
+#                 self.annotationsList.updateGroupes()
+#                 self.annotationsList.updateListe()
+#                 self.calculationsList.update()
+#                 self.otherDataList.update()
 
 #                 self.freeze = False
 #                 self.canvas.dessiner()
@@ -510,11 +510,11 @@ class MainWindow(QMainWindow):
 #             for layout in self.projet.layouts:
 #                 self.listeLayouts.addItem(layout.intitule)
 
-#             self.listeProfils.update()
-#             self.listeAnnotations.updateGroupes()
-#             self.listeAnnotations.updateListe()
-#             self.listeCalculs.update()
-#             self.listeAutresDonnees.update()
+#             self.profilesList.update()
+#             self.annotationsList.updateGroupes()
+#             self.annotationsList.updateListe()
+#             self.calculationsList.update()
+#             self.otherDataList.update()
 
 #             self.setWindowTitle("pyLong")
 
@@ -529,11 +529,11 @@ class MainWindow(QMainWindow):
 #             for layout in self.projet.layouts:
 #                 self.listeLayouts.addItem(layout.intitule)
 
-#             self.listeProfils.update()
-#             self.listeAnnotations.updateGroupes()
-#             self.listeAnnotations.updateListe()
-#             self.listeCalculs.update()
-#             self.listeAutresDonnees.update()
+#             self.profilesList.update()
+#             self.annotationsList.updateGroupes()
+#             self.annotationsList.updateListe()
+#             self.calculationsList.update()
+#             self.otherDataList.update()
 
 #             self.setWindowTitle("pyLong")
 
@@ -546,7 +546,7 @@ class MainWindow(QMainWindow):
 #         DialogImprimer(parent=self).exec_()
 
 #     def ajusterAnnotations(self):
-#         if self.listeAnnotations.selection():
+#         if self.annotationsList.selection():
 #             DialogAjusterAnnotations(parent=self).exec()
 #         else:
 #             alerte = QMessageBox(self)
@@ -555,22 +555,22 @@ class MainWindow(QMainWindow):
 #             alerte.exec_()
 
 #     def supprimerDonnees(self):
-#         self.listeAutresDonnees.supprimer()
+#         self.otherDataList.supprimer()
 
-#     def supprimerProfils(self):
-#         self.listeProfils.supprimer()
+    def profileDelete(self):
+        self.profilesList.delete()
 
 #     def supprimerCalculs(self):
-#         self.listeCalculs.supprimer()
+#         self.calculationsList.supprimer()
 
 #     def supprimerAnnotation(self):
-#         self.listeAnnotations.supprimer()
+#         self.annotationsList.supprimer()
 
 #     def toolBox(self):
 #         DialogToolBox(parent=self).exec_()
 
 #     def tableauValeurs(self):
-#         if self.listeProfils.selection():
+#         if self.profilesList.selection():
 #             DialogTableauValeurs(parent=self).exec_()
 
 #         else:
@@ -592,256 +592,246 @@ class MainWindow(QMainWindow):
             alert.setIcon(QMessageBox.Warning)
             alert.exec_()
 
-#     def addPoint(self, checked):
-#         self.controleOutilsNavigation()
+    def addPoint(self, checked):
+        self.checkNavigationTools()
 
-#         if checked:
-#             self.supprimerPoint.setChecked(False)
-#             try:
-#                 self.canvas.customContextMenuRequested.disconnect(self.canvas.contextMenu)
-#             except:
-#                 pass
+        if checked:
+            self.deletePointAction.setChecked(False)
+            try:
+                self.canvas.customContextMenuRequested.disconnect(self.canvas.contextMenu)
+            except:
+                pass
 
-#             self.barreDeNavigation._actions['pan'].setEnabled(False)
-#             self.barreDeNavigation._actions['zoom'].setEnabled(False)
+            self.navigationBar._actions['pan'].setEnabled(False)
+            self.navigationBar._actions['zoom'].setEnabled(False)
+            self.navigationBar._actions['back'].setEnabled(False)
+            self.navigationBar._actions['forward'].setEnabled(False)
 
-#             try:
-#                 self.projet.apercu.line.figure.canvas.mpl_disconnect(self.projet.apercu.cid)
-#             except:
-#                 pass
+            try:
+                self.project.preview.line.figure.canvas.mpl_disconnect(self.project.preview.cid)
+            except:
+                pass
 
-#             # self.canvas.setCursor(Qt.CrossCursor)
+            if not self.magnetismAction.isChecked():
+                self.project.preview.cid = self.project.preview.line.figure.canvas.mpl_connect('button_press_event', self.project.preview.addOnClick)
+            else:
+                i = self.profilesComboBox.currentIndex()
+                zprofile, sprofile = self.project.profiles[i]
+                self.project.preview.profile = zprofile
+                self.project.preview.cid = self.project.preview.line.figure.canvas.mpl_connect('button_press_event', self.project.preview.addOnClickOnProfile)
 
-#             if not self.magnetisme.isChecked():
-#                 self.projet.apercu.cid = self.projet.apercu.line.figure.canvas.mpl_connect('button_press_event', self.projet.apercu.addOnClick)
-#             else:
-#                 i = self.listingProfils.currentIndex()
-#                 zprofil, pprofil = self.projet.profils[i]
-#                 self.projet.apercu.profil = zprofil
-#                 self.projet.apercu.cid = self.projet.apercu.line.figure.canvas.mpl_connect('button_press_event', self.projet.apercu.addOnClickOnProfile)
+        else:
+            try:
+                self.canvas.customContextMenuRequested.connect(self.canvas.contextMenu)
+            except:
+                pass
+            self.navigationBar._actions['pan'].setEnabled(True)
+            self.navigationBar._actions['zoom'].setEnabled(True)
+            self.navigationBar._actions['back'].setEnabled(True)
+            self.navigationBar._actions['forward'].setEnabled(True)
 
-#         else:
-#             try:
-#                 self.canvas.customContextMenuRequested.connect(self.canvas.contextMenu)
-#             except:
-#                 pass
-#             self.barreDeNavigation._actions['pan'].setEnabled(True)
-#             self.barreDeNavigation._actions['zoom'].setEnabled(True)
+            try:
+                self.project.preview.line.figure.canvas.mpl_disconnect(self.project.preview.cid)
+            except:
+                pass
 
-#             try:
-#                 self.projet.apercu.line.figure.canvas.mpl_disconnect(self.projet.apercu.cid)
-#             except:
-#                 pass
+    def removePoint(self, checked):
+        self.checkNavigationTools()
 
-#             # self.canvas.setCursor(Qt.ArrowCursor)
+        if checked:
+            self.addPointAction.setChecked(False)
+            try:
+                self.canvas.customContextMenuRequested.disconnect(self.canvas.contextMenu)
+            except:
+                pass
 
-#     def removePoint(self, checked):
-#         self.controleOutilsNavigation()
+            self.navigationBar._actions['pan'].setEnabled(False)
+            self.navigationBar._actions['zoom'].setEnabled(False)
+            self.navigationBar._actions['back'].setEnabled(False)
+            self.navigationBar._actions['forward'].setEnabled(False)
 
-#         if checked:
-#             self.ajouterPoint.setChecked(False)
-#             try:
-#                 self.canvas.customContextMenuRequested.disconnect(self.canvas.contextMenu)
-#             except:
-#                 pass
+            try:
+                self.project.preview.line.figure.canvas.mpl_disconnect(self.project.preview.cid)
+            except:
+                pass
 
-#             self.barreDeNavigation._actions['pan'].setEnabled(False)
-#             self.barreDeNavigation._actions['zoom'].setEnabled(False)
+            self.project.preview.cid = self.project.preview.line.figure.canvas.mpl_connect('pick_event', self.project.preview.deleteOnPick)
 
-#             try:
-#                 self.projet.apercu.line.figure.canvas.mpl_disconnect(self.projet.apercu.cid)
-#             except:
-#                 pass
+        else:
+            try:
+                self.canvas.customContextMenuRequested.connect(self.canvas.contextMenu)
+            except:
+                pass
+            self.barreDeNavigation._actions['pan'].setEnabled(True)
+            self.barreDeNavigation._actions['zoom'].setEnabled(True)
+            self.barreDeNavigation._actions['back'].setEnabled(True)
+            self.barreDeNavigation._actions['forward'].setEnabled(True)
+            try:
+                self.project.preview.line.figure.canvas.mpl_disconnect(self.project.prview.cid)
+            except:
+                pass
 
-#             # self.canvas.setCursor(Qt.CrossCursor)
+    def activateMagnetism(self):
+        self.checkNavigationTools()
 
-#             self.projet.apercu.cid = self.projet.apercu.line.figure.canvas.mpl_connect('pick_event', self.projet.apercu.deleteOnPick)
+        self.addPointAction.setChecked(False)
+        self.deletePointAction.setChecked(False)
 
-#         else:
-#             try:
-#                 self.canvas.customContextMenuRequested.connect(self.canvas.contextMenu)
-#             except:
-#                 pass
-#             self.barreDeNavigation._actions['pan'].setEnabled(True)
-#             self.barreDeNavigation._actions['zoom'].setEnabled(True)
-#             try:
-#                 self.projet.apercu.line.figure.canvas.mpl_disconnect(self.projet.apercu.cid)
-#             except:
-#                 pass
+        try:
+            self.project.preview.line.figure.canvas.mpl_disconnect(self.project.preview.cid)
+        except:
+            pass
 
-#             # self.canvas.setCursor(Qt.ArrowCursor)
+    def updateProfilesList(self, checked):
+        self.profilesComboBox.clear()
+        if checked:
+            self.profilesComboBox.setEnabled(True)
+            for zprofile, sprofile in self.project.profiles:
+                self.profilesComboBox.addItem(zprofile.title)
+        else:
+            self.profilesComboBox.setEnabled(False)
 
-#     def activerMagnetisme(self):
-#         self.controleOutilsNavigation()
+    def edit(self, checked):
+        if not self.profilesList.selection():
+            self.editingAction.setChecked(False)
 
-#         self.ajouterPoint.setChecked(False)
-#         self.supprimerPoint.setChecked(False)
+            alert = QMessageBox(self)
+            alert.setText("Select a profile before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
+            return 0
 
-#         try:
-#             self.projet.apercu.line.figure.canvas.mpl_disconnect(self.projet.apercu.cid)
-#         except:
-#             pass
+        else:
+            if checked:
+                i = self.profilesList.list.currentRow()
+                zprofile, sprofile = self.project.profiles[i]
 
-#         # self.canvas.setCursor(Qt.ArrowCursor)
+                self.interactiveEdition = True
 
-#     def updateListingProfils(self, checked):
-#         self.listingProfils.clear()
-#         if checked:
-#             self.actionListingProfils.setEnabled(True)
-#             for zprofil, pprofil in self.projet.profils:
-#                 self.listingProfils.addItem(zprofil.intitule)
-#         else:
-#             self.actionListingProfils.setEnabled(False)
+                self.profilesList.setEnabled(False)
+                self.annotationsList.setEnabled(False)
+                self.calculationsList.setEnabled(False)
+                self.otherDataList.setEnabled(False)
 
-#     def editionProfil(self, checked):
-#         if not self.listeProfils.selection():
-#             self.action_editerProfils.setChecked(False)
+                self.projectToolBar.setEnabled(False)
+                self.figureToolBar.setEnabled(False)
+                self.subplotToolBar.setEnabled(False)
+                self.profileToolBar.setEnabled(False)
+                self.annotationToolBar.setEnabled(False)
+                self.reminderLineToolBar.setEnabled(False)
+                self.toolboxToolBar.setEnabled(False)
+                self.otherDataToolBar.setEnabled(False)
+                self.resourceToolBar.setEnabled(False)
+                self.onfToolBar.setEnabled(False)
 
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez un profil avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
-#             return 0
+                self.projectMenu.setEnabled(False)
+                self.figureMenu.setEnabled(False)
+                self.subplotMenu.setEnabled(False)
+                self.profileMenu.setEnabled(False)
+                self.annotationMenu.setEnabled(False)
+                self.reminderLineMenu.setEnabled(False)
+                self.toolboxMenu.setEnabled(False)
+                self.otherDataMenu.setEnabled(False)
+                self.resourceMenu.setEnabled(False)
 
-#         else:
-#             if checked:
-#                 i = self.listeProfils.liste.currentRow()
-#                 zprofil, pprofil = self.projet.profils[i]
+                self.addPointAction.setEnabled(True)
+                self.addPointAction.setVisible(True)
+                self.addPointAction.setChecked(False)
+                self.deletePointAction.setEnabled(True)
+                self.deletePointAction.setVisible(True)
+                self.deletePointAction.setChecked(False)
+                self.magnetismAction.setVisible(True)
+                self.magnetismAction.setChecked(False)
+                self.profilesListAction.setVisible(True)
+                self.profilesListAction.setEnabled(False)
 
-#                 self.editionActive = True
+                self.project.preview.x = zprofile.x
+                self.project.preview.z = zprofile.z
+                self.project.preview.visible = True
+                self.project.preview.update()
 
-#                 self.listeProfils.setEnabled(False)
-#                 self.listeAnnotations.setEnabled(False)
-#                 self.listeCalculs.setEnabled(False)
-#                 self.listeAutresDonnees.setEnabled(False)
+                self.canvas.draw()
 
-#                 self.action_miseEnPage.setEnabled(False)
-#                 self.action_miseEnPage_avancee.setEnabled(False)
-#                 self.rafraichirFigure.setEnabled(False)
-#                 self.action_exporterFigure.setEnabled(False)
-#                 self.action_copierFigure.setEnabled(False)
-#                 self.action_gestionSubplots.setEnabled(False)
+            else:
+                dialog = QMessageBox(self)
+                dialog.setWindowTitle("Sortie du mode édition interactive")
+                dialog.setText("Enregistrer les modifications ?")
+                dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                dialog.button(QMessageBox.Yes).setText("Oui")
+                dialog.button(QMessageBox.No).setText("Non")
+                dialog.setIcon(QMessageBox.Question)
+                answer = dialog.exec_()
 
-#                 self.outilsProjet.setEnabled(False)
-#                 self.outilsFigure.setEnabled(False)
-#                 self.outilsSubplots.setEnabled(False)
-#                 self.outilsProfils.setEnabled(False)
-#                 self.outilsAnnotations.setEnabled(False)
-#                 self.outilsRappels.setEnabled(False)
-#                 self.outilsToolBox.setEnabled(False)
-#                 self.outilsAutresDonnees.setEnabled(False)
-#                 self.outilsRessources.setEnabled(False)
-#                 self.outilsONF.setEnabled(False)
+                if answer == QMessageBox.Yes:
+                    xs = self.project.preview.line.get_xdata()
+                    ys = self.project.preview.line.get_ydata()
 
-#                 self.menuProjet.setEnabled(False)
-#                 self.menuFigure.setEnabled(False)
-#                 self.menuSubplot.setEnabled(False)
-#                 self.menuProfil.setEnabled(False)
-#                 self.menuAnnotation.setEnabled(False)
-#                 self.menuRappel.setEnabled(False)
-#                 self.menuToolBox.setEnabled(False)
-#                 self.menuAutresDonnees.setEnabled(False)
-#                 self.menuRessources.setEnabled(False)
+                    i = self.profilesList.list.currentRow()
+                    zprofile, sprofile = self.project.profiles[i]
 
-#                 self.ajouterPoint.setEnabled(True)
-#                 self.ajouterPoint.setVisible(True)
-#                 self.ajouterPoint.setChecked(False)
-#                 self.supprimerPoint.setEnabled(True)
-#                 self.supprimerPoint.setVisible(True)
-#                 self.supprimerPoint.setChecked(False)
-#                 self.magnetisme.setVisible(True)
-#                 self.magnetisme.setChecked(False)
-#                 self.actionListingProfils.setVisible(True)
-#                 self.actionListingProfils.setEnabled(False)
+                    zprofile.x = np.array(xs)
+                    zprofile.z = np.array(ys)
 
-#                 self.projet.apercu.abscisses = zprofil.abscisses
-#                 self.projet.apercu.altitudes = zprofil.altitudes
-#                 self.projet.apercu.visible = True
-#                 self.projet.apercu.update()
+                    zprofile.update()
 
-#                 self.canvas.draw()
+                    sprofile.updateData(zprofile.x, zprofile.z)
+                    sprofile.update()
 
-#             else:
-#                 dialogue = QMessageBox(self)
-#                 dialogue.setWindowTitle("Sortie du mode édition interactive")
-#                 dialogue.setText("Enregistrer les modifications ?")
-#                 dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-#                 dialogue.button(QMessageBox.Yes).setText("Oui")
-#                 dialogue.button(QMessageBox.No).setText("Non")
-#                 dialogue.setIcon(QMessageBox.Question)
-#                 reponse = dialogue.exec_()
+                    if sprofile.annotationsVisible:
+                        self.canvas.updateCanvas()
 
-#                 if reponse == QMessageBox.Yes:
-#                     xs = self.projet.apercu.line.get_xdata()
-#                     ys = self.projet.apercu.line.get_ydata()
+                self.interactiveEdition = False
 
-#                     i = self.listeProfils.liste.currentRow()
-#                     zprofil, pprofil = self.projet.profils[i]
+                self.profilesList.setEnabled(True)
+                self.annotationsList.setEnabled(True)
+                self.calculationsList.setEnabled(True)
+                self.otherDataList.setEnabled(True)
 
-#                     zprofil.abscisses = np.array(xs)
-#                     zprofil.altitudes = np.array(ys)
+                self.projectToolBar.setEnabled(True)
+                self.figureToolBar.setEnabled(True)
+                self.subplotToolBar.setEnabled(True)
+                self.profileToolBar.setEnabled(True)
+                self.annotationToolBar.setEnabled(True)
+                self.reminderLineToolBar.setEnabled(True)
+                self.toolboxToolBar.setEnabled(True)
+                self.otherDataToolBar.setEnabled(True)
+                self.resourceToolBar.setEnabled(True)
+                self.onfToolBar.setEnabled(True)
 
-#                     zprofil.update()
+                self.projectMenu.setEnabled(True)
+                self.figureMenu.setEnabled(True)
+                self.subplotMenu.setEnabled(True)
+                self.profileMenu.setEnabled(True)
+                self.annotationMenu.setEnabled(True)
+                self.reminderLineMenu.setEnabled(True)
+                self.toolboxMenu.setEnabled(True)
+                self.otherDataMenu.setEnabled(True)
+                self.resourceMenu.setEnabled(True)
 
-#                     pprofil.updateData(zprofil.abscisses, zprofil.altitudes)
-#                     pprofil.update()
+                self.navigationBar._actions['pan'].setEnabled(True)
+                self.navigationBar._actions['zoom'].setEnabled(True)
+                self.navigationBar._actions['back'].setEnabled(True)
+                self.navigationBar._actions['forward'].setEnabled(True)
 
-#                     if pprofil.pentesVisibles:
-#                         self.canvas.dessiner()
+                self.addPointAction.setEnabled(False)
+                self.addPointAction.setVisible(False)
+                self.addPointAction.setChecked(False)
+                self.deletePointAction.setEnabled(False)
+                self.deletePointAction.setVisible(False)
+                self.deletePointAction.setChecked(False)
+                self.magnetismAction.setVisible(False)
+                self.magnetismAction.setChecked(False)
+                self.profilesListAction.setVisible(False)
+                self.profilesListAction.setEnabled(False)
 
-#                 self.editionActive = False
+                self.project.preview.visible = False
+                self.project.preview.update()
+                self.canvas.draw()
 
-#                 self.listeProfils.setEnabled(True)
-#                 self.listeAnnotations.setEnabled(True)
-#                 self.listeCalculs.setEnabled(True)
-#                 self.listeAutresDonnees.setEnabled(True)
-
-#                 self.action_miseEnPage.setEnabled(True)
-#                 self.action_miseEnPage_avancee.setEnabled(True)
-#                 self.rafraichirFigure.setEnabled(True)
-#                 self.action_exporterFigure.setEnabled(True)
-#                 self.action_copierFigure.setEnabled(True)
-#                 self.action_gestionSubplots.setEnabled(True)
-
-#                 self.outilsProjet.setEnabled(True)
-#                 self.outilsFigure.setEnabled(True)
-#                 self.outilsSubplots.setEnabled(True)
-#                 self.outilsProfils.setEnabled(True)
-#                 self.outilsAnnotations.setEnabled(True)
-#                 self.outilsRappels.setEnabled(True)
-#                 self.outilsToolBox.setEnabled(True)
-#                 self.outilsAutresDonnees.setEnabled(True)
-#                 self.outilsRessources.setEnabled(True)
-#                 self.outilsONF.setEnabled(True)
-
-#                 self.menuProjet.setEnabled(True)
-#                 self.menuFigure.setEnabled(True)
-#                 self.menuSubplot.setEnabled(True)
-#                 self.menuProfil.setEnabled(True)
-#                 self.menuAnnotation.setEnabled(True)
-#                 self.menuRappel.setEnabled(True)
-#                 self.menuToolBox.setEnabled(True)
-#                 self.menuAutresDonnees.setEnabled(True)
-#                 self.menuRessources.setEnabled(True)
-
-#                 self.barreDeNavigation._actions['pan'].setEnabled(True)
-#                 self.barreDeNavigation._actions['zoom'].setEnabled(True)
-
-#                 self.ajouterPoint.setEnabled(False)
-#                 self.ajouterPoint.setVisible(False)
-#                 self.supprimerPoint.setEnabled(False)
-#                 self.supprimerPoint.setVisible(False)
-#                 self.magnetisme.setVisible(False)
-#                 self.actionListingProfils.setVisible(False)
-
-#                 self.projet.apercu.visible = False
-#                 self.projet.apercu.update()
-#                 self.canvas.draw()
-
-#             try:
-#                 self.canvas.customContextMenuRequested.connect(self.canvas.contextMenu)
-#             except:
-#                 pass
+            try:
+                self.canvas.customContextMenuRequested.connect(self.canvas.contextMenu)
+            except:
+                pass
 
     def export(self):
         if self.profilesList.selection():
@@ -897,42 +887,42 @@ class MainWindow(QMainWindow):
 
 #     def ajouterTexte(self):
 #         txt = Texte()
-#         i = self.listeAnnotations.groupes.currentIndex()
+#         i = self.annotationsList.groupes.currentIndex()
 #         txt.groupe = i
 #         txt.update()
 #         self.projet.groupes[i].annotations.append(txt)
-#         self.listeAnnotations.updateListe()
+#         self.annotationsList.updateListe()
 #         self.canvas.ax_z.add_artist(txt.text)
 #         self.canvas.draw()
 
 #     def ajouterAnnotationPonctuelle(self):
 #         ap = AnnotationPonctuelle()
-#         i = self.listeAnnotations.groupes.currentIndex()
+#         i = self.annotationsList.groupes.currentIndex()
 #         ap.groupe = i
 #         ap.update()
 #         self.projet.groupes[i].annotations.append(ap)
-#         self.listeAnnotations.updateListe()
+#         self.annotationsList.updateListe()
 #         self.canvas.ax_z.add_artist(ap.annotation)
 #         self.canvas.draw()
 
 #     def ajouterAnnotationLineaire(self):
 #         al = AnnotationLineaire()
-#         i = self.listeAnnotations.groupes.currentIndex()
+#         i = self.annotationsList.groupes.currentIndex()
 #         al.groupe = i
 #         al.update()
 #         self.projet.groupes[i].annotations.append(al)
-#         self.listeAnnotations.updateListe()
+#         self.annotationsList.updateListe()
 #         self.canvas.ax_z.add_artist(al.annotation)
 #         self.canvas.ax_z.add_artist(al.text)
 #         self.canvas.draw()
 
 #     def ajouterZone(self):
 #         zone = Zone()
-#         i = self.listeAnnotations.groupes.currentIndex()
+#         i = self.annotationsList.groupes.currentIndex()
 #         zone.groupe = i
 #         zone.update()
 #         self.projet.groupes[i].annotations.append(zone)
-#         self.listeAnnotations.updateListe()
+#         self.annotationsList.updateListe()
 #         self.canvas.ax_z.add_artist(zone.text)
 #         self.canvas.ax_z.add_line(zone.left_line)
 #         self.canvas.ax_z.add_line(zone.right_line)
@@ -940,22 +930,22 @@ class MainWindow(QMainWindow):
 
 #     def ajouterRectangle(self):
 #         rect = Rectangle()
-#         i = self.listeAnnotations.groupes.currentIndex()
+#         i = self.annotationsList.groupes.currentIndex()
 #         rect.groupe = i
 #         rect.update()
 #         self.projet.groupes[i].annotations.append(rect)
-#         self.listeAnnotations.updateListe()
+#         self.annotationsList.updateListe()
 #         self.canvas.ax_z.add_patch(rect.rectangle)
 #         self.canvas.updateLegendes()
 
 #     def supprimerGroupes(self):
-#         self.listeAnnotations.supprimerGroupe()
+#         self.annotationsList.supprimerGroupe()
 
 #     def renommerGroupe(self):
-#         self.listeAnnotations.renommerGroupe()
+#         self.annotationsList.renommerGroupe()
 
 #     def ajouterGroupe(self):
-#         self.listeAnnotations.ajouterGroupe()
+#         self.annotationsList.ajouterGroupe()
 
     def deleteLayouts(self):
         print("Delete layouts")

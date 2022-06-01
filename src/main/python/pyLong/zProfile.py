@@ -83,9 +83,9 @@ class zProfile:
         Xs.sort()
         i = Xs.index(x)
 
-        if x == self.Xs[0]:
+        if x == Xs[0]:
             return np.round(self.z[0], 3)
-        elif x == self.Xs[-1]:
+        elif x == Xs[-1]:
             return np.round(self.z[-1], 3)
         else:
             f = interp1d(self.x[i - 1:i + 1], self.z[i - 1:i + 1], kind='linear')
