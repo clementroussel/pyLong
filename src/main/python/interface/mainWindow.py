@@ -59,7 +59,7 @@ import json
 # pyLong modules
 from pyLong.project import Project
 
-# from pyLong.Texte import *
+from pyLong.text import *
 # from pyLong.AnnotationPonctuelle import *
 # from pyLong.AnnotationLineaire import *
 # from pyLong.Zone import *
@@ -885,15 +885,15 @@ class MainWindow(QMainWindow):
     def addProfile(self):
         DialogAddProfile(parent=self).exec_()
 
-#     def ajouterTexte(self):
-#         txt = Texte()
-#         i = self.annotationsList.groupes.currentIndex()
-#         txt.groupe = i
-#         txt.update()
-#         self.projet.groupes[i].annotations.append(txt)
-#         self.annotationsList.updateListe()
-#         self.canvas.ax_z.add_artist(txt.text)
-#         self.canvas.draw()
+    # def addText(self):
+    #     txt = Text()
+    #     i = self.annotationsList.groups.currentIndex()
+    #     txt.group = i
+    #     txt.update()
+    #     self.project.groups[i].annotations.append(txt)
+    #     self.annotationsList.updateList()
+    #     self.canvas.ax_z.add_artist(txt.text)
+    #     self.canvas.draw()
 
 #     def ajouterAnnotationPonctuelle(self):
 #         ap = AnnotationPonctuelle()

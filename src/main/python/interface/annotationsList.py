@@ -11,12 +11,12 @@ from pyLong.linearAnnotation import LinearAnnotation
 from pyLong.interval import Interval
 from pyLong.rectangle import Rectangle
 
-# from DialogTexte import *
-# from DialogAnnotationPonctuelle import *
-# from DialogAnnotationLineaire import *
-# from DialogZone import *
-# from DialogRectangle import *
-# from DialogGestionGroupes import *
+from interface.dialogText import *
+from interface.dialogVerticalAnnotation import *
+from interface.dialogLinearAnnotation import *
+from interface.dialogInterval import *
+from interface.dialogRectangle import *
+from interface.dialogManageGroups import *
 
 # from DialogAjoutGroupe import *
 # from DialogRenommerGroupe import *
@@ -31,8 +31,8 @@ class AnnotationsList(List):
 
         self.pyLong = parent
 
-        # self.liste.doubleClicked.connect(self.ouvrirAnnotation)
-        # self.liste.itemChanged.connect(self.activerAnnotation)
+        # self.list.doubleClicked.connect(self.annotationStyle)
+        # self.list.itemChanged.connect(self.activate)
 
         self.list.setContextMenuPolicy(Qt.CustomContextMenu)
         self.list.customContextMenuRequested.connect(self.contextMenu)
@@ -64,13 +64,15 @@ class AnnotationsList(List):
 
         sublayout = QHBoxLayout()
 
+        subsublayout = QVBoxLayout()
+
         self.groups = CheckableComboBox()
         for i, group in enumerate(self.pyLong.project.groups):
             self.groups.addItem(group.title)
             self.groups.setItemChecked(i, group.active)
 
         # self.groupes.activated.connect(self.activerGroupe)
-        # self.groupes.currentIndexChanged.connect(self.updateListe)
+        # self.groupes.currentIndexChanged.connect(self.updateList)
         self.groups.setContextMenuPolicy(Qt.CustomContextMenu)
         self.groups.customContextMenuRequested.connect(self.contextMenuGroups)
 
@@ -82,22 +84,24 @@ class AnnotationsList(List):
         self.popMenuGroups.addSeparator()
         self.popMenuGroups.addAction(self.pyLong.deleteGroupAction)
 
-        sublayout.addWidget(self.groups)
+        layout.addWidget(self.groups)
+
+        sublayout.addWidget(self.list)
 
         # self.goUp.clicked.connect(self.goTop)
-        sublayout.addWidget(self.goTop)
+        subsublayout.addWidget(self.goTop)
 
         # moveUp.clicked.connect(self.moveUp)
-        sublayout.addWidget(self.moveUp)
+        subsublayout.addWidget(self.moveUp)
 
         # moveDown.clicked.connect(self.moveDown)
-        sublayout.addWidget(self.moveDown)
+        subsublayout.addWidget(self.moveDown)
 
         # self.goDown.clicked.connect(self.goDown)
-        sublayout.addWidget(self.goBottom)
+        subsublayout.addWidget(self.goBottom)
 
+        sublayout.addLayout(subsublayout)
         layout.addLayout(sublayout)
-        layout.addWidget(self.list)
         self.setLayout(layout)
 
     def contextMenu(self, point):
@@ -124,41 +128,41 @@ class AnnotationsList(List):
         self.popMenuGroups.exec_(self.groups.mapToGlobal(point))
 
     def selection(self):
-        n = self.liste.count()
+        n = self.list.count()
         selections = []
 
         for i in range(n):
-            selections.append(self.liste.item(i).isSelected())
+            selections.append(self.list.item(i).isSelected())
 
         return n > 0 and True in selections
 
-    def ouvrirAnnotation(self):
+    def annotationStyle(self):
         if self.selection():
-            self.pyLong.controleOutilsNavigation()
-            i = self.groupes.currentIndex()
-            j = self.liste.currentRow()
-            annotation = self.pyLong.projet.groupes[i].annotations[j]
-            if type(annotation) == Texte:
-                self.dialog = DialogTexte(parent=self.pyLong)
+            self.pyLong.checkNavigationTools()
+            i = self.groups.currentIndex()
+            j = self.list.currentRow()
+            annotation = self.pyLong.project.groups[i].annotations[j]
+            if type(annotation) == Text:
+                self.dialog = DialogText(parent=self.pyLong)
                 self.dialog.show()
-            elif type(annotation) == AnnotationPonctuelle:
-                self.dialog = DialogAnnotationPonctuelle(parent=self.pyLong)
+            elif type(annotation) == VerticalAnnotation:
+                self.dialog = DialogVerticalAnnotation(parent=self.pyLong)
                 self.dialog.show()
-            elif type(annotation) == AnnotationLineaire:
-                self.dialog = DialogAnnotationLineaire(parent=self.pyLong)
+            elif type(annotation) == LinearAnnotation:
+                self.dialog = DialogLinearAnnotation(parent=self.pyLong)
                 self.dialog.show()
-            elif type(annotation) == Zone:
-                self.dialog = DialogZone(parent=self.pyLong)
+            elif type(annotation) == Interval:
+                self.dialog = DialogInterval(parent=self.pyLong)
                 self.dialog.show()
             elif type(annotation) == Rectangle:
                 self.dialog = DialogRectangle(parent=self.pyLong)
                 self.dialog.show()
 
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Sélectionnez une ou plusieurs annotation(s) avant de lancer cette commande.")
-            alerte.setIcon(QMessageBox.Warning)
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Select an annotation before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
     def ajouterGroupe(self):
         DialogAjoutGroupe(parent=self.pyLong).exec_()

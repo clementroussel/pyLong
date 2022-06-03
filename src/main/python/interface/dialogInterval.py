@@ -4,12 +4,12 @@ from PyQt5.QtCore import *
 
 import numpy as np
 
-from pyLong.dictionnaires import *
+from pyLong.dictionaries import *
 
-from ColorsComboBox import *
+from interface.colorsComboBox import *
 
 
-class DialogZone(QDialog):
+class DialogInterval(QDialog):
     def __init__(self, parent):
         super().__init__(parent=parent)
         

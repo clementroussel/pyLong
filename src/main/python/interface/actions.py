@@ -213,7 +213,7 @@ def createActions(self):
     self.annotationToolBar.setIconSize(QSize(20, 20))
 
     self.addTextAction = QAction(QIcon(self.appctxt.get_resource('icons/text.png')), "Add a text", self)
-    #self.addTextAction.triggered.connect(self.addText)
+    # self.addTextAction.triggered.connect(self.addText)
     self.annotationToolBar.addAction(self.addTextAction)
 
     self.addVerticalAnnotationAction = QAction(QIcon(self.appctxt.get_resource('icons/verticalAnnotation.png')), "Add a vertical annotation", self)

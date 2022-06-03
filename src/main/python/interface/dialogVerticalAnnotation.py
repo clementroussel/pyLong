@@ -4,10 +4,10 @@ from PyQt5.QtCore import *
 
 import numpy as np
 
-from ColorsComboBox import *
+from interface.colorsComboBox import *
 
 
-class DialogAnnotationPonctuelle(QDialog):
+class DialogVerticalAnnotation(QDialog):
     def __init__(self, parent):
         super().__init__(parent=parent)
 
