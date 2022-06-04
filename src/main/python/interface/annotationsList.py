@@ -18,9 +18,9 @@ from interface.dialogInterval import *
 from interface.dialogRectangle import *
 from interface.dialogManageGroups import *
 
-# from DialogAjoutGroupe import *
-# from DialogRenommerGroupe import *
-# from DialogSupprimerGroupes import *
+from interface.dialogAddGroup import *
+from interface.dialogRenameGroup import *
+from interface.dialogDeleteGroups import *
 
 from pyLong.reminderLine import ReminderLine
 
@@ -71,8 +71,8 @@ class AnnotationsList(List):
             self.groups.addItem(group.title)
             self.groups.setItemChecked(i, group.active)
 
-        # self.groupes.activated.connect(self.activerGroupe)
-        # self.groupes.currentIndexChanged.connect(self.updateList)
+        self.groups.activated.connect(self.activateGroup)
+        self.groups.currentIndexChanged.connect(self.updateList)
         self.groups.setContextMenuPolicy(Qt.CustomContextMenu)
         self.groups.customContextMenuRequested.connect(self.contextMenuGroups)
 
@@ -82,22 +82,22 @@ class AnnotationsList(List):
         self.popMenuGroups.addSeparator()
         self.popMenuGroups.addAction(self.pyLong.renameGroupAction)
         self.popMenuGroups.addSeparator()
-        self.popMenuGroups.addAction(self.pyLong.deleteGroupAction)
+        self.popMenuGroups.addAction(self.pyLong.deleteGroupsAction)
 
         layout.addWidget(self.groups)
 
         sublayout.addWidget(self.list)
 
-        # self.goUp.clicked.connect(self.goTop)
+        self.goTop.clicked.connect(self.goTopMethod)
         subsublayout.addWidget(self.goTop)
 
-        # moveUp.clicked.connect(self.moveUp)
+        self.moveUp.clicked.connect(self.moveUpMethod)
         subsublayout.addWidget(self.moveUp)
 
-        # moveDown.clicked.connect(self.moveDown)
+        self.moveDown.clicked.connect(self.moveDownMethod)
         subsublayout.addWidget(self.moveDown)
 
-        # self.goDown.clicked.connect(self.goDown)
+        self.goBottom.clicked.connect(self.goBottomMethod)
         subsublayout.addWidget(self.goBottom)
 
         sublayout.addLayout(subsublayout)
@@ -164,114 +164,112 @@ class AnnotationsList(List):
             alert.setIcon(QMessageBox.Warning)
             alert.exec_()
 
-    def ajouterGroupe(self):
-        DialogAjoutGroupe(parent=self.pyLong).exec_()
+    def addGroup(self):
+        DialogAddGroup(parent=self.pyLong).exec_()
 
-    def renommerGroupe(self) :
-        i = self.groupes.currentIndex()
+    def renameGroup(self) :
+        i = self.groups.currentIndex()
         if i != 0:
-            DialogRenommerGroupe(parent=self.pyLong).exec_()
+            DialogRenameGroup(parent=self.pyLong).exec_()
 
-    def supprimerGroupes(self):
-        DialogSupprimerGroupes(parent=self.pyLong).exec_()
+    def deleteGroups(self):
+        DialogDeleteGroups(parent=self.pyLong).exec_()
 
-    def updateGroupes(self):
-        self.groupes.clear()
-        for i, groupe in enumerate(self.pyLong.projet.groupes):
-            self.groupes.addItem(groupe.intitule)
-            self.groupes.setItemChecked(i, groupe.actif)
+    def updateGroups(self):
+        self.groups.clear()
+        for i, group in enumerate(self.pyLong.project.groups):
+            self.groups.addItem(group.title)
+            self.groups.setItemChecked(i, group.active)
 
-    def updateListe(self):
-        self.liste.clear()
-        i = self.groupes.currentIndex()
-        for annotation in self.pyLong.projet.groupes[i].annotations:
+    def updateList(self):
+        self.list.clear()
+        i = self.groups.currentIndex()
+        for annotation in self.pyLong.project.groups[i].annotations:
             item = QListWidgetItem()
-            item.setText(annotation.intitule)
+            item.setText(annotation.title)
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            if annotation.actif:
+            if annotation.active:
                 item.setCheckState(Qt.Checked)
             else:
                 item.setCheckState(Qt.Unchecked)
-            self.liste.addItem(item)
+            self.list.addItem(item)
 
-    def monterAnnotation(self):
+    def moveUpMethod(self):
         if self.selection():
-            i = self.groupes.currentIndex()
-            j = self.liste.currentRow()
+            i = self.groups.currentIndex()
+            j = self.list.currentRow()
 
             if j != 0:
-                self.pyLong.projet.groupes[i].annotations[j-1], self.pyLong.projet.groupes[i].annotations[j] = \
-                    self.pyLong.projet.groupes[i].annotations[j], self.pyLong.projet.groupes[i].annotations[j-1]
-                self.updateListe()
-                self.liste.setCurrentRow(j-1)
+                self.pyLong.project.groups[i].annotations[j-1], self.pyLong.project.groups[i].annotations[j] = \
+                    self.pyLong.project.groups[i].annotations[j], self.pyLong.project.groups[i].annotations[j-1]
+                self.updateList()
+                self.list.setCurrentRow(j-1)
 
-    def descendreAnnotation(self):
+    def moveDownMethod(self):
         if self.selection():
-            i = self.groupes.currentIndex()
-            j = self.liste.currentRow()
+            i = self.groups.currentIndex()
+            j = self.list.currentRow()
 
-            n = self.liste.count()
+            n = self.list.count()
 
             if j != n-1:
-                self.pyLong.projet.groupes[i].annotations[j+1], self.pyLong.projet.groupes[i].annotations[j] = \
-                    self.pyLong.projet.groupes[i].annotations[j], self.pyLong.projet.groupes[i].annotations[j+1]
-                self.updateListe()
-                self.liste.setCurrentRow(j+1)
+                self.pyLong.project.groups[i].annotations[j+1], self.pyLong.project.groups[i].annotations[j] = \
+                    self.pyLong.project.groups[i].annotations[j], self.pyLong.project.groups[i].annotations[j+1]
+                self.updateList()
+                self.list.setCurrentRow(j+1)
 
-    def deplacerVersHaut(self):
+    def goTopMethod(self):
         if self.selection():
-            i = self.groupes.currentIndex()
-            j = self.liste.currentRow()
+            i = self.groups.currentIndex()
+            j = self.list.currentRow()
 
             while j != 0:
-                self.monterAnnotation()
+                self.moveUpMethod()
                 j -= 1
 
-    def deplacerVersBas(self):
+    def goBottomMethod(self):
         if self.selection():
-            i = self.groupes.currentIndex()
-            j = self.liste.currentRow()
+            i = self.groups.currentIndex()
+            j = self.list.currentRow()
 
-            n = self.liste.count()
+            n = self.list.count()
 
             while j != n-1:
-                self.descendreAnnotation()
+                self.moveDownMethod()
                 j += 1
 
-    def supprimer(self):
+    def delete(self):
         if self.selection():
-            indices = []
-            for item in self.liste.selectedIndexes():
-                indices.append(item.row())
+            indexes = []
+            for item in self.list.selectedIndexes():
+                indexes.append(item.row())
 
-            indices.sort()
-            indices.reverse()
+            indexes.sort()
+            indexes.reverse()
 
-            if len(indices) == 1:
-                i = indices[0]
-                annotation = self.pyLong.projet.groupes[self.groupes.currentIndex()].annotations[i]
+            if len(indexes) == 1:
+                i = indexes[0]
+                annotation = self.pyLong.project.groups[self.groups.currentIndex()].annotations[i]
 
-                dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Supprimer une annotation")
-                dialogue.setText("Supprimer l'annotation' : {} ?".format(annotation.intitule))
-                dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Oui")
-                dialogue.button(QMessageBox.No).setText("Non")
-                dialogue.setIcon(QMessageBox.Question)
-                reponse = dialogue.exec_()
+                dialog = QMessageBox(self)
+                dialog.setWindowTitle("Delete an annotation")
+                dialog.setText("Delete : {} ?".format(annotation.title))
+                dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                dialog.setIcon(QMessageBox.Question)
+                answer = dialog.exec_()
 
-                if reponse == QMessageBox.Yes:
-                    if type(annotation) == Texte:
+                if answer == QMessageBox.Yes:
+                    if type(annotation) == Text:
                         annotation.text.remove()
 
-                    elif type(annotation) == AnnotationPonctuelle:
+                    elif type(annotation) == VerticalAnnotation:
                         annotation.annotation.remove()
 
-                    elif type(annotation) == AnnotationLineaire:
+                    elif type(annotation) == LinearAnnotation:
                         annotation.annotation.remove()
                         annotation.text.remove()
 
-                    elif type(annotation) == Zone:
+                    elif type(annotation) == Interval:
                         annotation.text.remove()
                         annotation.left_line.remove()
                         annotation.right_line.remove()
@@ -279,40 +277,37 @@ class AnnotationsList(List):
                     elif type(annotation) == Rectangle:
                         annotation.rectangle.remove()
 
-                    # self.pyLong.canvas.draw()
-                    self.pyLong.projet.groupes[self.groupes.currentIndex()].annotations.pop(i)
+                    self.pyLong.project.groups[self.groups.currentIndex()].annotations.pop(i)
                     self.updateListe()
-                    self.pyLong.canvas.updateLegendes()
+                    self.pyLong.canvas.updateLegends()
 
                 try:
-                    self.liste.setCurrentRow(i)
+                    self.list.setCurrentRow(i)
                 except:
                     pass
 
             else:
-                dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Supprimer plusieurs annotations")
-                dialogue.setText("Supprimer les {} annotations sélectionnées ?".format(len(indices)))
-                dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Oui")
-                dialogue.button(QMessageBox.No).setText("Non")
-                dialogue.setIcon(QMessageBox.Question)
-                reponse = dialogue.exec_()
+                dialog = QMessageBox(self)
+                dialog.setWindowTitle("Delete annotations")
+                dialog.setText("Delete the {} annotations selected ?".format(len(indexes)))
+                dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                dialog.setIcon(QMessageBox.Question)
+                answer = dialog.exec_()
 
-                if reponse == QMessageBox.Yes:
-                    for i in indices:
-                        annotation = self.pyLong.projet.groupes[self.groupes.currentIndex()].annotations[i]
-                        if type(annotation) == Texte:
+                if answer == QMessageBox.Yes:
+                    for i in indexes:
+                        annotation = self.pyLong.project.groups[self.groups.currentIndex()].annotations[i]
+                        if type(annotation) == Text:
                             annotation.text.remove()
 
-                        elif type(annotation) == AnnotationPonctuelle:
+                        elif type(annotation) == VerticalAnnotation:
                             annotation.annotation.remove()
 
-                        elif type(annotation) == AnnotationLineaire:
+                        elif type(annotation) == LinearAnnotation:
                             annotation.annotation.remove()
                             annotation.text.remove()
 
-                        elif type(annotation) == Zone:
+                        elif type(annotation) == Interval:
                             annotation.text.remove()
                             annotation.left_line.remove()
                             annotation.right_line.remove()
@@ -320,140 +315,138 @@ class AnnotationsList(List):
                         elif type(annotation) == Rectangle:
                             annotation.rectangle.remove()
 
-                        # self.pyLong.canvas.draw()
-                        self.pyLong.projet.groupes[self.groupes.currentIndex()].annotations.pop(i)
+                        self.pyLong.project.groups[self.groups.currentIndex()].annotations.pop(i)
 
                     self.updateListe()
-                    self.pyLong.canvas.updateLegendes()
+                    self.pyLong.canvas.updateLegends()
 
                 try:
-                    self.liste.setCurrentRow(i)
+                    self.list.setCurrentRow(i)
                 except:
                     pass
 
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Sélectionnez une ou plusieurs annotation(s) avant de lancer cette commande.")
-            alerte.setIcon(QMessageBox.Warning)
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Select at least one annotation before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
-    def activerAnnotation(self):
-        i = self.groupes.currentIndex()
-        for j in range(self.liste.count()):
+    def activateAnnotation(self):
+        i = self.groups.currentIndex()
+        for j in range(self.list.count()):
 
-            annotation = self.pyLong.projet.groupes[i].annotations[j]
+            annotation = self.pyLong.project.groups[i].annotations[j]
 
-            if self.liste.item(j).checkState() == Qt.Checked:
-                annotation.actif = True
+            if self.list.item(j).checkState() == Qt.Checked:
+                annotation.active = True
             else:
-                annotation.actif = False
+                annotation.active = False
 
             annotation.update()
 
-        # self.pyLong.canvas.draw()
-        self.pyLong.canvas.updateLegendes()
+        self.pyLong.canvas.updateLegends()
 
-    def activerGroupe(self):
-        for i in range(self.groupes.count()):
-            if self.groupes.itemChecked(i):
-                self.pyLong.projet.groupes[i].actif = True
+    def activateGroup(self):
+        for i in range(self.groups.count()):
+            if self.groups.itemChecked(i):
+                self.pyLong.project.groups[i].active = True
             else:
-                self.pyLong.projet.groupes[i].actif = False
+                self.pyLong.project.groups[i].active = False
 
-        self.pyLong.canvas.dessiner()
+        self.pyLong.canvas.updateFigure()
 
-    def creerLigneRappel(self):
-        if self.selection():
-            indices = []
-            for item in self.liste.selectedIndexes():
-                indices.append(item.row())
+    # def creerLigneRappel(self):
+    #     if self.selection():
+    #         indexes = []
+    #         for item in self.liste.selectedIndexes():
+    #             indexes.append(item.row())
 
-            indices.sort()
-            indices.reverse()
+    #         indexes.sort()
+    #         indexes.reverse()
 
-            if len(indices) == 1:
-                i = indices[0]
-                annotation = self.pyLong.projet.groupes[self.groupes.currentIndex()].annotations[i]
+    #         if len(indexes) == 1:
+    #             i = indexes[0]
+    #             annotation = self.pyLong.projet.groupes[self.groupes.currentIndex()].annotations[i]
 
-                if type(annotation) == Texte:
-                    pass
+    #             if type(annotation) == Texte:
+    #                 pass
 
-                elif type(annotation) == AnnotationPonctuelle:
-                    ligne = LigneRappel()
-                    ligne.abscisse = annotation.abscisse
-                    ligne.subplots = list(self.pyLong.projet.subplots)
-                    self.pyLong.projet.lignesRappel.append(ligne)
+    #             elif type(annotation) == AnnotationPonctuelle:
+    #                 ligne = LigneRappel()
+    #                 ligne.abscisse = annotation.abscisse
+    #                 ligne.subplots = list(self.pyLong.projet.subplots)
+    #                 self.pyLong.projet.lignesRappel.append(ligne)
 
-                elif type(annotation) == AnnotationLineaire:
-                    ligne1 = LigneRappel()
-                    ligne1.abscisse = annotation.fleche['abscisse de début']
-                    ligne1.subplots = list(self.pyLong.projet.subplots)
-                    self.pyLong.projet.lignesRappel.append(ligne1)
+    #             elif type(annotation) == AnnotationLineaire:
+    #                 ligne1 = LigneRappel()
+    #                 ligne1.abscisse = annotation.fleche['abscisse de début']
+    #                 ligne1.subplots = list(self.pyLong.projet.subplots)
+    #                 self.pyLong.projet.lignesRappel.append(ligne1)
 
-                    ligne2 = LigneRappel()
-                    ligne2.abscisse = annotation.fleche['abscisse de fin']
-                    ligne2.subplots = list(self.pyLong.projet.subplots)
-                    self.pyLong.projet.lignesRappel.append(ligne2)
+    #                 ligne2 = LigneRappel()
+    #                 ligne2.abscisse = annotation.fleche['abscisse de fin']
+    #                 ligne2.subplots = list(self.pyLong.projet.subplots)
+    #                 self.pyLong.projet.lignesRappel.append(ligne2)
 
-                elif type(annotation) == Zone:
-                    ligne1 = LigneRappel()
-                    ligne1.abscisse = annotation.zone['abscisse de début']
-                    ligne1.subplots = list(self.pyLong.projet.subplots)
-                    self.pyLong.projet.lignesRappel.append(ligne1)
+    #             elif type(annotation) == Zone:
+    #                 ligne1 = LigneRappel()
+    #                 ligne1.abscisse = annotation.zone['abscisse de début']
+    #                 ligne1.subplots = list(self.pyLong.projet.subplots)
+    #                 self.pyLong.projet.lignesRappel.append(ligne1)
 
-                    ligne2 = LigneRappel()
-                    ligne2.abscisse = annotation.zone['abscisse de fin']
-                    ligne2.subplots = list(self.pyLong.projet.subplots)
-                    self.pyLong.projet.lignesRappel.append(ligne2)
+    #                 ligne2 = LigneRappel()
+    #                 ligne2.abscisse = annotation.zone['abscisse de fin']
+    #                 ligne2.subplots = list(self.pyLong.projet.subplots)
+    #                 self.pyLong.projet.lignesRappel.append(ligne2)
 
-                elif type(annotation) == Rectangle:
-                    pass
+    #             elif type(annotation) == Rectangle:
+    #                 pass
 
-                self.pyLong.canvas.dessiner()
+    #             self.pyLong.canvas.dessiner()
 
-            else:
-                for i in indices:
-                    annotation = self.pyLong.projet.groupes[self.groupes.currentIndex()].annotations[i]
+    #         else:
+    #             for i in indexes:
+    #                 annotation = self.pyLong.projet.groupes[self.groupes.currentIndex()].annotations[i]
 
-                    if type(annotation) == Texte:
-                        pass
+    #                 if type(annotation) == Texte:
+    #                     pass
 
-                    elif type(annotation) == AnnotationPonctuelle:
-                        ligne = LigneRappel()
-                        ligne.abscisse = annotation.abscisse
-                        ligne.subplots = list(self.pyLong.projet.subplots)
-                        self.pyLong.projet.lignesRappel.append(ligne)
+    #                 elif type(annotation) == AnnotationPonctuelle:
+    #                     ligne = LigneRappel()
+    #                     ligne.abscisse = annotation.abscisse
+    #                     ligne.subplots = list(self.pyLong.projet.subplots)
+    #                     self.pyLong.projet.lignesRappel.append(ligne)
 
-                    elif type(annotation) == AnnotationLineaire:
-                        ligne1 = LigneRappel()
-                        ligne1.abscisse = annotation.fleche['abscisse de début']
-                        ligne1.subplots = list(self.pyLong.projet.subplots)
-                        self.pyLong.projet.lignesRappel.append(ligne1)
+    #                 elif type(annotation) == AnnotationLineaire:
+    #                     ligne1 = LigneRappel()
+    #                     ligne1.abscisse = annotation.fleche['abscisse de début']
+    #                     ligne1.subplots = list(self.pyLong.projet.subplots)
+    #                     self.pyLong.projet.lignesRappel.append(ligne1)
 
-                        ligne2 = LigneRappel()
-                        ligne2.abscisse = annotation.fleche['abscisse de fin']
-                        ligne2.subplots = list(self.pyLong.projet.subplots)
-                        self.pyLong.projet.lignesRappel.append(ligne2)
+    #                     ligne2 = LigneRappel()
+    #                     ligne2.abscisse = annotation.fleche['abscisse de fin']
+    #                     ligne2.subplots = list(self.pyLong.projet.subplots)
+    #                     self.pyLong.projet.lignesRappel.append(ligne2)
 
-                    elif type(annotation) == Zone:
-                        ligne1 = LigneRappel()
-                        ligne1.abscisse = annotation.zone['abscisse de début']
-                        ligne1.subplots = list(self.pyLong.projet.subplots)
-                        self.pyLong.projet.lignesRappel.append(ligne1)
+    #                 elif type(annotation) == Zone:
+    #                     ligne1 = LigneRappel()
+    #                     ligne1.abscisse = annotation.zone['abscisse de début']
+    #                     ligne1.subplots = list(self.pyLong.projet.subplots)
+    #                     self.pyLong.projet.lignesRappel.append(ligne1)
 
-                        ligne2 = LigneRappel()
-                        ligne2.abscisse = annotation.zone['abscisse de fin']
-                        ligne2.subplots = list(self.pyLong.projet.subplots)
-                        self.pyLong.projet.lignesRappel.append(ligne2)
+    #                     ligne2 = LigneRappel()
+    #                     ligne2.abscisse = annotation.zone['abscisse de fin']
+    #                     ligne2.subplots = list(self.pyLong.projet.subplots)
+    #                     self.pyLong.projet.lignesRappel.append(ligne2)
 
-                    elif type(annotation) == Rectangle:
-                        pass
+    #                 elif type(annotation) == Rectangle:
+    #                     pass
 
-                self.pyLong.canvas.dessiner()
+    #             self.pyLong.canvas.dessiner()
 
-        else:
-            alerte = QMessageBox(self)
-            alerte.setText("Sélectionnez une ou plusieurs annotation(s) avant de lancer cette commande.")
-            alerte.setIcon(QMessageBox.Warning)
-            alerte.exec_()
+    #     else:
+    #         alerte = QMessageBox(self)
+    #         alerte.setText("Sélectionnez une ou plusieurs annotation(s) avant de lancer cette commande.")
+    #         alerte.setIcon(QMessageBox.Warning)
+    #         alerte.exec_()
 

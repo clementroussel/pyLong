@@ -3,7 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 
-class DialogRenommerGroupe(QDialog):
+class DialogRenameGroup(QDialog):
     def __init__(self, parent):
         super().__init__()
         

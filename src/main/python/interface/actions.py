@@ -438,9 +438,9 @@ def createActions(self):
     self.renameGroupAction = QAction('Rename current group', self)
     #self.renameGroup.triggered.connect(self.renameGroup)
     self.annotationMenu.addAction(self.renameGroupAction)
-    self.deleteGroupAction = QAction('Delete groups', self)
-    #self.deleteGroupAction.triggered.connect(self.self.deleteGroup)
-    self.annotationMenu.addAction(self.deleteGroupAction)
+    self.deleteGroupsAction = QAction('Delete groups', self)
+    #self.deleteGroupAction.triggered.connect(self.deleteGroups)
+    self.annotationMenu.addAction(self.deleteGroupsAction)
 
     self.annotationMenu.addAction(self.groupsManagerAction)
     self.annotationMenu.addSeparator()

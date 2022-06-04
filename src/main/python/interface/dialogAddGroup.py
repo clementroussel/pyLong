@@ -2,10 +2,10 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from pyLong.Groupe import *
+from pyLong.group import *
 
 
-class DialogAjoutGroupe(QDialog):
+class DialogAddGroup(QDialog):
     def __init__(self, parent):
         super().__init__()
         
