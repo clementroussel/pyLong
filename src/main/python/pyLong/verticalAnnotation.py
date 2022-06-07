@@ -12,7 +12,7 @@ class VerticalAnnotation(Annotation):
         
         Annotation.__init__(self)
         
-        self.title = ""
+        self.title = "Vertical annotation n°{}".format(VerticalAnnotation.counter)
     
         self.label = ""
 

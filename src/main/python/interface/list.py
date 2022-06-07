@@ -19,7 +19,7 @@ class List(QGroupBox):
         self.goTop.setMaximumWidth(25)
 
         self.moveUp = QPushButton()
-        self.moveUp.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/moveUp.png')))
+        self.moveUp.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/moveUp.png'))) 
         self.moveUp.setIconSize(QSize(10, 10))
         self.moveUp.setMaximumWidth(25)
 

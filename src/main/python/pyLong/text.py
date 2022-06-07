@@ -11,7 +11,7 @@ class Text(Annotation):
         
         Annotation.__init__(self)
         
-        self.title = ""
+        self.title = "Text n°{}".format(Text.counter)
     
         self.label = ""
 
@@ -39,7 +39,7 @@ class Text(Annotation):
         self.text.set_text(self.label)
         self.text.set_x(self.position['x coordinate'])
         self.text.set_y(self.position['z coordinate'])
-        self.text.set_fontsize(self.labelProperties['taille'])
+        self.text.set_fontsize(self.labelProperties['size'])
         self.text.set_fontstyle(self.labelProperties['style'])
         self.text.set_color(colors[self.labelProperties['color']])
         self.text.set_fontweight(self.labelProperties['thickness'])

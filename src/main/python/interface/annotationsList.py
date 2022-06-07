@@ -31,8 +31,8 @@ class AnnotationsList(List):
 
         self.pyLong = parent
 
-        # self.list.doubleClicked.connect(self.annotationStyle)
-        # self.list.itemChanged.connect(self.activate)
+        self.list.doubleClicked.connect(self.annotationStyle)
+        self.list.itemChanged.connect(self.activate)
 
         self.list.setContextMenuPolicy(Qt.CustomContextMenu)
         self.list.customContextMenuRequested.connect(self.contextMenu)
@@ -331,7 +331,7 @@ class AnnotationsList(List):
             alert.setIcon(QMessageBox.Warning)
             alert.exec_()
 
-    def activateAnnotation(self):
+    def activate(self):
         i = self.groups.currentIndex()
         for j in range(self.list.count()):
 

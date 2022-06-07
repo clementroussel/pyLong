@@ -4,6 +4,8 @@ from PyQt5.QtCore import *
 
 import numpy as np
 
+from pyLong.dictionaries import *
+
 from interface.colorsComboBox import *
 
 
@@ -15,254 +17,252 @@ class DialogVerticalAnnotation(QDialog):
         
         self.pyLong = parent
         
-        i = self.pyLong.listeAnnotations.groupes.currentIndex()
-        j = self.pyLong.listeAnnotations.liste.currentRow()
-        self.ap = self.pyLong.projet.groupes[i].annotations[j]
+        i = self.pyLong.annotationsList.groups.currentIndex()
+        j = self.pyLong.annotationsList.list.currentRow()
+        self.annotation = self.pyLong.project.groups[i].annotations[j]
         
-        self.setWindowTitle("Annotation ponctuelle")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/annotation_ponctuelle.png')))
+        self.setWindowTitle("Vertical annotation")
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/verticalAnnotation.png')))
     
         mainLayout = QVBoxLayout()
         
         layout = QHBoxLayout()
         
-        label = QLabel("Intitulé :")
+        label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label)
         
-        self.intitule = QLineEdit()
-        self.intitule.setText(self.ap.intitule)
-        self.intitule.textChanged.connect(self.updateIntitule)
-        layout.addWidget(self.intitule)  
+        self.title = QLineEdit()
+        self.title.setText(self.annotation.title)
+        self.title.textChanged.connect(self.updateTitle)
+        layout.addWidget(self.title)  
         
         mainLayout.addLayout(layout)
         
-        groupe = QGroupBox("Texte à afficher")
+        group = QGroupBox("Text")
         layout = QGridLayout()
         
-        label = QLabel("Libellé :")
+        label = QLabel("Label :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.libelle = QLineEdit()
-        self.libelle.setMaxLength(50)
-        self.libelle.setText(self.ap.libelle)
-        self.libelle.textEdited.connect(self.appliquer)
-        layout.addWidget(self.libelle, 0, 1)
+        self.label = QLineEdit()
+        self.label.setMaxLength(50)
+        self.label.setText(self.annotation.label)
+        self.label.textEdited.connect(self.update)
+        layout.addWidget(self.label, 0, 1)
         
-        label = QLabel("Taille :")
+        label = QLabel("Size :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.tailleLibelle = QDoubleSpinBox()
-        self.tailleLibelle.setMaximumWidth(50)
-        self.tailleLibelle.setLocale(QLocale('English'))
-        self.tailleLibelle.setRange(0, 99.9)
-        self.tailleLibelle.setDecimals(1)
-        self.tailleLibelle.setSingleStep(0.1)
-        self.tailleLibelle.setValue(self.ap.texte['taille'])
-        self.tailleLibelle.valueChanged.connect(self.appliquer)
-        layout.addWidget(self.tailleLibelle, 1, 1)
+        self.textSize = QDoubleSpinBox()
+        self.textSize.setMaximumWidth(50)
+        self.textSize.setLocale(QLocale('English'))
+        self.textSize.setRange(0, 99.9)
+        self.textSize.setDecimals(1)
+        self.textSize.setSingleStep(0.1)
+        self.textSize.setValue(self.annotation.labelProperties['size'])
+        self.textSize.valueChanged.connect(self.update)
+        layout.addWidget(self.textSize, 1, 1)
         
-        label = QLabel("Couleur :")
+        label = QLabel("Color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 2, 0)
         
-        self.couleurLibelle = ColorsComboBox(self.pyLong.appctxt)
-        self.couleurLibelle.setCurrentText(self.ap.texte['couleur'])
-        self.couleurLibelle.currentTextChanged.connect(self.appliquer)
-        layout.addWidget(self.couleurLibelle, 2, 1)
+        self.textColor = ColorsComboBox(self.pyLong.appctxt)
+        self.textColor.setCurrentText(self.annotation.labelProperties['color'])
+        self.textColor.currentTextChanged.connect(self.update)
+        layout.addWidget(self.textColor, 2, 1)
         
-        groupe.setLayout(layout)
-        mainLayout.addWidget(groupe)
+        group.setLayout(layout)
+        mainLayout.addWidget(group)
         
-        groupe = QGroupBox("Coordonnées du point annoté")
+        group = QGroupBox("Position")
         layout = QGridLayout()
         
-        self.pointer = QPushButton()
-        self.pointer.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/cible.png')))
-        self.pointer.setIconSize(QSize(12,12))
-        self.pointer.setMaximumWidth(25)
-        self.pointer.setAutoDefault(False)
-        self.pointer.clicked.connect(self.pointage)
-        layout.addWidget(self.pointer, 0, 0)
+        point = QPushButton()
+        point.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/point.png')))
+        point.setIconSize(QSize(12,12))
+        point.setMaximumWidth(25)
+        point.setAutoDefault(False)
+        point.clicked.connect(self.point)
+        layout.addWidget(point, 0, 0)
         
-        label = QLabel("Profil :")
+        label = QLabel("Profile :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 1)
         
-        self.profils = QComboBox()
+        self.profiles = QComboBox()
         
-        for zprofil, pprofil in self.pyLong.projet.profils:
-            self.profils.addItem(zprofil.intitule)
+        for zprofile, sprofile in self.pyLong.project.profiles:
+            self.profiles.addItem(zprofile.title)
     
-        layout.addWidget(self.profils, 0, 2)
+        layout.addWidget(self.profiles, 0, 2)
         
-        label = QLabel("Abscisse :")
+        label = QLabel("X coordinate :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.abscisse = QDoubleSpinBox()
-        self.abscisse.setMaximumWidth(90)
-        self.abscisse.setSuffix(" m")
-        self.abscisse.setLocale(QLocale('English'))
-        self.abscisse.setRange(-99999.999, 99999.999)
-        self.abscisse.setDecimals(3)
-        self.abscisse.setSingleStep(0.1)
-        self.abscisse.setValue(self.ap.abscisse)
-        self.abscisse.valueChanged.connect(self.appliquer)
-        layout.addWidget(self.abscisse, 1, 1)
+        self.x = QDoubleSpinBox()
+        self.x.setMaximumWidth(90)
+        self.x.setSuffix(" m")
+        self.x.setLocale(QLocale('English'))
+        self.x.setRange(-99999.999, 99999.999)
+        self.x.setDecimals(3)
+        self.x.setSingleStep(0.1)
+        self.x.setValue(self.annotation.position['x coordinate'])
+        self.x.valueChanged.connect(self.update)
+        layout.addWidget(self.x, 1, 1)
         
-        self.interpAbscisse = QPushButton("x, z = f(x)")
-        self.interpAbscisse.setToolTip("Résolution de l'abscisse")
-        self.interpAbscisse.setAutoDefault(False)
-        self.interpAbscisse.clicked.connect(self.resoudreAbscisse)
-        layout.addWidget(self.interpAbscisse, 1, 2)
+        xInterpolation = QPushButton("x, z = f(x)")
+        xInterpolation.setAutoDefault(False)
+        xInterpolation.clicked.connect(self.xSolver)
+        layout.addWidget(xInterpolation, 1, 2)
 
-        label = QLabel("Altitude :")
+        label = QLabel("Z coordinate :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 2, 0)
         
-        self.altitude = QDoubleSpinBox()
-        self.altitude.setMaximumWidth(90)
-        self.altitude.setSuffix(" m")
-        self.altitude.setLocale(QLocale('English'))
-        self.altitude.setRange(-99999.999, 99999.999)
-        self.altitude.setDecimals(3)
-        self.altitude.setSingleStep(0.1)
-        self.altitude.setValue(self.ap.altitude)
-        self.altitude.valueChanged.connect(self.appliquer)
-        layout.addWidget(self.altitude, 2, 1)
+        self.z = QDoubleSpinBox()
+        self.z.setMaximumWidth(90)
+        self.z.setSuffix(" m")
+        self.z.setLocale(QLocale('English'))
+        self.z.setRange(-99999.999, 99999.999)
+        self.z.setDecimals(3)
+        self.z.setSingleStep(0.1)
+        self.z.setValue(self.annotation.position['z coordinate'])
+        self.z.valueChanged.connect(self.update)
+        layout.addWidget(self.z, 2, 1)
 
-        self.interpAltitude = QPushButton("z = f(x)")
-        self.interpAltitude.setToolTip("Interpoler l'altitude")
-        self.interpAltitude.setAutoDefault(False)
-        self.interpAltitude.clicked.connect(self.interpolerAltitude)
-        layout.addWidget(self.interpAltitude, 2, 2)
+        zInterpolation = QPushButton("z = f(x)")
+        zInterpolation.setAutoDefault(False)
+        zInterpolation.clicked.connect(self.zInterpolation)
+        layout.addWidget(zInterpolation, 2, 2)
         
-        groupe.setLayout(layout)
-        mainLayout.addWidget(groupe)
+        group.setLayout(layout)
+        mainLayout.addWidget(group)
         
-        groupe = QGroupBox("Flèche annotative")
+        group = QGroupBox("Arrow")
         layout = QGridLayout()
         
-        label = QLabel("Style de flèche :")
+        label = QLabel("Arrow style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.styleFleche = QComboBox()
-        self.styleFleche.addItem("-")
-        self.styleFleche.addItem("->")
-        self.styleFleche.addItem("-|>")
-        self.styleFleche.addItem("<-")
-        self.styleFleche.addItem("<->")
-        self.styleFleche.addItem("<|-")
-        self.styleFleche.addItem("<|-|>")
-        self.styleFleche.setCurrentText(self.ap.fleche['style de flèche'])
-        self.styleFleche.currentTextChanged.connect(self.appliquer)
-        layout.addWidget(self.styleFleche, 0, 1)
+        self.arrowStyle = QComboBox()
+        self.arrowStyle.addItem("-")
+        self.arrowStyle.addItem("->")
+        self.arrowStyle.addItem("-|>")
+        self.arrowStyle.addItem("<-")
+        self.arrowStyle.addItem("<->")
+        self.arrowStyle.addItem("<|-")
+        self.arrowStyle.addItem("<|-|>")
+        self.arrowStyle.setCurrentText(self.annotation.arrowProperties['arrow style'])
+        self.arrowStyle.currentTextChanged.connect(self.update)
+        layout.addWidget(self.arrowStyle, 0, 1)
         
-        label = QLabel("Style de ligne :")
+        label = QLabel("Line style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.styleLigne = QComboBox()
-        self.styleLigne.insertItems(0, list(styles2ligne.keys()))
-        self.styleLigne.setCurrentText(self.ap.fleche['style de ligne'])
-        self.styleLigne.currentTextChanged.connect(self.appliquer)
-        layout.addWidget(self.styleLigne, 1, 1)
+        self.lineStyle = QComboBox()
+        self.lineStyle.insertItems(0, list(lineStyles.keys()))
+        self.lineStyle.setCurrentText(self.annotation.arrowProperties['line style'])
+        self.lineStyle.currentTextChanged.connect(self.update)
+        layout.addWidget(self.lineStyle, 1, 1)
         
-        label = QLabel("Épaisseur :")
+        label = QLabel("Thickness :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 2, 0)
         
-        self.epaisseur = QDoubleSpinBox()
-        self.epaisseur.setMaximumWidth(50)
-        self.epaisseur.setLocale(QLocale('English'))
-        self.epaisseur.setRange(0, 99.9)
-        self.epaisseur.setDecimals(1)
-        self.epaisseur.setSingleStep(0.1)
-        self.epaisseur.setValue(self.ap.fleche['épaisseur'])
-        self.epaisseur.valueChanged.connect(self.appliquer)
-        layout.addWidget(self.epaisseur, 2, 1)
+        self.thickness = QDoubleSpinBox()
+        self.thickness.setMaximumWidth(50)
+        self.thickness.setLocale(QLocale('English'))
+        self.thickness.setRange(0, 99.9)
+        self.thickness.setDecimals(1)
+        self.thickness.setSingleStep(0.1)
+        self.thickness.setValue(self.annotation.arrowProperties['thickness'])
+        self.thickness.valueChanged.connect(self.update)
+        layout.addWidget(self.thickness, 2, 1)
         
-        label = QLabel("Couleur :")
+        label = QLabel("Color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 3, 0)
         
-        self.couleurFleche = ColorsComboBox(self.pyLong.appctxt)
-        self.couleurFleche.setCurrentText(self.ap.fleche['couleur'])
-        self.couleurFleche.currentTextChanged.connect(self.appliquer)
-        layout.addWidget(self.couleurFleche, 3, 1)
+        self.arrowColor = ColorsComboBox(self.pyLong.appctxt)
+        self.arrowColor.setCurrentText(self.annotation.arrowProperties['color'])
+        self.arrowColor.currentTextChanged.connect(self.update)
+        layout.addWidget(self.arrowColor, 3, 1)
         
-        label = QLabel("Longueur :")
+        label = QLabel("Length :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 4, 0)
         
-        self.longueur = QDoubleSpinBox()
-        self.longueur.setMaximumWidth(70)
-        self.longueur.setLocale(QLocale('English'))
-        self.longueur.setSuffix(" m")
-        self.longueur.setRange(0, 9999.9)
-        self.longueur.setDecimals(1)
-        self.longueur.setSingleStep(0.1)
-        self.longueur.setValue(self.ap.fleche['longueur'])
-        self.longueur.valueChanged.connect(self.appliquer)
-        layout.addWidget(self.longueur, 4, 1)
+        self.length = QDoubleSpinBox()
+        self.length.setMaximumWidth(70)
+        self.length.setLocale(QLocale('English'))
+        self.length.setSuffix(" m")
+        self.length.setRange(0, 9999.9)
+        self.length.setDecimals(1)
+        self.length.setSingleStep(0.1)
+        self.length.setValue(self.annotation.arrowProperties['length'])
+        self.length.valueChanged.connect(self.update)
+        layout.addWidget(self.length, 4, 1)
         
-        label = QLabel("Décalage vert. :")
+        label = QLabel("Vertical shift :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 5, 0)
         
-        self.decalageFleche = QDoubleSpinBox()
-        self.decalageFleche.setMaximumWidth(70)
-        self.decalageFleche.setLocale(QLocale('English'))
-        self.decalageFleche.setSuffix(" m")
-        self.decalageFleche.setRange(0, 9999.9)
-        self.decalageFleche.setDecimals(1)
-        self.decalageFleche.setSingleStep(0.1)
-        self.decalageFleche.setValue(self.ap.fleche['décalage'])
-        self.decalageFleche.valueChanged.connect(self.appliquer)
-        layout.addWidget(self.decalageFleche, 5, 1)
+        self.verticalShift = QDoubleSpinBox()
+        self.verticalShift.setMaximumWidth(70)
+        self.verticalShift.setLocale(QLocale('English'))
+        self.verticalShift.setSuffix(" m")
+        self.verticalShift.setRange(0, 9999.9)
+        self.verticalShift.setDecimals(1)
+        self.verticalShift.setSingleStep(0.1)
+        self.verticalShift.setValue(self.annotation.arrowProperties['vertical shift'])
+        self.verticalShift.valueChanged.connect(self.update)
+        layout.addWidget(self.verticalShift, 5, 1)
         
-        groupe.setLayout(layout)
-        mainLayout.addWidget(groupe)
+        group.setLayout(layout)
+        mainLayout.addWidget(group)
         
-        groupe = QGroupBox("Opacité et ordre")
+        group = QGroupBox("Opacity and order")
         layout = QGridLayout()
         
-        label = QLabel("Opacité :")
+        label = QLabel("Opacity :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.opacite = QDoubleSpinBox()
-        self.opacite.setMaximumWidth(45)
-        self.opacite.setLocale(QLocale('English'))
-        self.opacite.setRange(0, 1)
-        self.opacite.setDecimals(1)
-        self.opacite.setSingleStep(0.1)
-        self.opacite.setValue(self.ap.opacite)
-        self.opacite.valueChanged.connect(self.appliquer)
-        layout.addWidget(self.opacite, 0, 1)
+        self.opacity = QDoubleSpinBox()
+        self.opacity.setMaximumWidth(45)
+        self.opacity.setLocale(QLocale('English'))
+        self.opacity.setRange(0, 1)
+        self.opacity.setDecimals(1)
+        self.opacity.setSingleStep(0.1)
+        self.opacity.setValue(self.annotation.opacity)
+        self.opacity.valueChanged.connect(self.update)
+        layout.addWidget(self.opacity, 0, 1)
         
-        label = QLabel("Ordre :")
+        label = QLabel("Order :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.ordre = QSpinBox()
-        self.ordre.setMaximumWidth(45)
-        self.ordre.setLocale(QLocale('English'))
-        self.ordre.setRange(1, 99)
-        self.ordre.setSingleStep(1)
-        self.ordre.setValue(self.ap.ordre)
-        self.ordre.valueChanged.connect(self.appliquer)
-        layout.addWidget(self.ordre, 1, 1)
+        self.order = QSpinBox()
+        self.order.setMaximumWidth(45)
+        self.order.setLocale(QLocale('English'))
+        self.order.setRange(1, 99)
+        self.order.setSingleStep(1)
+        self.order.setValue(self.annotation.order)
+        self.order.valueChanged.connect(self.update)
+        layout.addWidget(self.order, 1, 1)
         
-        groupe.setLayout(layout)
-        mainLayout.addWidget(groupe)
+        group.setLayout(layout)
+        mainLayout.addWidget(group)
         
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(True)
         buttonBox.button(QDialogButtonBox.Ok).setDefault(True)
         
@@ -270,111 +270,111 @@ class DialogVerticalAnnotation(QDialog):
         
         self.setLayout(mainLayout)
         
-    def valider(self):
-        self.pyLong.controleOutilsNavigation()
+    def validate(self):
+        self.pyLong.checkNavigationTools()
         try:
             self.pyLong.canvas.mpl_disconnect(self.cid)
             self.pyLong.canvas.setCursor(Qt.ArrowCursor)
         except:
             pass
         
-        self.appliquer()
+        self.update()
         self.accept()
 
-    def updateIntitule(self):
-        self.ap.intitule = self.intitule.text()
-        self.pyLong.listeAnnotations.updateListe()
+    def updateTitle(self):
+        self.annotation.title = self.title.text()
+        self.pyLong.annotationsList.updateList()
         
-    def appliquer(self):
+    def update(self):
         try:
             self.pyLong.canvas.mpl_disconnect(self.cid)
             self.pyLong.canvas.setCursor(Qt.ArrowCursor)
         except:
             pass
 
-        self.ap.libelle = self.libelle.text()
-        self.ap.texte['taille'] = self.tailleLibelle.value()
-        self.ap.texte['couleur'] = self.couleurLibelle.currentText()
-        self.ap.abscisse = self.abscisse.value()
-        self.ap.altitude = self.altitude.value()
-        self.ap.fleche['style de flèche'] = self.styleFleche.currentText()
-        self.ap.fleche['style de ligne'] = self.styleLigne.currentText()
-        self.ap.fleche['épaisseur'] = self.epaisseur.value()
-        self.ap.fleche['couleur'] = self.couleurFleche.currentText()
-        self.ap.fleche['longueur'] = self.longueur.value()
-        self.ap.fleche['décalage'] = self.decalageFleche.value()
-        self.ap.opacite = self.opacite.value()
-        self.ap.ordre = self.ordre.value()
+        self.annotation.label = self.label.text()
+        self.annotation.labelProperties['size'] = self.textSize.value()
+        self.annotation.labelProperties['color'] = self.textColor.currentText()
+        self.annotation.position['x coordinate'] = self.x.value()
+        self.annotation.position['z coordinate'] = self.z.value()
+        self.annotation.arrowProperties['arrow style'] = self.arrowStyle.currentText()
+        self.annotation.arrowProperties['line style'] = self.lineStyle.currentText()
+        self.annotation.arrowProperties['thickness'] = self.thickness.value()
+        self.annotation.arrowProperties['color'] = self.arrowColor.currentText()
+        self.annotation.arrowProperties['length'] = self.length.value()
+        self.annotation.arrowProperties['vertical shift'] = self.verticalShift.value()
+        self.annotation.opacity = self.opacity.value()
+        self.annotation.order = self.order.value()
         
-        self.ap.update()
+        self.annotation.update()
         
         self.pyLong.canvas.draw()
         
-    def resoudreAbscisse(self):
-        altitude = self.altitude.value()
-        abscisse = self.abscisse.value()
+    def xSolver(self):
+        z = self.z.value()
+        x = self.x.value()
         
-        if self.profils.currentIndex() != -1:
-            i = self.profils.currentIndex()
-            zprofil, pprofil = self.pyLong.projet.profils[i]
+        if self.profiles.currentIndex() != -1:
+            i = self.profiles.currentIndex()
+            zprofile, sprofile = self.pyLong.project.profiles[i]
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Aucun profil disponible.")
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("No profile available.")
+            alert.exec_()
             return 0
 
-        if altitude >= np.min(zprofil.altitudes) and altitude <= np.max(zprofil.altitudes):
+        if z >= np.min(zprofile.z) and z <= np.max(zprofile.z):
             try:
-                abscisse = zprofil.resoudre(altitude, abscisse)
-                self.abscisse.setValue(abscisse)
+                x = zprofile.solve(z, x)
+                self.x.setValue(x)
             except:
                 pass
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Altitude fournie incorrecte.")
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Z coordinate out of range.")
+            alert.exec_()
 
-        self.appliquer()                          
+        self.update()                          
         
-    def interpolerAltitude(self):
-        abscisse = self.abscisse.value()
+    def zInterpolation(self):
+        x = self.x.value()
         
-        if self.profils.currentIndex() != -1:
-            i = self.profils.currentIndex()
-            zprofil, pprofil = self.pyLong.projet.profils[i]
+        if self.profiles.currentIndex() != -1:
+            i = self.profiles.currentIndex()
+            zprofile, sprofile = self.pyLong.project.profiles[i]
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Aucun profil disponible.")
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("No profile available.")
+            alert.exec_()
             return 0
         
-        if abscisse >= np.min(zprofil.abscisses) and abscisse <= np.max(zprofil.abscisses):
-            altitude = zprofil.interpoler(abscisse)
-            self.altitude.setValue(altitude)
+        if x >= np.min(zprofile.x) and x <= np.max(zprofile.x):
+            z = zprofile.interpolate(x)
+            self.z.setValue(z)
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Abscisse fournie incorrecte.")
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("X coordinate out of range.")
+            alert.exec_()
             
-        self.appliquer()
+        self.update()
         
-    def pointage(self):
-        self.pyLong.controleOutilsNavigation()
+    def point(self):
+        self.pyLong.checkNavigationTools()
         self.cid = self.pyLong.canvas.mpl_connect('button_press_event', self.onclick)
         self.pyLong.canvas.setCursor(Qt.CrossCursor)
         
     def onclick(self, event):
         try:
-            self.abscisse.setValue(event.xdata)
-            self.altitude.setValue(event.ydata)
+            self.x.setValue(event.xdata)
+            self.z.setValue(event.ydata)
         except:
             pass
         
         self.pyLong.canvas.mpl_disconnect(self.cid)
-        self.appliquer()
+        self.update()
         
     def closeEvent(self, event):
-        self.pyLong.controleOutilsNavigation()
+        self.pyLong.checkNavigationTools()
         try:
             self.pyLong.canvas.mpl_disconnect(self.cid)
             self.pyLong.canvas.setCursor(Qt.ArrowCursor)
@@ -382,7 +382,7 @@ class DialogVerticalAnnotation(QDialog):
             pass
         
     def reject(self):
-        self.pyLong.controleOutilsNavigation()
+        self.pyLong.checkNavigationTools()
         try:
             self.pyLong.canvas.mpl_disconnect(self.cid)
             self.pyLong.canvas.setCursor(Qt.ArrowCursor)

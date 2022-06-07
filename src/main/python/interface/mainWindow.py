@@ -55,12 +55,13 @@ import os
 # import pickle
 # from pickle import Pickler, Unpickler
 import json
+# from main.python.pyLong.verticalAnnotation import VerticalAnnotation
 
 # pyLong modules
 from pyLong.project import Project
 
 from pyLong.text import *
-# from pyLong.AnnotationPonctuelle import *
+from pyLong.verticalAnnotation import *
 # from pyLong.AnnotationLineaire import *
 # from pyLong.Zone import *
 # from pyLong.Rectangle import *
@@ -885,25 +886,25 @@ class MainWindow(QMainWindow):
     def addProfile(self):
         DialogAddProfile(parent=self).exec_()
 
-    # def addText(self):
-    #     txt = Text()
-    #     i = self.annotationsList.groups.currentIndex()
-    #     txt.group = i
-    #     txt.update()
-    #     self.project.groups[i].annotations.append(txt)
-    #     self.annotationsList.updateList()
-    #     self.canvas.ax_z.add_artist(txt.text)
-    #     self.canvas.draw()
+    def addText(self):
+        annotation = Text()
+        i = self.annotationsList.groups.currentIndex()
+        annotation.group = i
+        annotation.update()
+        self.project.groups[i].annotations.append(annotation)
+        self.annotationsList.updateList()
+        self.canvas.ax_z.add_artist(annotation.text)
+        self.canvas.draw()
 
-#     def ajouterAnnotationPonctuelle(self):
-#         ap = AnnotationPonctuelle()
-#         i = self.annotationsList.groupes.currentIndex()
-#         ap.groupe = i
-#         ap.update()
-#         self.projet.groupes[i].annotations.append(ap)
-#         self.annotationsList.updateListe()
-#         self.canvas.ax_z.add_artist(ap.annotation)
-#         self.canvas.draw()
+    def addVerticalAnnotation(self):
+        annotation = VerticalAnnotation()
+        i = self.annotationsList.groups.currentIndex()
+        annotation.group = i
+        annotation.update()
+        self.project.groups[i].annotations.append(annotation)
+        self.annotationsList.updateList()
+        self.canvas.ax_z.add_artist(annotation.annotation)
+        self.canvas.draw()
 
 #     def ajouterAnnotationLineaire(self):
 #         al = AnnotationLineaire()
