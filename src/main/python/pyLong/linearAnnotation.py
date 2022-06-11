@@ -15,7 +15,7 @@ class LinearAnnotation(Annotation):
         
         Annotation.__init__(self)
         
-        self.title = ""
+        self.title = "Linear annotation n°{}".format(LinearAnnotation.counter)
     
         self.label = ""
         

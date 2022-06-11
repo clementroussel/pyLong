@@ -12,7 +12,7 @@ class Rectangle(Annotation):
         
         Annotation.__init__(self)
         
-        self.title = ""
+        self.title = "Rectangle n°{}".format(Rectangle.counter)
     
         self.label = ""
 
@@ -22,7 +22,7 @@ class Rectangle(Annotation):
         self.dimensions = {'width' : 100,
                            'height' : 100}
         
-        self.contour = {'line style': "solid",
+        self.outline = {'line style': "solid",
                         'color': 'Black',
                         'thickness': 0.8}
         
@@ -43,9 +43,9 @@ class Rectangle(Annotation):
             self.rectangle.set_label(self.label)
         else:
             self.rectangle.set_label("")
-        self.rectangle.set_linestyle(lineStyles[self.contour['line style']])
-        self.rectangle.set_linewidth(self.contour['thickness'])
-        self.rectangle.set_edgecolor(colors[self.contour['color']])
+        self.rectangle.set_linestyle(lineStyles[self.outline['line style']])
+        self.rectangle.set_linewidth(self.outline['thickness'])
+        self.rectangle.set_edgecolor(colors[self.outline['color']])
         self.rectangle.set_facecolor(colors[self.filling['color']])
         self.rectangle.set_hatch(self.filling['density'] * self.filling['hatch style'])
         self.rectangle.set_alpha(self.opacity)
@@ -57,9 +57,9 @@ class Rectangle(Annotation):
 
     def imitate(self, annotation):
         if isinstance(annotation, Rectangle):
-            self.contour['line style'] = annotation.contour['line style']
-            self.contour['color'] = annotation.contour['color']
-            self.contour['thickness'] = annotation.contour['thickness']
+            self.outline['line style'] = annotation.contour['line style']
+            self.outline['color'] = annotation.contour['color']
+            self.outline['thickness'] = annotation.contour['thickness']
             self.filling['color'] = annotation.filling['color']
             self.filling['hatch style'] = annotation.filling['hatch style']
             self.filling['density'] = annotation.filling['density']

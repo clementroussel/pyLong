@@ -221,7 +221,7 @@ def createActions(self):
     self.annotationToolBar.addAction(self.addVerticalAnnotationAction)
 
     self.addLinearAnnotationAction = QAction(QIcon(self.appctxt.get_resource('icons/linearAnnotation.png')), "Add a linear annotation", self)
-    #self.addLinearAnnotation.triggered.connect(self.addLinearAnnotation)
+    self.addLinearAnnotationAction.triggered.connect(self.addLinearAnnotation)
     self.annotationToolBar.addAction(self.addLinearAnnotationAction)
 
     self.addIntervalAction = QAction(QIcon(self.appctxt.get_resource('icons/interval.png')), "Add an interval", self)
@@ -229,11 +229,11 @@ def createActions(self):
     self.annotationToolBar.addAction(self.addIntervalAction)
 
     self.addRectangleAction = QAction(QIcon(self.appctxt.get_resource('icons/rectangle.png')), "Add a rectangle", self)
-    #self.addRectangleAction.triggered.connect(self.addRectangle)
+    self.addRectangleAction.triggered.connect(self.addRectangle)
     self.annotationToolBar.addAction(self.addRectangleAction)
 
     self.annotationStyleAction = QAction(QIcon(self.appctxt.get_resource('icons/style.png')), "Annotation style", self)
-    #self.annotationStyleAction.triggered.connect(self.annotationStyle)
+    self.annotationStyleAction.triggered.connect(self.annotationStyle)
     self.annotationToolBar.addAction(self.annotationStyleAction)
 
     self.copyStyleAction = QAction(QIcon(self.appctxt.get_resource('icons/copyStyle.png')), "Copy style", self)

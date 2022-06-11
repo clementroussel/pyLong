@@ -62,9 +62,9 @@ from pyLong.project import Project
 
 from pyLong.text import *
 from pyLong.verticalAnnotation import *
-# from pyLong.AnnotationLineaire import *
+from pyLong.linearAnnotation import *
 # from pyLong.Zone import *
-# from pyLong.Rectangle import *
+from pyLong.rectangle import *
 
 
 class NavigationBar(NavigationToolbar):
@@ -195,8 +195,8 @@ class MainWindow(QMainWindow):
 #     def ouvrirStyleCalcul(self):
 #         self.calculationsList.ouvrirCalcul()
 
-#     def ouvrirStyleAnnotation(self):
-#         self.annotationsList.ouvrirAnnotation()
+    def annotationStyle(self):
+        self.annotationsList.annotationStyle()
 
 #     def annotations2ligneRappel(self):
 #         self.annotationsList.creerLigneRappel()
@@ -906,16 +906,16 @@ class MainWindow(QMainWindow):
         self.canvas.ax_z.add_artist(annotation.annotation)
         self.canvas.draw()
 
-#     def ajouterAnnotationLineaire(self):
-#         al = AnnotationLineaire()
-#         i = self.annotationsList.groupes.currentIndex()
-#         al.groupe = i
-#         al.update()
-#         self.projet.groupes[i].annotations.append(al)
-#         self.annotationsList.updateListe()
-#         self.canvas.ax_z.add_artist(al.annotation)
-#         self.canvas.ax_z.add_artist(al.text)
-#         self.canvas.draw()
+    def addLinearAnnotation(self):
+        annotation = LinearAnnotation()
+        i = self.annotationsList.groups.currentIndex()
+        annotation.group = i
+        annotation.update()
+        self.project.groups[i].annotations.append(annotation)
+        self.annotationsList.updateList()
+        self.canvas.ax_z.add_artist(annotation.annotation)
+        self.canvas.ax_z.add_artist(annotation.text)
+        self.canvas.draw()
 
 #     def ajouterZone(self):
 #         zone = Zone()
@@ -929,15 +929,15 @@ class MainWindow(QMainWindow):
 #         self.canvas.ax_z.add_line(zone.right_line)
 #         self.canvas.draw()
 
-#     def ajouterRectangle(self):
-#         rect = Rectangle()
-#         i = self.annotationsList.groupes.currentIndex()
-#         rect.groupe = i
-#         rect.update()
-#         self.projet.groupes[i].annotations.append(rect)
-#         self.annotationsList.updateListe()
-#         self.canvas.ax_z.add_patch(rect.rectangle)
-#         self.canvas.updateLegendes()
+    def addRectangle(self):
+        annotation = Rectangle()
+        i = self.annotationsList.groups.currentIndex()
+        annotation.group = i
+        annotation.update()
+        self.project.groups[i].annotations.append(annotation)
+        self.annotationsList.updateList()
+        self.canvas.ax_z.add_patch(annotation.rectangle)
+        self.canvas.updateLegends()
 
 #     def supprimerGroupes(self):
 #         self.annotationsList.supprimerGroupe()
