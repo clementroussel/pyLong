@@ -57,9 +57,9 @@ class Rectangle(Annotation):
 
     def imitate(self, annotation):
         if isinstance(annotation, Rectangle):
-            self.outline['line style'] = annotation.contour['line style']
-            self.outline['color'] = annotation.contour['color']
-            self.outline['thickness'] = annotation.contour['thickness']
+            self.outline['line style'] = annotation.outline['line style']
+            self.outline['color'] = annotation.outline['color']
+            self.outline['thickness'] = annotation.outline['thickness']
             self.filling['color'] = annotation.filling['color']
             self.filling['hatch style'] = annotation.filling['hatch style']
             self.filling['density'] = annotation.filling['density']

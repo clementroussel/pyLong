@@ -242,7 +242,7 @@ def createActions(self):
     self.annotationToolBar.addAction(self.copyStyleAction)
 
     self.pasteStyleAction = QAction(QIcon(self.appctxt.get_resource('icons/pasteStyle.png')), "Paste style", self)
-    #self.pasteStyleAction.triggered.connect(self.pasteStyle)
+    self.pasteStyleAction.triggered.connect(self.pasteStyle)
     self.pasteStyleAction.setShortcut(QKeySequence("Ctrl+Alt+V"))
     self.annotationToolBar.addAction(self.pasteStyleAction)
 
@@ -381,6 +381,8 @@ def createActions(self):
     self.figureMenu.addSeparator()
     self.figureMenu.addAction(self.refreshAction)
     self.figureMenu.addSeparator()
+    self.figureMenu.addAction(self.navigationBar._actions['back'])
+    self.figureMenu.addAction(self.navigationBar._actions['forward'])
     self.figureMenu.addAction(self.navigationBar._actions['pan'])
     self.figureMenu.addAction(self.navigationBar._actions['zoom'])
     self.figureMenu.addSeparator()

@@ -98,11 +98,11 @@ class Interval(Annotation):
             self.limitsProperties['style'] = annotation.limitsProperties['style']
             self.limitsProperties['color'] = annotation.limitsProperties['color']
             self.limitsProperties['thickness'] = annotation.limitsProperties['thickness']
-            self.frameProperties['style'] = annotation.frame['style']
-            self.frameProperties['thickness'] = annotation.frame['thickness']
-            self.frameProperties['color'] = annotation.frame['color']
-            self.opacite = annotation.opacite
-            self.ordre = annotation.ordre
+            self.frameProperties['style'] = annotation.frameProperties['style']
+            self.frameProperties['thickness'] = annotation.frameProperties['thickness']
+            self.frameProperties['color'] = annotation.frameProperties['color']
+            self.opacity = annotation.opacity
+            self.order = annotation.order
 
             self.update()
 

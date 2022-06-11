@@ -368,22 +368,22 @@ class MainWindow(QMainWindow):
             alert.setIcon(QMessageBox.Warning)
             alert.exec_()
 
-#     def collerPropriete(self):
-#         if self.annotationsList.selection():
-#             j = self.annotationsList.groupes.currentIndex()
-#             indices = []
-#             for item in self.annotationsList.liste.selectedIndexes():
-#                 indices.append(item.row())
+    def pasteStyle(self):
+        if self.annotationsList.selection():
+            j = self.annotationsList.groups.currentIndex()
+            indexes = []
+            for item in self.annotationsList.list.selectedIndexes():
+                indexes.append(item.row())
 
-#             for i in indices:
-#                 annotation = self.projet.groupes[j].annotations[i]
-#                 annotation.imiter(self.projet.annotationModele)
-#             self.canvas.draw()
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez une ou plusieurs annotation(s) avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+            for i in indexes:
+                annotation = self.project.groups[j].annotations[i]
+                annotation.imitate(self.project.modelAnnotation)
+            self.canvas.draw()
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select at least one annotation before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
 #     def enregistrerProjet(self):
 #         try:
