@@ -2,48 +2,46 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from pyLong.Layout import *
-from pyLong.Subplot import *
+from pyLong.layout import *
+from pyLong.subplot import *
 
 
-class DialogAjoutLayout(QDialog):
+class DialogAddLayout(QDialog):
     def __init__(self, parent):
         super().__init__()
         
         self.pyLong = parent
         
-        self.setWindowTitle("Ajouter une mise en page")
+        self.setWindowTitle("Add a layout")
         
         mainLayout = QVBoxLayout()
         
-        groupe = QGroupBox("Nouvelle mise en page")
+        group = QGroupBox("New layout")
         layout = QGridLayout()
         
-        label = QLabel("Intitulé :")
+        label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.intitule = QLineEdit()
-        self.intitule.setText("layout {}".format(Layout.compteur + 1))
-        layout.addWidget(self.intitule, 0, 1)
+        self.title = QLineEdit()
+        self.title.setText("layout {}".format(Layout.counter + 1))
+        layout.addWidget(self.title, 0, 1)
         
-        self.dupliquer = QCheckBox("Dupliquer la mise en page :")
-        self.dupliquer.stateChanged.connect(self.updateInterface)
-        layout.addWidget(self.dupliquer, 1, 0)
+        self.duplicate = QCheckBox("Duplicate layout :")
+        self.duplicate.stateChanged.connect(self.updateInterface)
+        layout.addWidget(self.duplicate, 1, 0)
         
-        self.listeLayouts = QComboBox()
-        for laYout in self.pyLong.projet.layouts:
-            self.listeLayouts.addItem(laYout.intitule)
-        self.listeLayouts.setCurrentText(self.pyLong.listeLayouts.currentText())
-        layout.addWidget(self.listeLayouts, 1, 1)
+        self.layoutsList = QComboBox()
+        for laYout in self.pyLong.project.layouts:
+            self.layoutsList.addItem(laYout.title)
+        self.layoutsList.setCurrentText(self.pyLong.layoutsList.currentText())
+        layout.addWidget(self.layoutsList, 1, 1)
         
-        groupe.setLayout(layout)
-        mainLayout.addWidget(groupe)
+        group.setLayout(layout)
+        mainLayout.addWidget(group)
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.rejected.connect(self.reject)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         
         layout = QHBoxLayout()
         layout.addWidget(buttonBox)
@@ -55,81 +53,81 @@ class DialogAjoutLayout(QDialog):
         self.updateInterface()
         
     def updateInterface(self):
-        if self.dupliquer.isChecked():
-            self.listeLayouts.setEnabled(True)
+        if self.duplicate.isChecked():
+            self.layoutsList.setEnabled(True)
         else:
-            self.listeLayouts.setEnabled(False)
+            self.layoutsList.setEnabled(False)
             
-    def appliquer(self):
+    def validate(self):
         layout = Layout()
-        layout.intitule = self.intitule.text()
+        layout.title = self.title.text()
         
-        if self.dupliquer.isChecked():
-            i = self.listeLayouts.currentIndex()
-            layoutReference = self.pyLong.projet.layouts[i]
+        if self.duplicate.isChecked():
+            i = self.layoutsList.currentIndex()
+            layoutReference = self.pyLong.project.layouts[i]
 
-            layout.dimensions['largeur'] = layoutReference.dimensions['largeur']
-            layout.dimensions['hauteur'] = layoutReference.dimensions['hauteur']
+            layout.dimensions['width'] = layoutReference.dimensions['width']
+            layout.dimensions['height'] = layoutReference.dimensions['height']
             layout.format = layoutReference.format
-            layout.axeSecondaire = layoutReference.axeSecondaire
+            layout.secondaryAxis = layoutReference.secondaryAxis
             
-            layout.abscisses['min'] = layoutReference.abscisses['min']
-            layout.abscisses['max'] = layoutReference.abscisses['max']
-            layout.abscisses['intervalles'] = layoutReference.abscisses['intervalles']
+            layout.xAxisProperties['min'] = layoutReference.xAxisProperties['min']
+            layout.xAxisProperties['max'] = layoutReference.xAxisProperties['max']
+            layout.xAxisProperties['intervals'] = layoutReference.xAxisProperties['intervals']
             
-            layout.altitudes['min'] = layoutReference.altitudes['min']
-            layout.altitudes['max'] = layoutReference.altitudes['max']
-            layout.altitudes['intervalles'] = layoutReference.altitudes['intervalles']
+            layout.zAxisProperties['min'] = layoutReference.zAxisProperties['min']
+            layout.zAxisProperties['max'] = layoutReference.zAxisProperties['max']
+            layout.zAxisProperties['intervals'] = layoutReference.zAxisProperties['intervals']
             
-            layout.pentes['min %'] = layoutReference.pentes['min %']
-            layout.pentes['max %'] = layoutReference.pentes['max %']
-            layout.pentes['min °'] = layoutReference.pentes['min °']
-            layout.pentes['max °'] = layoutReference.pentes['max °']
-            layout.pentes['intervalles %'] = layoutReference.pentes['intervalles %']
-            layout.pentes['intervalles °'] = layoutReference.pentes['intervalles °']
+            layout.slopesAxisProperties['min %'] = layoutReference.slopesAxisProperties['min %']
+            layout.slopesAxisProperties['max %'] = layoutReference.slopesAxisProperties['max %']
+            layout.slopesAxisProperties['min °'] = layoutReference.slopesAxisProperties['min °']
+            layout.slopesAxisProperties['max °'] = layoutReference.slopesAxisProperties['max °']
+            layout.slopesAxisProperties['intervals %'] = layoutReference.slopesAxisProperties['intervals %']
+            layout.slopesAxisProperties['intervals °'] = layoutReference.slopesAxisProperties['intervals °']
             
-            layout.legende['active'] = layoutReference.legende['active']
-            layout.legende['cadre'] = layoutReference.legende['cadre']
-            layout.legende['nombre de colonnes'] = layoutReference.legende['nombre de colonnes']
-            layout.legende['taille'] = layoutReference.legende['taille']
-            layout.legende['position'] = layoutReference.legende['position']
+            layout.legend['active'] = layoutReference.legend['active']
+            layout.legend['frame'] = layoutReference.legend['frame']
+            layout.legend['columns'] = layoutReference.legend['columns']
+            layout.legend['size'] = layoutReference.legend['size']
+            layout.legend['position'] = layoutReference.legend['position']
             
-            layout.grille['active'] = layoutReference.grille['active']
-            layout.grille['style'] = layoutReference.grille['style']
-            layout.grille['épaisseur'] = layoutReference.grille['épaisseur']
-            layout.grille['opacité'] = layoutReference.grille['opacité']
+            layout.grid['active'] = layoutReference.grid['active']
+            layout.grid['style'] = layoutReference.grid['style']
+            layout.grid['thickness'] = layoutReference.grid['thickness']
+            layout.grid['opacity'] = layoutReference.grid['opacity']
             
-            layout.abscisses['libellé'] = layoutReference.abscisses['libellé']
-            layout.altitudes['libellé'] = layoutReference.altitudes['libellé']
-            layout.pentes['libellé'] = layoutReference.pentes['libellé']
+            layout.xAxisProperties['label'] = layoutReference.xAxisProperties['label']
+            layout.zAxisProperties['label'] = layoutReference.zAxisProperties['label']
+            layout.slopesAxisProperties['label'] = layoutReference.slopesAxisProperties['label']
             
-            layout.abscisses['taille libellé'] = layoutReference.abscisses['taille libellé']
-            layout.altitudes['taille libellé'] = layoutReference.altitudes['taille libellé']
-            layout.pentes['taille libellé'] = layoutReference.pentes['taille libellé']
+            layout.xAxisProperties['label size'] = layoutReference.xAxisProperties['label size']
+            layout.zAxisProperties['label size'] = layoutReference.zAxisProperties['label size']
+            layout.slopesAxisProperties['label size'] = layoutReference.slopesAxisProperties['label size']
             
-            layout.abscisses['couleur libellé'] = layoutReference.abscisses['couleur libellé']
-            layout.altitudes['couleur libellé'] = layoutReference.altitudes['couleur libellé']
-            layout.pentes['couleur libellé'] = layoutReference.pentes['couleur libellé']
+            layout.xAxisProperties['label color'] = layoutReference.xAxisProperties['label color']
+            layout.zAxisProperties['label color'] = layoutReference.zAxisProperties['label color']
+            layout.slopesAxisProperties['label color'] = layoutReference.slopesAxisProperties['label color']
             
-            layout.abscisses['taille valeur'] = layoutReference.abscisses['taille valeur']
-            layout.altitudes['taille valeur'] = layoutReference.altitudes['taille valeur']
-            layout.pentes['taille valeur'] = layoutReference.pentes['taille valeur']
+            layout.xAxisProperties['value size'] = layoutReference.xAxisProperties['value size']
+            layout.zAxisProperties['value size'] = layoutReference.zAxisProperties['value size']
+            layout.slopesAxisProperties['value size'] = layoutReference.slopesAxisProperties['value size']
             
-            layout.abscisses['couleur valeur'] = layoutReference.abscisses['couleur valeur']
-            layout.altitudes['couleur valeur'] = layoutReference.altitudes['couleur valeur']
-            layout.pentes['couleur valeur'] = layoutReference.pentes['couleur valeur']
+            layout.xAxisProperties['value color'] = layoutReference.xAxisProperties['value color']
+            layout.zAxisProperties['value color'] = layoutReference.zAxisProperties['value color']
+            layout.slopesAxisProperties['value color'] = layoutReference.slopesAxisProperties['value color']
             
-            layout.abscisses['delta gauche'] = layoutReference.abscisses['delta gauche']
-            layout.abscisses['delta droite'] = layoutReference.abscisses['delta droite']
+            layout.xAxisProperties['left shift'] = layoutReference.xAxisProperties['left shift']
+            layout.xAxisProperties['right shift'] = layoutReference.xAxisProperties['right shift']
             
-            layout.altitudes['delta bas'] = layoutReference.altitudes['delta bas']
-            layout.altitudes['delta haut'] = layoutReference.altitudes['delta haut']
+            layout.zAxisProperties['lower shift'] = layoutReference.zAxisProperties['lower shift']
+            layout.zAxisProperties['upper shift'] = layoutReference.zAxisProperties['upper shift']
             
-            layout.pentes['delta bas %'] = layoutReference.pentes['delta bas %']
-            layout.pentes['delta haut %'] = layoutReference.pentes['delta haut %']
+            layout.slopesAxisProperties['lower shift %'] = layoutReference.slopesAxisProperties['lower shift %']
+            layout.slopesAxisProperties['upper shift %'] = layoutReference.slopesAxisProperties['upper shift %']
     
-            layout.pentes['delta bas °'] = layoutReference.pentes['delta bas °']
-            layout.pentes['delta haut °'] = layoutReference.pentes['delta haut °']
+            layout.slopesAxisProperties['lower shift °'] = layoutReference.slopesAxisProperties['lower shift °']
+            layout.slopesAxisProperties['upper shift °'] = layoutReference.slopesAxisProperties['upper shift °']
 
             layout.subdivisions = layoutReference.subdivisions
             layout.hspace = layoutReference.hspace
@@ -137,34 +135,32 @@ class DialogAjoutLayout(QDialog):
             for subplotReference in layoutReference.subplots:
                 subplot = Subplot()
 
-                subplot.identifiant = subplotReference.identifiant
+                subplot.id = subplotReference.id
 
                 subplot.subdivisions = subplotReference.subdivisions
 
-                subplot.ordonnees['min'] = subplotReference.ordonnees['min']
-                subplot.ordonnees['max'] = subplotReference.ordonnees['max']
-                subplot.ordonnees['libellé'] = subplotReference.ordonnees['libellé']
-                subplot.ordonnees['intervalles'] = subplotReference.ordonnees['intervalles']
-                subplot.ordonnees['couleur libellé'] = subplotReference.ordonnees['couleur libellé']
-                subplot.ordonnees['couleur valeur'] = subplotReference.ordonnees['couleur valeur']
-                subplot.ordonnees['delta bas'] = subplotReference.ordonnees['delta bas']
-                subplot.ordonnees['delta haut'] = subplotReference.ordonnees['delta haut']
+                subplot.yAxisProperties['min'] = subplotReference.yAxisProperties['min']
+                subplot.yAxisProperties['max'] = subplotReference.yAxisProperties['max']
+                subplot.yAxisProperties['label'] = subplotReference.yAxisProperties['label']
+                subplot.yAxisProperties['intervals'] = subplotReference.yAxisProperties['intervals']
+                subplot.yAxisProperties['label color'] = subplotReference.yAxisProperties['label color']
+                subplot.yAxisProperties['value color'] = subplotReference.yAxisProperties['value color']
+                subplot.yAxisProperties['lower shift'] = subplotReference.yAxisProperties['lower shift']
+                subplot.yAxisProperties['upper shift'] = subplotReference.yAxisProperties['upper shift']
 
-                subplot.legende['active'] = subplotReference.legende['active']
-                subplot.legende['position'] = subplotReference.legende['position']
-                subplot.legende['nombre de colonnes'] = subplotReference.legende['nombre de colonnes']
+                subplot.legend['active'] = subplotReference.legend['active']
+                subplot.legend['position'] = subplotReference.legend['position']
+                subplot.legend['columns'] = subplotReference.legend['columns']
 
                 layout.subplots.append(subplot)
             
-            self.pyLong.projet.layouts.append(layout)
+            self.pyLong.project.layouts.append(layout)
         else:
-            self.pyLong.projet.layouts.append(layout)
+            self.pyLong.project.layouts.append(layout)
             
-        self.pyLong.listeLayouts.addItem(layout.intitule)
-        n = self.pyLong.listeLayouts.count()
-        self.pyLong.listeLayouts.setCurrentIndex(n - 1)
-        
-    def valider(self):
-        self.appliquer()
-        self.pyLong.canvas.dessiner()
+        self.pyLong.layoutsList.addItem(layout.title)
+        n = self.pyLong.layoutsList.count()
+        self.pyLong.layoutsList.setCurrentIndex(n - 1)
+
+        self.pyLong.canvas.updateFigure()
         self.accept()

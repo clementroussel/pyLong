@@ -75,7 +75,7 @@ def createActions(self):
     for layout in self.project.layouts:
         self.layoutsList.addItem(layout.title)
 
-    # self.layoutsList.currentIndexChanged.connect(self.canvas.plot)
+    self.layoutsList.currentIndexChanged.connect(self.canvas.updateFigure)
 
     self.layoutsList.setContextMenuPolicy(Qt.CustomContextMenu)
     self.layoutsList.customContextMenuRequested.connect(self.contextMenuLayouts)
@@ -248,12 +248,12 @@ def createActions(self):
 
     self.adjustVerticalAnnotationAction = QAction(QIcon(self.appctxt.get_resource('icons/adjustVerticalAnnotation.png')), "Adjust vertical annotations", self)
     self.adjustVerticalAnnotationAction.setShortcut(QKeySequence("Ctrl+Alt+Z"))
-    #self.adjustVerticalAnnotationAction.triggered.connect(self.adjustVerticalAnnotation)
+    self.adjustVerticalAnnotationAction.triggered.connect(self.adjustVerticalAnnotation)
     self.annotationToolBar.addAction(self.adjustVerticalAnnotationAction)
 
     self.duplicateAction = QAction(QIcon(self.appctxt.get_resource('icons/duplicate.png')), "Duplicate", self)
     self.duplicateAction.setShortcut(QKeySequence("Ctrl+Alt+D"))
-    #self.action_dupliquerAnnotation.triggered.connect(self.duplicate)
+    self.duplicateAction.triggered.connect(self.duplicate)
     self.annotationToolBar.addAction(self.duplicateAction)
 
     self.groupsManagerAction = QAction(QIcon(self.appctxt.get_resource('icons/groupsManager.png')), "Groups manager", self)
@@ -261,7 +261,7 @@ def createActions(self):
     self.annotationToolBar.addAction(self.groupsManagerAction)
 
     self.annotationDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)
-    #self.deleteAnnotationAction.triggered.connect(self.annotationDelete)
+    self.annotationDeleteAction.triggered.connect(self.annotationDelete)
     self.annotationDeleteAction.setShortcut(QKeySequence("Alt+A"))
     self.annotationToolBar.addAction(self.annotationDeleteAction)
 

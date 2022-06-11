@@ -2,39 +2,37 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from pyLong.Layout import *
+from pyLong.layout import *
 
 
-class DialogSupprimerLayouts(QDialog):
+class DialogDeleteLayouts(QDialog):
     def __init__(self, parent):
         super().__init__()
         
         self.pyLong = parent
         
-        self.setWindowTitle("Supprimer des mises en page")
+        self.setWindowTitle("Delete layouts")
         
         mainLayout = QVBoxLayout()
         
-        groupe = QGroupBox("Supprimer les mises en page :")
+        group = QGroupBox("Delete layouts :")
         layout = QVBoxLayout()
         
-        self.listeLayouts = QListWidget()
-        for l in self.pyLong.projet.layouts[1:]:
+        self.layoutsList = QListWidget()
+        for l in self.pyLong.project.layouts[1:]:
             item = QListWidgetItem()
-            item.setText(l.intitule)
+            item.setText(l.title)
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
             item.setCheckState(Qt.Unchecked)
-            self.listeLayouts.addItem(item)
+            self.layoutsList.addItem(item)
         
-        layout.addWidget(self.listeLayouts)
-        groupe.setLayout(layout)
+        layout.addWidget(self.layoutsList)
+        group.setLayout(layout)
         
-        mainLayout.addWidget(groupe)
+        mainLayout.addWidget(group)
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.rejected.connect(self.reject)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         
         layout = QHBoxLayout()
         layout.addWidget(buttonBox)
@@ -43,11 +41,11 @@ class DialogSupprimerLayouts(QDialog):
 
         self.setLayout(mainLayout)
         
-    def valider(self):
-        n = self.pyLong.listeLayouts.count()
+    def validate(self):
+        n = self.pyLong.layoutsList.count()
         n -= 1
         for i in range(n-1, -1, -1):
-            if self.listeLayouts.item(i).checkState() == Qt.Checked:
-                self.pyLong.projet.layouts.pop(i+1)
-                self.pyLong.listeLayouts.removeItem(i+1)
+            if self.layoutsList.item(i).checkState() == Qt.Checked:
+                self.pyLong.project.layouts.pop(i+1)
+                self.pyLong.layoutsList.removeItem(i+1)
         self.accept()

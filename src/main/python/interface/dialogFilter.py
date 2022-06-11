@@ -147,6 +147,7 @@ class DialogFilter(QDialog):
                 self.pyLong.profilesList.update()
 
                 self.pyLong.canvas.ax_z.add_line(zprofile.line)
+                self.pyLong.canvas.ax_z.add_line(sprofile.trickLine)
             
                 self.accept()
                 
@@ -174,6 +175,7 @@ class DialogFilter(QDialog):
                 self.pyLong.profilesList.update()
 
                 self.pyLong.canvas.ax_z.add_line(zprofile.line)
+                self.pyLong.canvas.ax_z.add_line(sprofile.trickLine)
             
                 self.accept()
                 
@@ -201,6 +203,7 @@ class DialogFilter(QDialog):
                 self.pyLong.profilesList.update()
 
                 self.pyLong.canvas.ax_z.add_line(zprofile.line)
+                self.pyLong.canvas.ax_z.add_line(sprofile.trickLine)
             
                 self.accept()
                 

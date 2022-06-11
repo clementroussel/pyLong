@@ -220,7 +220,6 @@ class AnnotationsList(List):
 
     def goTopMethod(self):
         if self.selection():
-            i = self.groups.currentIndex()
             j = self.list.currentRow()
 
             while j != 0:
@@ -229,7 +228,6 @@ class AnnotationsList(List):
 
     def goBottomMethod(self):
         if self.selection():
-            i = self.groups.currentIndex()
             j = self.list.currentRow()
 
             n = self.list.count()
@@ -271,14 +269,14 @@ class AnnotationsList(List):
 
                     elif type(annotation) == Interval:
                         annotation.text.remove()
-                        annotation.left_line.remove()
-                        annotation.right_line.remove()
+                        annotation.startLine.remove()
+                        annotation.endLine.remove()
 
                     elif type(annotation) == Rectangle:
                         annotation.rectangle.remove()
 
                     self.pyLong.project.groups[self.groups.currentIndex()].annotations.pop(i)
-                    self.updateListe()
+                    self.updateList()
                     self.pyLong.canvas.updateLegends()
 
                 try:
@@ -289,7 +287,7 @@ class AnnotationsList(List):
             else:
                 dialog = QMessageBox(self)
                 dialog.setWindowTitle("Delete annotations")
-                dialog.setText("Delete the {} annotations selected ?".format(len(indexes)))
+                dialog.setText("Delete the {} selected annotations ?".format(len(indexes)))
                 dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
                 dialog.setIcon(QMessageBox.Question)
                 answer = dialog.exec_()
@@ -309,15 +307,15 @@ class AnnotationsList(List):
 
                         elif type(annotation) == Interval:
                             annotation.text.remove()
-                            annotation.left_line.remove()
-                            annotation.right_line.remove()
+                            annotation.startLine.remove()
+                            annotation.endLine.remove()
 
                         elif type(annotation) == Rectangle:
                             annotation.rectangle.remove()
 
                         self.pyLong.project.groups[self.groups.currentIndex()].annotations.pop(i)
 
-                    self.updateListe()
+                    self.updateList()
                     self.pyLong.canvas.updateLegends()
 
                 try:

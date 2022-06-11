@@ -19,9 +19,9 @@ from interface.dialogLayout import DialogLayout
 
 # from DialogPreferences import *
 
-# from DialogAjoutLayout import *
-# from DialogRenommerLayout import *
-# from DialogSupprimerLayouts import *
+from interface.dialogAddLayout import *
+from interface.dialogRenameLayout import *
+from interface.dialogDeleteLayouts import *
 
 # from DialogLayout import *
 # from DialogLayoutAvancee import *
@@ -37,7 +37,7 @@ from interface.dialogFilter import *
 from interface.dialogSimplify import *
 from interface.dialogExport import *
 
-# from DialogAjusterAnnotations import *
+from interface.dialogAdjustAnnotations import *
 # from DialogGestionGroupes import *
 
 # from DialogLignesRappel import *
@@ -315,47 +315,47 @@ class MainWindow(QMainWindow):
 #         self.annotationsList.updateListe()
 #         self.canvas.dessiner()
 
-#     def dupliquerAnnotations(self):
-#         if self.annotationsList.selection():
-#             j = self.annotationsList.groupes.currentIndex()
-#             indices = []
-#             for item in self.annotationsList.liste.selectedIndexes():
-#                 indices.append(item.row())
+    def duplicate(self):
+        if self.annotationsList.selection():
+            j = self.annotationsList.groups.currentIndex()
+            indexes = []
+            for item in self.annotationsList.list.selectedIndexes():
+                indexes.append(item.row())
 
-#             for i in indices:
-#                 annotation = self.projet.groupes[j].annotations[i]
-#                 if type(annotation) == Texte:
-#                     txt = annotation.dupliquer()
-#                     self.projet.groupes[j].annotations.append(txt)
-#                     self.canvas.ax_z.add_artist(txt.text)
-#                 elif type(annotation) == AnnotationPonctuelle:
-#                     ap = annotation.dupliquer()
-#                     self.projet.groupes[j].annotations.append(ap)
-#                     self.canvas.ax_z.add_artist(ap.annotation)
-#                 elif type(annotation) == AnnotationLineaire:
-#                     al = annotation.dupliquer()
-#                     self.projet.groupes[j].annotations.append(al)
-#                     self.canvas.ax_z.add_artist(al.annotation)
-#                     self.canvas.ax_z.add_artist(al.text)
-#                 elif type(annotation) == Zone:
-#                     zone = annotation.dupliquer()
-#                     self.projet.groupes[j].annotations.append(zone)
-#                     self.canvas.ax_z.add_artist(zone.text)
-#                     self.canvas.ax_z.add_line(zone.left_line)
-#                     self.canvas.ax_z.add_line(zone.right_line)
-#                 else:
-#                     rect = annotation.dupliquer()
-#                     self.projet.groupes[j].annotations.append(rect)
-#                     self.canvas.ax_z.add_patch(rect.rectangle)
+            for i in indexes:
+                annotation = self.project.groups[j].annotations[i]
+                if type(annotation) == Text:
+                    newAnnotation = annotation.duplicate()
+                    self.project.groups[j].annotations.append(newAnnotation)
+                    self.canvas.ax_z.add_artist(newAnnotation.text)
+                elif type(annotation) == VerticalAnnotation:
+                    newAnnotation = annotation.duplicate()
+                    self.project.groups[j].annotations.append(newAnnotation)
+                    self.canvas.ax_z.add_artist(newAnnotation.annotation)
+                elif type(annotation) == LinearAnnotation:
+                    newAnnotation = annotation.duplicate()
+                    self.project.groups[j].annotations.append(newAnnotation)
+                    self.canvas.ax_z.add_artist(newAnnotation.annotation)
+                    self.canvas.ax_z.add_artist(newAnnotation.text)
+                elif type(annotation) == Interval:
+                    newAnnotation = annotation.duplicate()
+                    self.project.groups[j].annotations.append(newAnnotation)
+                    self.canvas.ax_z.add_artist(newAnnotation.text)
+                    self.canvas.ax_z.add_line(newAnnotation.startLine)
+                    self.canvas.ax_z.add_line(newAnnotation.endLine)
+                else:
+                    newAnnotation = annotation.duplicate()
+                    self.project.groups[j].annotations.append(newAnnotation)
+                    self.canvas.ax_z.add_patch(newAnnotation.rectangle)
 
-#             self.annotationsList.updateListe()
-#             self.canvas.updateLegendes()
+            self.annotationsList.updateList()
+            self.canvas.updateLegends()
 
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez une annotation avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select at least one annotation before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
     def copyStyle(self):
         if self.annotationsList.selection():
@@ -546,14 +546,14 @@ class MainWindow(QMainWindow):
 #     def imprimer(self):
 #         DialogImprimer(parent=self).exec_()
 
-#     def ajusterAnnotations(self):
-#         if self.annotationsList.selection():
-#             DialogAjusterAnnotations(parent=self).exec()
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez une ou plusieurs annotation(s) avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+    def adjustVerticalAnnotation(self):
+        if self.annotationsList.selection():
+            DialogAdjustAnnotations(parent=self).exec()
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select at least one vertical annotation before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
 #     def supprimerDonnees(self):
 #         self.otherDataList.supprimer()
@@ -564,8 +564,8 @@ class MainWindow(QMainWindow):
 #     def supprimerCalculs(self):
 #         self.calculationsList.supprimer()
 
-#     def supprimerAnnotation(self):
-#         self.annotationsList.supprimer()
+    def annotationDelete(self):
+        self.annotationsList.delete()
 
 #     def toolBox(self):
 #         DialogToolBox(parent=self).exec_()
@@ -949,18 +949,15 @@ class MainWindow(QMainWindow):
 #         self.annotationsList.ajouterGroupe()
 
     def deleteLayouts(self):
-        print("Delete layouts")
-        # DialogDeleteLayouts(parent=self).exec_()
+        DialogDeleteLayouts(parent=self).exec_()
 
     def renameLayout(self):
-        print("Rename layout")
-        # i = self.listLayouts.currentIndex()
-        # if i != 0:
-        #     DialogRenameLayout(parent=self).exec_()
+        i = self.layoutsList.currentIndex()
+        if i != 0:
+            DialogRenameLayout(parent=self).exec_()
 
     def addLayout(self):
-        print("Add layout")
-        # DialogAddLayout(parent=self).exec_()
+        DialogAddLayout(parent=self).exec_()
 
     def settings(self):
         print("Settings")

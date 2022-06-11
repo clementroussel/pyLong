@@ -36,12 +36,16 @@ class ProfilesList(List):
 
         sublayout = QVBoxLayout()
 
+        self.goTop.clicked.connect(self.goTopMethod)
         sublayout.addWidget(self.goTop)
 
+        self.moveUp.clicked.connect(self.moveUpMethod)
         sublayout.addWidget(self.moveUp)
 
+        self.moveDown.clicked.connect(self.moveDownMethod)
         sublayout.addWidget(self.moveDown)
 
+        self.goBottom.clicked.connect(self.goBottomMethod)
         sublayout.addWidget(self.goBottom)
 
         layout.addWidget(self.list)
@@ -195,3 +199,43 @@ class ProfilesList(List):
                 self.pyLong.canvas.updateFigure()
             else:
                 self.pyLong.canvas.draw()
+
+    def moveUpMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            if j != 0:
+                self.pyLong.project.profiles[j-1], self.pyLong.project.profiles[j] = \
+                    self.pyLong.project.profiles[j], self.pyLong.project.profiles[j-1]
+                self.update()
+                self.list.setCurrentRow(j-1)
+
+    def moveDownMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            n = self.list.count()
+
+            if j != n-1:
+                self.pyLong.project.profiles[j+1], self.pyLong.project.profiles[j] = \
+                    self.pyLong.project.profiles[j], self.pyLong.project.profiles[j+1]
+                self.update()
+                self.list.setCurrentRow(j+1)
+
+    def goTopMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            while j != 0:
+                self.moveUpMethod()
+                j -= 1
+
+    def goBottomMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            n = self.list.count()
+
+            while j != n-1:
+                self.moveDownMethod()
+                j += 1
