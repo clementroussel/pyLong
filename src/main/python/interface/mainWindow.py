@@ -63,7 +63,7 @@ from pyLong.project import Project
 from pyLong.text import *
 from pyLong.verticalAnnotation import *
 from pyLong.linearAnnotation import *
-# from pyLong.Zone import *
+from pyLong.interval import *
 from pyLong.rectangle import *
 
 
@@ -917,17 +917,17 @@ class MainWindow(QMainWindow):
         self.canvas.ax_z.add_artist(annotation.text)
         self.canvas.draw()
 
-#     def ajouterZone(self):
-#         zone = Zone()
-#         i = self.annotationsList.groupes.currentIndex()
-#         zone.groupe = i
-#         zone.update()
-#         self.projet.groupes[i].annotations.append(zone)
-#         self.annotationsList.updateListe()
-#         self.canvas.ax_z.add_artist(zone.text)
-#         self.canvas.ax_z.add_line(zone.left_line)
-#         self.canvas.ax_z.add_line(zone.right_line)
-#         self.canvas.draw()
+    def addInterval(self):
+        annotation = Interval()
+        i = self.annotationsList.groups.currentIndex()
+        annotation.group = i
+        annotation.update()
+        self.project.groups[i].annotations.append(annotation)
+        self.annotationsList.updateList()
+        self.canvas.ax_z.add_artist(annotation.text)
+        self.canvas.ax_z.add_line(annotation.startLine)
+        self.canvas.ax_z.add_line(annotation.endLine)
+        self.canvas.draw()
 
     def addRectangle(self):
         annotation = Rectangle()

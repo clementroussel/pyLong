@@ -15,7 +15,7 @@ class Interval(Annotation):
         
         Annotation.__init__(self)
         
-        self.title = ""
+        self.title = "Interval n°{}".format(Interval.counter)
     
         self.label = ""
         
@@ -25,17 +25,17 @@ class Interval(Annotation):
                        'z end': 500,
                        'z low': 0}
         
-        self.labelProperties = {'z coordinate': 0.,
+        self.labelProperties = {'z coordinate': 250.,
                                 'size': 9.,
                                 'color': 'Black'}
         
         self.limitsProperties = {'style': 'solid',
                                  'color': 'Black',
-                                 'thickness': 0.8}
+                                 'thickness': 1}
         
-        self.frame = {'style': 'solid',
-                      'color': 'Black',
-                      'thickness': 0.8}
+        self.frameProperties = {'style': 'solid',
+                                'color': 'Black',
+                                'thickness': 1}
         
         self.clear()
 
@@ -60,9 +60,9 @@ class Interval(Annotation):
         self.text.set_color(colors[self.labelProperties['color']])
         self.text.set_alpha(self.opacity)
         self.text.set_zorder(self.order)
-        self.text.set_bbox(dict(linestyle=lineStyles[self.frame['style']],
-                                edgecolor=colors[self.frame['color']],
-                                linewidth=self.frame['thickness'],
+        self.text.set_bbox(dict(linestyle=lineStyles[self.frameProperties['style']],
+                                edgecolor=colors[self.frameProperties['color']],
+                                linewidth=self.frameProperties['thickness'],
                                 facecolor='White',
                                 alpha=self.opacity,
                                 zorder=self.order))
@@ -98,9 +98,9 @@ class Interval(Annotation):
             self.limitsProperties['style'] = annotation.limitsProperties['style']
             self.limitsProperties['color'] = annotation.limitsProperties['color']
             self.limitsProperties['thickness'] = annotation.limitsProperties['thickness']
-            self.frame['style'] = annotation.frame['style']
-            self.frame['thickness'] = annotation.frame['thickness']
-            self.frame['color'] = annotation.frame['color']
+            self.frameProperties['style'] = annotation.frame['style']
+            self.frameProperties['thickness'] = annotation.frame['thickness']
+            self.frameProperties['color'] = annotation.frame['color']
             self.opacite = annotation.opacite
             self.ordre = annotation.ordre
 

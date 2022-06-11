@@ -225,7 +225,7 @@ def createActions(self):
     self.annotationToolBar.addAction(self.addLinearAnnotationAction)
 
     self.addIntervalAction = QAction(QIcon(self.appctxt.get_resource('icons/interval.png')), "Add an interval", self)
-    #self.addIntervalAction.triggered.connect(self.addInterval)
+    self.addIntervalAction.triggered.connect(self.addInterval)
     self.annotationToolBar.addAction(self.addIntervalAction)
 
     self.addRectangleAction = QAction(QIcon(self.appctxt.get_resource('icons/rectangle.png')), "Add a rectangle", self)

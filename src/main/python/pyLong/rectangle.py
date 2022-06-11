@@ -24,7 +24,7 @@ class Rectangle(Annotation):
         
         self.outline = {'line style': "solid",
                         'color': 'Black',
-                        'thickness': 0.8}
+                        'thickness': 1}
         
         self.filling = {'color': 'White',
                         'hatch style': '/',
