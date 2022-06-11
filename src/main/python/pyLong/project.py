@@ -53,6 +53,8 @@ class Project:
 
         self.reminderLines = []
 
+        self.modelAnnotation = None
+
     def new(self):
         self.path = ""
 

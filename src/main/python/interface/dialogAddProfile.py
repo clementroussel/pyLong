@@ -196,7 +196,7 @@ class DialogAddProfile(QDialog):
 
                             self.pyLong.canvas.ax_z.add_artist(annotation.annotation)
 
-                    # self.pyLong.annotationsList.updateList()
+                    self.pyLong.annotationsList.updateList()
                     self.pyLong.canvas.draw()
                     self.accept()
 

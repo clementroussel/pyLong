@@ -237,7 +237,7 @@ def createActions(self):
     self.annotationToolBar.addAction(self.annotationStyleAction)
 
     self.copyStyleAction = QAction(QIcon(self.appctxt.get_resource('icons/copyStyle.png')), "Copy style", self)
-    #self.copyStyleAction.triggered.connect(self.copyStyle)
+    self.copyStyleAction.triggered.connect(self.copyStyle)
     self.copyStyleAction.setShortcut(QKeySequence("Ctrl+Alt+C"))
     self.annotationToolBar.addAction(self.copyStyleAction)
 

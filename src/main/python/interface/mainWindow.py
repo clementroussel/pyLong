@@ -357,16 +357,16 @@ class MainWindow(QMainWindow):
 #             alerte.setIcon(QMessageBox.Warning)
 #             alerte.exec_()
 
-#     def copierPropriete(self):
-#         if self.annotationsList.selection():
-#             i = self.annotationsList.groupes.currentIndex()
-#             j = self.annotationsList.liste.currentRow()
-#             self.projet.annotationModele = self.projet.groupes[i].annotations[j]
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez une annotation avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+    def copyStyle(self):
+        if self.annotationsList.selection():
+            i = self.annotationsList.groups.currentIndex()
+            j = self.annotationsList.list.currentRow()
+            self.project.modelAnnotation = self.project.groups[i].annotations[j]
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select an annotation before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
 #     def collerPropriete(self):
 #         if self.annotationsList.selection():
