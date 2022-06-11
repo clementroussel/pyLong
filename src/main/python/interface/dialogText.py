@@ -4,6 +4,8 @@ from PyQt5.QtCore import *
 
 from interface.colorsComboBox import *
 
+from pyLong.text import *
+
 
 class DialogText(QDialog):
     def __init__(self, parent):
@@ -14,6 +16,10 @@ class DialogText(QDialog):
         i = self.pyLong.annotationsList.groups.currentIndex()
         j = self.pyLong.annotationsList.list.currentRow()
         self.txt = self.pyLong.project.groups[i].annotations[j]
+
+        if not self.txt.edited:
+            Text.counter -= 1
+            self.txt.edited = True
         
         self.setWindowTitle("Text")
         self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/text.png')))

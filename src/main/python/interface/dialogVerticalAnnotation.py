@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 import numpy as np
 
 from pyLong.dictionaries import *
+from pyLong.verticalAnnotation import *
 
 from interface.colorsComboBox import *
 
@@ -20,6 +21,10 @@ class DialogVerticalAnnotation(QDialog):
         i = self.pyLong.annotationsList.groups.currentIndex()
         j = self.pyLong.annotationsList.list.currentRow()
         self.annotation = self.pyLong.project.groups[i].annotations[j]
+
+        if not self.annotation.edited:
+            VerticalAnnotation.counter -= 1
+            self.annotation.edited = True
         
         self.setWindowTitle("Vertical annotation")
         self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/verticalAnnotation.png')))

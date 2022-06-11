@@ -6,6 +6,7 @@ import numpy as np
 from pyparsing import line_end
 
 from pyLong.dictionaries import *
+from pyLong.linearAnnotation import *
 
 from interface.colorsComboBox import *
 
@@ -21,6 +22,10 @@ class DialogLinearAnnotation(QDialog):
         i = self.pyLong.annotationsList.groups.currentIndex()
         j = self.pyLong.annotationsList.list.currentRow()
         self.annotation = self.pyLong.project.groups[i].annotations[j]
+
+        if not self.annotation.edited:
+            LinearAnnotation.counter -= 1
+            self.annotation.edited = True
         
         self.setWindowTitle("Linear annotation")
         self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/linearAnnotation.png')))

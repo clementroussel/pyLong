@@ -3,6 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 from pyLong.dictionaries import *
+from pyLong.rectangle import *
 
 from interface.colorsComboBox import *
 
@@ -16,6 +17,10 @@ class DialogRectangle(QDialog):
         i = self.pyLong.annotationsList.groups.currentIndex()
         j = self.pyLong.annotationsList.list.currentRow()
         self.rect = self.pyLong.project.groups[i].annotations[j]
+
+        if not self.rect.edited:
+            Rectangle.counter -= 1
+            self.rect.edited = True
         
         self.setWindowTitle("Rectangle")
         self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/rectangle.png')))

@@ -8,3 +8,5 @@ class Annotation:
         self.opacity = 1.
         
         self.order = 1
+
+        self.edited = False

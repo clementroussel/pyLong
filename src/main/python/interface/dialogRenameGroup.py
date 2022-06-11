@@ -9,31 +9,29 @@ class DialogRenameGroup(QDialog):
         
         self.pyLong = parent
         
-        self.setWindowTitle("Renommer le groupe")
+        self.setWindowTitle("Rename group")
         
-        i = self.pyLong.listeAnnotations.groupes.currentIndex()
-        self.currentGroupe = self.pyLong.projet.groupes[i]
+        i = self.pyLong.annotationsList.groups.currentIndex()
+        self.currentGroup = self.pyLong.project.groups[i]
         
         mainLayout = QGridLayout()
         
-        label = QLabel("Intitulé :")
+        label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         mainLayout.addWidget(label, 0, 0)      
         
-        self.intitule = QLineEdit()
-        self.intitule.setText(self.currentGroupe.intitule)
-        mainLayout.addWidget(self.intitule, 0, 1)        
+        self.title = QLineEdit()
+        self.title.setText(self.currentGroup.title)
+        mainLayout.addWidget(self.title, 0, 1)        
                 
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.rejected.connect(self.accept)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         
         mainLayout.addWidget(buttonBox, 1, 0, 1, 2)
 
         self.setLayout(mainLayout)
         
-    def valider(self):
-        self.currentGroupe.intitule = self.intitule.text()
-        self.pyLong.listeAnnotations.groupes.setItemText(self.pyLong.listeAnnotations.groupes.currentIndex(), self.intitule.text())
+    def validate(self):
+        self.currentGroup.title = self.title.text()
+        self.pyLong.annotationsList.groups.setItemText(self.pyLong.annotationsList.groups.currentIndex(), self.title.text())
         self.accept()

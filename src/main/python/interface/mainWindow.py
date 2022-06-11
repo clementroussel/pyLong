@@ -939,14 +939,14 @@ class MainWindow(QMainWindow):
         self.canvas.ax_z.add_patch(annotation.rectangle)
         self.canvas.updateLegends()
 
-#     def supprimerGroupes(self):
-#         self.annotationsList.supprimerGroupe()
+    def deleteGroups(self):
+        self.annotationsList.deleteGroups()
 
-#     def renommerGroupe(self):
-#         self.annotationsList.renommerGroupe()
+    def renameGroup(self):
+        self.annotationsList.renameGroup()
 
-#     def ajouterGroupe(self):
-#         self.annotationsList.ajouterGroupe()
+    def addGroup(self):
+        self.annotationsList.addGroup()
 
     def deleteLayouts(self):
         DialogDeleteLayouts(parent=self).exec_()

@@ -4,36 +4,40 @@ from PyQt5.QtCore import *
 
 from pyLong.group import *
 
+from pyLong.text import Text
+from pyLong.verticalAnnotation import VerticalAnnotation
+from pyLong.linearAnnotation import LinearAnnotation
+from pyLong.interval import Interval
+from pyLong.rectangle import Rectangle
+
 class DialogDeleteGroups(QDialog):
     def __init__(self, parent):
         super().__init__()
         
         self.pyLong = parent
         
-        self.setWindowTitle("Supprimer des groupes")
+        self.setWindowTitle("Delete groups")
         
         mainLayout = QVBoxLayout()
         
-        groupe = QGroupBox("Supprimer les groupes d'annotations :")
+        group = QGroupBox("Delete groups :")
         layout = QVBoxLayout()
         
-        self.listeGroupes = QListWidget()
-        for g in self.pyLong.projet.groupes[1:]:
+        self.groupsList = QListWidget()
+        for g in self.pyLong.project.groups[1:]:
             item = QListWidgetItem()
-            item.setText(g.intitule)
+            item.setText(g.title)
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
             item.setCheckState(Qt.Unchecked)
-            self.listeGroupes.addItem(item)
+            self.groupsList.addItem(item)
         
-        layout.addWidget(self.listeGroupes)
-        groupe.setLayout(layout)
+        layout.addWidget(self.groupsList)
+        group.setLayout(layout)
         
-        mainLayout.addWidget(groupe)
+        mainLayout.addWidget(group)
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.rejected.connect(self.accept)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         
         layout = QHBoxLayout()
         layout.addWidget(buttonBox)
@@ -42,11 +46,33 @@ class DialogDeleteGroups(QDialog):
 
         self.setLayout(mainLayout)
         
-    def valider(self):
-        n = self.pyLong.listeAnnotations.groupes.count()
+    def validate(self):
+        n = self.pyLong.annotationsList.groups.count()
         n -= 1
         for i in range(n-1, -1, -1):
-            if self.listeGroupes.item(i).checkState() == Qt.Checked:
-                self.pyLong.projet.groupes.pop(i+1)
-                self.pyLong.listeAnnotations.groupes.removeItem(i+1)
+            if self.groupsList.item(i).checkState() == Qt.Checked:
+                for annotation in self.pyLong.project.groups[i+1].annotations:
+                    if type(annotation) == Text:
+                        annotation.text.remove()
+
+                    elif type(annotation) == VerticalAnnotation:
+                        annotation.annotation.remove()
+
+                    elif type(annotation) == LinearAnnotation:
+                        annotation.annotation.remove()
+                        annotation.text.remove()
+
+                    elif type(annotation) == Interval:
+                        annotation.text.remove()
+                        annotation.startLine.remove()
+                        annotation.endLine.remove()
+
+                    elif type(annotation) == Rectangle:
+                        annotation.rectangle.remove()
+
+                    
+                self.pyLong.project.groups[i+1].annotations.clear()                
+                self.pyLong.project.groups.pop(i+1)
+                self.pyLong.annotationsList.groups.removeItem(i+1)
+                self.pyLong.canvas.updateLegends()
         self.accept()

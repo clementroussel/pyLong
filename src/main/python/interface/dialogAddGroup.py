@@ -11,28 +11,26 @@ class DialogAddGroup(QDialog):
         
         self.pyLong = parent
         
-        self.setWindowTitle("Ajouter un groupe d'annotations")
+        self.setWindowTitle("Add a group")
         
         mainLayout = QVBoxLayout()
         
-        groupe = QGroupBox("Nouveau groupe d'annotations")
+        group = QGroupBox("New group")
         layout = QGridLayout()
         
-        label = QLabel("Intitulé :")
+        label = QLabel("title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.intitule = QLineEdit()
-        self.intitule.setText("groupe {}".format(Groupe.compteur + 1))
-        layout.addWidget(self.intitule, 0, 1)
+        self.title = QLineEdit()
+        self.title.setText("group {}".format(Group.counter + 1))
+        layout.addWidget(self.title, 0, 1)
         
-        groupe.setLayout(layout)
-        mainLayout.addWidget(groupe)
+        group.setLayout(layout)
+        mainLayout.addWidget(group)
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.rejected.connect(self.accept)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         
         layout = QHBoxLayout()
         layout.addWidget(buttonBox)
@@ -41,19 +39,13 @@ class DialogAddGroup(QDialog):
 
         self.setLayout(mainLayout)
             
-    def appliquer(self):
-        groupe = Groupe()
-        groupe.intitule = self.intitule.text()
+    def validate(self):
+        group = Group()
+        group.title = self.title.text()
             
-        self.pyLong.projet.groupes.append(groupe)
+        self.pyLong.project.groups.append(group)
 
-        self.pyLong.listeAnnotations.updateGroupes()
-        self.pyLong.listeAnnotations.groupes.setCurrentIndex(self.pyLong.listeAnnotations.groupes.count() - 1)
-        # # self.pyLong.listeAnnotations.groupes.addItem(groupe.intitule)
-        # n = self.pyLong.listeAnnotations.liste.count()
-        # # self.pyLong.listeAnnotations.groupes.setItemChecked(n - 1, groupe.actif)
-        # self.pyLong.listeAnnotations.groupes.setCurrentIndex(n - 1)
-        
-    def valider(self):
-        self.appliquer()
+        self.pyLong.annotationsList.updateGroups()
+        self.pyLong.annotationsList.groups.setCurrentIndex(self.pyLong.annotationsList.groups.count() - 1)
+
         self.accept()
