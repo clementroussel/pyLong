@@ -286,7 +286,7 @@ def createActions(self):
     self.toolboxToolBar.setIconSize(QSize(20, 20))
 
     self.toolboxAction = QAction(QIcon(self.appctxt.get_resource('icons/toolbox.png')), "Toolbox", self)
-    #self.toolboxAction.triggered.connect(self.toolBox)
+    self.toolboxAction.triggered.connect(self.toolBox)
     self.toolboxToolBar.addAction(self.toolboxAction)
 
     self.calculationAction = QAction(QIcon(self.appctxt.get_resource('icons/calculation.png')), "Calculation properties", self)

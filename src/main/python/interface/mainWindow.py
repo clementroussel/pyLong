@@ -42,7 +42,7 @@ from interface.dialogAdjustAnnotations import *
 
 # from DialogLignesRappel import *
 
-# from DialogToolBox import *
+from interface.dialogToolBox import *
 
 # from DialogAjoutDonnees import *
 # from DialogOptionsDonnees import *
@@ -567,18 +567,18 @@ class MainWindow(QMainWindow):
     def annotationDelete(self):
         self.annotationsList.delete()
 
-#     def toolBox(self):
-#         DialogToolBox(parent=self).exec_()
+    def toolBox(self):
+        DialogToolBox(parent=self).exec_()
 
-#     def tableauValeurs(self):
-#         if self.profilesList.selection():
-#             DialogTableauValeurs(parent=self).exec_()
+    # def tableauValeurs(self):
+    #     if self.profilesList.selection():
+    #         DialogTableauValeurs(parent=self).exec_()
 
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez un profil avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+        # else:
+        #     alerte = QMessageBox(self)
+        #     alerte.setText("Sélectionnez un profil avant de lancer cette commande.")
+        #     alerte.setIcon(QMessageBox.Warning)
+        #     alerte.exec_()
 
 #     def onDoubleClick(self, event):
 #         pass
