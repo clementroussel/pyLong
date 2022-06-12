@@ -27,7 +27,7 @@ from interface.dialogDeleteLayouts import *
 # from DialogLayoutAvancee import *
 # from DialogImprimer import *
 
-# from DialogGestionSubplots import *
+from interface.dialogManageSubplots import *
 
 from interface.dialogAddProfile import DialogAddProfile
 from interface.dialogProfileOptions import *
@@ -304,8 +304,8 @@ class MainWindow(QMainWindow):
 #         else:
 #             event.ignore()
 
-#     def gestionSubplots(self):
-#         DialogGestionSubplots(parent=self).exec_()
+    def subplotsManager(self):
+        DialogManageSubplots(parent=self).exec_()
 
 #     def gestionGroupes(self):
 #         i = self.annotationsList.groupes.currentIndex()

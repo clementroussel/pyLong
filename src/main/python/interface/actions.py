@@ -126,7 +126,7 @@ def createActions(self):
     self.subplotToolBar.setIconSize(QSize(20, 20))
 
     self.subplotsManagerAction = QAction(QIcon(self.appctxt.get_resource('icons/subplotsManager.png')), "Subplots manager", self)
-    #self.subplotsManagerAction.triggered.connect(self.subplotsManagerAction)
+    self.subplotsManagerAction.triggered.connect(self.subplotsManager)
     self.subplotToolBar.addAction(self.subplotsManagerAction)
 
     self.subplotToolBar.addSeparator()

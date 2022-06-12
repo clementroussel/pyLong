@@ -2,50 +2,50 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from DialogAjoutSubplot import *
+from interface.dialogAddSubplot import *
 
 
-class DialogGestionSubplots(QDialog):
+class DialogManageSubplots(QDialog):
     def __init__(self, parent):
         super().__init__()
 
         self.pyLong = parent
 
-        self.setWindowTitle("Gestion des subplots")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/gestion_subplots.png')))
+        self.setWindowTitle("Subplots manager")
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/subplotsManager.png')))
 
         mainLayout = QVBoxLayout()
 
-        groupe = QGroupBox("Subplots disponibles")
+        group = QGroupBox("Available subplots")
         layout = QVBoxLayout()
 
-        self.listeSubplots = QListWidget()
-        for subplots in self.pyLong.projet.subplots:
-            self.listeSubplots.addItem(subplots)
+        self.subplotsList = QListWidget()
+        for subplots in self.pyLong.project.subplots:
+            self.subplotsList.addItem(subplots)
 
-        layout.addWidget(self.listeSubplots)
+        layout.addWidget(self.subplotsList)
 
         sublayout = QHBoxLayout()
 
         sublayout.addWidget(QLabel())
 
-        ajouterSubplot = QPushButton("+")
-        ajouterSubplot.setAutoDefault(False)
-        ajouterSubplot.setFixedSize(QSize(25, 25))
-        ajouterSubplot.clicked.connect(self.ajouterSubplot)
-        sublayout.addWidget(ajouterSubplot)
+        addSubplot = QPushButton("+")
+        addSubplot.setAutoDefault(False)
+        addSubplot.setFixedSize(QSize(25, 25))
+        addSubplot.clicked.connect(self.addSubplot)
+        sublayout.addWidget(addSubplot)
 
-        supprimerSubplots = QPushButton("-")
-        supprimerSubplots.setAutoDefault(False)
-        supprimerSubplots.setFixedSize(QSize(25, 25))
-        supprimerSubplots.clicked.connect(self.supprimerSubplot)
-        sublayout.addWidget(supprimerSubplots)
+        deleteSubplot = QPushButton("-")
+        deleteSubplot.setAutoDefault(False)
+        deleteSubplot.setFixedSize(QSize(25, 25))
+        deleteSubplot.clicked.connect(self.deleteSubplot)
+        sublayout.addWidget(deleteSubplot)
 
         layout.addLayout(sublayout)
 
-        groupe.setLayout(layout)
+        group.setLayout(layout)
 
-        mainLayout.addWidget(groupe)
+        mainLayout.addWidget(group)
 
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
         buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.accept)
@@ -56,34 +56,34 @@ class DialogGestionSubplots(QDialog):
 
         self.setLayout(mainLayout)
 
-    def supprimerSubplot(self):
-        i = self.listeSubplots.currentRow()
-        subplot = self.pyLong.projet.subplots[i]
+    def deleteSubplot(self):
+        i = self.subplotsList.currentRow()
+        subplot = self.pyLong.project.subplots[i]
 
         l = []
-        for layout in self.pyLong.projet.layouts:
-            l += [subplot.identifiant for subplot in layout.subplots]
+        for layout in self.pyLong.project.layouts:
+            l += [subplot.id for subplot in layout.subplots]
 
-        l += [donnee.subplot for donnee in self.pyLong.projet.autresDonnees]
+        l += [data.subplot for data in self.pyLong.project.otherData]
 
-        for ligne in self.pyLong.projet.lignesRappel:
-            l += [subplot for subplot in ligne.subplots]
+        for line in self.pyLong.project.reminderLines:
+            l += [subplot for subplot in line.subplots]
 
         if subplot not in l:
-            self.pyLong.projet.subplots.remove(subplot)
+            self.pyLong.project.subplots.remove(subplot)
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Suppression impossible. Le subplot {} est utilisé.".format(subplot))
-            alerte.setIcon(QMessageBox.Warning)
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Subplot {} is used and cannot be deleted.".format(subplot))
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
-        self.updateListe()
+        self.updateList()
 
-    def ajouterSubplot(self):
-        DialogAjoutSubplot(parent=self).exec_()
-        self.updateListe()
+    def addSubplot(self):
+        DialogAddSubplot(parent=self).exec_()
+        self.updateList()
 
-    def updateListe(self):
-        self.listeSubplots.clear()
-        for subplots in self.pyLong.projet.subplots:
-            self.listeSubplots.addItem(subplots)
+    def updateList(self):
+        self.subplotsList.clear()
+        for subplots in self.pyLong.project.subplots:
+            self.subplotsList.addItem(subplots)
