@@ -160,8 +160,8 @@ class Canvas(FigureCanvas):
                 self.subplots.append(self.figure.add_subplot(gs[n_start:n_start + layout.subplots[i].subdivisions], sharex=self.ax_z))
                 n_start += layout.subplots[i].subdivisions
 
-                self.subplots[i].set_ylim((layout.subplots[i].ordonnees['min'] - layout.subplots[i].ordonnees['delta bas'],
-                                           layout.subplots[i].ordonnees['max'] + layout.subplots[i].ordonnees['delta haut']))
+                self.subplots[i].set_ylim((layout.subplots[i].yAxisProperties['min'] - layout.subplots[i].yAxisProperties['lower shift'],
+                                           layout.subplots[i].yAxisProperties['max'] + layout.subplots[i].yAxisProperties['upper shift']))
 
                 self.subplots[i].set_yticks(np.linspace(layout.subplots[i].yAxisProperties['min'],
                                                         layout.subplots[i].yAxisProperties['max'],

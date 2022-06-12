@@ -24,7 +24,7 @@ from interface.dialogRenameLayout import *
 from interface.dialogDeleteLayouts import *
 
 # from DialogLayout import *
-# from DialogLayoutAvancee import *
+from interface.dialogLayoutAvanced import *
 # from DialogImprimer import *
 
 from interface.dialogManageSubplots import *
@@ -228,8 +228,8 @@ class MainWindow(QMainWindow):
 #     def ajouterDonnees(self):
 #         DialogAjoutDonnees(parent=self).exec_()
 
-#     def miseEnPage_avancee(self):
-#         DialogLayoutAvancee(parent=self).exec_()
+    def advancedLayout(self):
+        DialogLayoutAdvanced(parent=self).exec_()
 
     def fullScreen(self, checked):
         if checked:

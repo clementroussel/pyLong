@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from pyLong.Subplot import *
+from pyLong.subplot import *
 
 
 class DialogChoixSubplot(QDialog):
@@ -14,50 +14,51 @@ class DialogChoixSubplot(QDialog):
 
         self.pyLong = parent.pyLong
 
-        i = self.pyLong.listeLayouts.currentIndex()
-        self.layout = self.pyLong.projet.layouts[i]
+        i = self.pyLong.layoutsList.currentIndex()
+        self.layout = self.pyLong.project.layouts[i]
 
-        self.setWindowTitle("Choix d'un subplot")
+        self.setWindowTitle("Subplot choice")
 
         mainLayout = QVBoxLayout()
 
-        groupe = QGroupBox("Subplots disponibles")
+        group = QGroupBox("Available subplots")
         layout = QVBoxLayout()
 
-        self.listeSubplots = QListWidget()
-        self.listeSubplots.doubleClicked.connect(self.valider)
-        liste = []
-        for i in range(self.parent.listeSubplots.count()):
-            liste.append(self.parent.listeSubplots.item(i).text())
-        for subplots in self.pyLong.projet.subplots:
-            if subplots not in liste:
-                self.listeSubplots.addItem(subplots)
+        self.subplotsList = QListWidget()
+        self.subplotsList.doubleClicked.connect(self.validate)
+        list = []
+        for i in range(self.parent.subplotsList.count()):
+            list.append(self.parent.subplotsList.item(i).text())
+        for subplots in self.pyLong.project.subplots:
+            if subplots not in list:
+                self.subplotsList.addItem(subplots)
 
-        layout.addWidget(self.listeSubplots)
+        layout.addWidget(self.subplotsList)
 
-        groupe.setLayout(layout)
+        group.setLayout(layout)
 
-        mainLayout.addWidget(groupe)
+        mainLayout.addWidget(group)
 
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-        buttonBox.button(QDialogButtonBox.Cancel).setText("Annuler")
-        buttonBox.button(QDialogButtonBox.Cancel).setAutoDefault(False)
-        buttonBox.button(QDialogButtonBox.Cancel).clicked.connect(self.accept)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
-        buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(False)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
+        buttonBox.button(QDialogButtonBox.Ok).setDefault(True)
+        buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(True)
 
         mainLayout.addWidget(buttonBox)
 
         self.setLayout(mainLayout)
 
-    def valider(self):
-        i = self.listeSubplots.currentIndex()
-        if i == -1:
-            pass
-        else:
-            subplot = Subplot()
-            subplot.identifiant = self.listeSubplots.currentItem().text()
+    def validate(self):
+        try:
+            i = self.subplotsList.currentIndex()
+            if i == -1:
+                pass
+            else:
+                subplot = Subplot()
+                subplot.id = self.subplotsList.currentItem().text()
 
-            self.layout.subplots.append(subplot)
+                self.layout.subplots.append(subplot)
 
+                self.accept()
+        except:
             self.accept()
