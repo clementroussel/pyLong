@@ -10,8 +10,8 @@ class OtherDataList(List):
 
         self.pyLong = parent
 
-        # self.liste.doubleClicked.connect(self.pyLong.optionsDonnees)
-        # self.liste.itemChanged.connect(self.activer)
+        self.list.doubleClicked.connect(self.pyLong.dataStyle)
+        self.list.itemChanged.connect(self.activate)
 
         self.list.setContextMenuPolicy(Qt.CustomContextMenu)
         self.list.customContextMenuRequested.connect(self.contextMenu)

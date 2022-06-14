@@ -305,11 +305,11 @@ def createActions(self):
     self.otherDataToolBar.setIconSize(QSize(20, 20))
 
     self.addDataAction = QAction(QIcon(self.appctxt.get_resource('icons/addData.png')), "Add new data", self)
-    #self.addDataAction.triggered.connect(self.addData)
+    self.addDataAction.triggered.connect(self.addData)
     self.otherDataToolBar.addAction(self.addDataAction)
 
     self.dataStyleAction = QAction(QIcon(self.appctxt.get_resource('icons/style.png')), "Data style", self)
-    # self.action_styleDonnees.triggered.connect(self.dataStyle)
+    self.dataStyleAction.triggered.connect(self.dataStyle)
     self.otherDataToolBar.addAction(self.dataStyleAction)
 
     self.dataDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)

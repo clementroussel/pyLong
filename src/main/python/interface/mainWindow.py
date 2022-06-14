@@ -44,8 +44,8 @@ from interface.dialogAdjustAnnotations import *
 
 from interface.dialogToolBox import *
 
-# from DialogAjoutDonnees import *
-# from DialogOptionsDonnees import *
+from interface.dialogAddData import *
+from interface.dialogDataOptions import *
 
 # matplotlib modules
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
@@ -216,17 +216,17 @@ class MainWindow(QMainWindow):
     def zoomOut(self):
         self.canvas.zoomOut()
 
-#     def optionsDonnees(self):
-#         if self.otherDataList.selection():
-#             DialogOptionsDonnees(parent=self).exec_()
-#         else:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Sélectionnez une donnée avant de lancer cette commande.")
-#             alerte.setIcon(QMessageBox.Warning)
-#             alerte.exec_()
+    def dataStyle(self):
+        if self.otherDataList.selection():
+            DialogDataOptions(parent=self).exec_()
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select a data before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
-#     def ajouterDonnees(self):
-#         DialogAjoutDonnees(parent=self).exec_()
+    def addData(self):
+        DialogAddData(parent=self).exec_()
 
     def advancedLayout(self):
         DialogLayoutAdvanced(parent=self).exec_()

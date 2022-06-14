@@ -34,7 +34,7 @@ class OtherData:
                                'color': 'Black',
                                'thickness': 1}
         
-        self.markerProperties = {'style': 'aucun',
+        self.markerProperties = {'style': 'none',
                                  'color': 'Black',
                                  'size': 1}
         
@@ -46,7 +46,7 @@ class OtherData:
     def update(self):
         self.line.set_data(self.x, self.y)
         
-        if not self.visible:
+        if not self.active:
             self.line.set_label("")
         else:
             self.line.set_label(self.label)
