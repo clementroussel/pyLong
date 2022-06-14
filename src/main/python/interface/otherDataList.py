@@ -23,26 +23,25 @@ class OtherDataList(List):
         self.popMenu.addSeparator()
         self.popMenu.addAction(self.pyLong.dataDeleteAction)
 
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
 
-        sublayout = QHBoxLayout()
+        sublayout = QVBoxLayout()
 
-        sublayout.addWidget(QLabel())
-        # self.goUp.clicked.connect(self.goTop)
+        self.goTop.clicked.connect(self.goTopMethod)
         sublayout.addWidget(self.goTop)
 
-        # moveUp.clicked.connect(self.moveUp)
+        self.moveUp.clicked.connect(self.moveUpMethod)
         sublayout.addWidget(self.moveUp)
 
-        # moveDown.clicked.connect(self.moveDown)
+        self.moveDown.clicked.connect(self.moveDownMethod)
         sublayout.addWidget(self.moveDown)
 
-        # self.goDown.clicked.connect(self.goDown)
+        self.goBottom.clicked.connect(self.goBottomMethod)
         sublayout.addWidget(self.goBottom)
 
+        layout.addWidget(self.list)
         layout.addLayout(sublayout)
 
-        layout.addWidget(self.list)
         self.setLayout(layout)
 
     def contextMenu(self, point):
@@ -71,27 +70,25 @@ class OtherDataList(List):
 
     def delete(self):
         if self.selection():
-            indices = []
+            indexes = []
             for item in self.list.selectedIndexes():
-                indices.append(item.row())
+                indexes.append(item.row())
 
-            indices.sort()
-            indices.reverse()
+            indexes.sort()
+            indexes.reverse()
 
-            if len(indices) == 1:
-                i = indices[0]
+            if len(indexes) == 1:
+                i = indexes[0]
                 data = self.pyLong.project.otherData[i]
 
-                dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Delete a data")
-                dialogue.setText("Delete data : {} ?".format(data.title))
-                dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Yes")
-                dialogue.button(QMessageBox.No).setText("No")
-                dialogue.setIcon(QMessageBox.Question)
-                reponse = dialogue.exec_()
+                dialog = QMessageBox(self)
+                dialog.setWindowTitle("Delete a data")
+                dialog.setText("Delete data : {} ?".format(data.title))
+                dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                dialog.setIcon(QMessageBox.Question)
+                answer = dialog.exec_()
 
-                if reponse == QMessageBox.Yes:
+                if answer == QMessageBox.Yes:
                     try:
                         data.line.remove()
                     except:
@@ -106,17 +103,15 @@ class OtherDataList(List):
                     pass
 
             else:
-                dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Delete data")
-                dialogue.setText("Data the {} selected data ?".format(len(indices)))
-                dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Yes")
-                dialogue.button(QMessageBox.No).setText("No")
-                dialogue.setIcon(QMessageBox.Question)
-                reponse = dialogue.exec_()
+                dialog = QMessageBox(self)
+                dialog.setWindowTitle("Delete data")
+                dialog.setText("Delete the {} selected data ?".format(len(indexes)))
+                dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                dialog.setIcon(QMessageBox.Question)
+                answer = dialog.exec_()
 
-                if reponse == QMessageBox.Yes:
-                    for i in indices:
+                if answer == QMessageBox.Yes:
+                    for i in indexes:
                         data = self.pyLong.project.otherData[i]
                         data.line.remove()
                         self.pyLong.project.otherData.pop(i)
@@ -130,10 +125,10 @@ class OtherDataList(List):
                         pass
 
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Select one or more data before running this command.")
-            alerte.setIcon(QMessageBox.Warning)
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Select at least one before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
     def activate(self):
         for j in range(self.list.count()):
@@ -147,3 +142,43 @@ class OtherDataList(List):
             data.update()
 
         self.pyLong.canvas.draw()
+
+    def moveUpMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            if j != 0:
+                self.pyLong.project.otherData[j-1], self.pyLong.project.otherData[j] = \
+                    self.pyLong.project.otherData[j], self.pyLong.project.otherData[j-1]
+                self.update()
+                self.list.setCurrentRow(j-1)
+
+    def moveDownMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            n = self.list.count()
+
+            if j != n-1:
+                self.pyLong.project.otherData[j+1], self.pyLong.project.otherData[j] = \
+                    self.pyLong.project.otherData[j], self.pyLong.project.otherData[j+1]
+                self.update()
+                self.list.setCurrentRow(j+1)
+
+    def goTopMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            while j != 0:
+                self.moveUpMethod()
+                j -= 1
+
+    def goBottomMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            n = self.list.count()
+
+            while j != n-1:
+                self.moveDownMethod()
+                j += 1

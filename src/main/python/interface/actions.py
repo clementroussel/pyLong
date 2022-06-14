@@ -313,7 +313,7 @@ def createActions(self):
     self.otherDataToolBar.addAction(self.dataStyleAction)
 
     self.dataDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)
-    #self.action_supprimerDonnees.triggered.connect(self.dataDelete)
+    self.dataDeleteAction.triggered.connect(self.dataDelete)
     self.dataDeleteAction.setShortcut(QKeySequence("Alt+D"))
     self.otherDataToolBar.addAction(self.dataDeleteAction)
 

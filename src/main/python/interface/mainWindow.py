@@ -555,8 +555,8 @@ class MainWindow(QMainWindow):
             alert.setIcon(QMessageBox.Warning)
             alert.exec_()
 
-#     def supprimerDonnees(self):
-#         self.otherDataList.supprimer()
+    def dataDelete(self):
+        self.otherDataList.delete()
 
     def profileDelete(self):
         self.profilesList.delete()
