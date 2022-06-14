@@ -8,7 +8,7 @@ from pyLong.toolbox.flowR import *
 from pyLong.toolbox.rickenmann import *
 from pyLong.toolbox.corominas import *
 
-# from interface.dialogDeltaZ import *
+from interface.dialogDeltaZ import *
 
 
 class DialogToolBox(QDialog):
@@ -26,8 +26,8 @@ class DialogToolBox(QDialog):
         layout = QVBoxLayout()
 
         deltaZ = QPushButton("Profile substraction")
-        deltaZ.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/substraction.png')))
-        # deltaZ.clicked.connect(self.deltaZ)
+        deltaZ.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/comparison.png')))
+        deltaZ.clicked.connect(self.deltaZ)
         deltaZ.setAutoDefault(False)
         layout.addWidget(deltaZ)
 
@@ -78,9 +78,9 @@ class DialogToolBox(QDialog):
 
         self.setLayout(mainLayout)
 
-    # def deltaZ(self):
-    #     self.accept()
-    #     DialogDeltaZ(parent=self.pyLong).exec_()
+    def deltaZ(self):
+        self.accept()
+        DialogDeltaZ(parent=self.pyLong).exec_()
         
     def energyLine(self):
         calculation = EnergyLine()

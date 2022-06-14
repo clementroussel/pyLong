@@ -105,27 +105,27 @@ class CalculationsList(List):
 
     def delete(self):
         if self.selection():
-            indices = []
+            indexes = []
             for item in self.list.selectedIndexes():
-                indices.append(item.row())
+                indexes.append(item.row())
 
-            indices.sort()
-            indices.reverse()
+            indexes.sort()
+            indexes.reverse()
 
-            if len(indices) == 1:
-                i = indices[0]
+            if len(indexes) == 1:
+                i = indexes[0]
                 calculation = self.pyLong.project.calculations[i]
 
-                dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Delete a calculation")
-                dialogue.setText("Delete calculation : {} ?".format(calculation.title))
-                dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Yes")
-                dialogue.button(QMessageBox.No).setText("No")
-                dialogue.setIcon(QMessageBox.Question)
-                reponse = dialogue.exec_()
+                dialog = QMessageBox(self)
+                dialog.setWindowTitle("Delete a calculation")
+                dialog.setText("Delete calculation : {} ?".format(calculation.title))
+                dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                dialog.button(QMessageBox.Yes).setText("Yes")
+                dialog.button(QMessageBox.No).setText("No")
+                dialog.setIcon(QMessageBox.Question)
+                answer = dialog.exec_()
 
-                if reponse == QMessageBox.Yes:
+                if answer == QMessageBox.Yes:
                     if isinstance(calculation, (EnergyLine, Rickenmann, FlowR, Corominas)):
                         calculation.line.remove()
 
@@ -140,17 +140,17 @@ class CalculationsList(List):
                     pass
 
             else:
-                dialogue = QMessageBox(self)
-                dialogue.setWindowTitle("Delete calculations")
-                dialogue.setText("Delete the {} selected calculations ?".format(len(indices)))
-                dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                dialogue.button(QMessageBox.Yes).setText("Yes")
-                dialogue.button(QMessageBox.No).setText("No")
-                dialogue.setIcon(QMessageBox.Question)
-                reponse = dialogue.exec_()
+                dialog = QMessageBox(self)
+                dialog.setWindowTitle("Delete calculations")
+                dialog.setText("Delete the {} selected calculations ?".format(len(indexes)))
+                dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                dialog.button(QMessageBox.Yes).setText("Yes")
+                dialog.button(QMessageBox.No).setText("No")
+                dialog.setIcon(QMessageBox.Question)
+                answer = dialog.exec_()
 
-                if reponse == QMessageBox.Yes:
-                    for i in indices:
+                if answer == QMessageBox.Yes:
+                    for i in indexes:
                         calculation = self.pyLong.project.calculations[i]
                         if isinstance(calculation, (EnergyLine, Rickenmann, FlowR, Corominas)):
                             calculation.line.remove()
@@ -167,10 +167,10 @@ class CalculationsList(List):
                     pass
 
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Select one or more calculation(s) before running this command.")
-            alerte.setIcon(QMessageBox.Warning)
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Select at least one before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
     def activate(self):
         for j in range(self.list.count()):

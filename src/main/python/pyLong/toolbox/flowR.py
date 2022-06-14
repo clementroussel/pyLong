@@ -14,7 +14,7 @@ class FlowR():
         
         self.active = True
         
-        self.title = ""
+        self.title = "Flow-R n°{}".format(FlowR.counter)
         
         self.label = ""
         
@@ -65,7 +65,7 @@ class FlowR():
         FlowR.counter -= 1
         
     def calculate(self):
-        if self.parametres['zprofile'] is None:
+        if self.parameters['zprofile'] is None:
             self.success = False
             return 0
         

@@ -192,8 +192,8 @@ class MainWindow(QMainWindow):
 #         for chemin in chemins:
 #             self.menuRecent.addAction(f"{chemin}", lambda path=chemin: self.ouvrirProjetRecent(chemin=path))
 
-#     def ouvrirStyleCalcul(self):
-#         self.calculationsList.ouvrirCalcul()
+    def calculation(self):
+        self.calculationsList.calculationProperties()
 
     def annotationStyle(self):
         self.annotationsList.annotationStyle()
@@ -561,8 +561,8 @@ class MainWindow(QMainWindow):
     def profileDelete(self):
         self.profilesList.delete()
 
-#     def supprimerCalculs(self):
-#         self.calculationsList.supprimer()
+    def calculationDelete(self):
+        self.calculationsList.delete()
 
     def annotationDelete(self):
         self.annotationsList.delete()

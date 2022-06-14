@@ -290,11 +290,11 @@ def createActions(self):
     self.toolboxToolBar.addAction(self.toolboxAction)
 
     self.calculationAction = QAction(QIcon(self.appctxt.get_resource('icons/calculation.png')), "Calculation properties", self)
-    #self.calculationAction.triggered.connect(self.calculation)
+    self.calculationAction.triggered.connect(self.calculation)
     self.toolboxToolBar.addAction(self.calculationAction)
 
     self.calculationDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)
-    #self.deleteCalculationAction.triggered.connect(self.calculationDelete)
+    self.calculationDeleteAction.triggered.connect(self.calculationDelete)
     self.calculationDeleteAction.setShortcut(QKeySequence("Alt+C"))
     self.toolboxToolBar.addAction(self.calculationDeleteAction)
 
@@ -309,7 +309,7 @@ def createActions(self):
     self.otherDataToolBar.addAction(self.addDataAction)
 
     self.dataStyleAction = QAction(QIcon(self.appctxt.get_resource('icons/style.png')), "Data style", self)
-    #self.action_styleDonnees.triggered.connect(self.dataStyle)
+    # self.action_styleDonnees.triggered.connect(self.dataStyle)
     self.otherDataToolBar.addAction(self.dataStyleAction)
 
     self.dataDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)

@@ -2,9 +2,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from ColorsComboBox import *
+from interface.colorsComboBox import *
 import os
-from pyLong.dictionnaires import *
+from pyLong.dictionaries import *
 
 from scipy.interpolate import interp1d
 
@@ -20,158 +20,158 @@ class DialogDeltaZ(QDialog):
         
         self.pyLong = parent
 
-        self.setWindowTitle("Ecarts altimétriques")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/deux-lignes.png')))
+        self.setWindowTitle("Profiles comparison")
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/comparison.png')))
 
         mainlayout = QVBoxLayout()
 
-        groupe = QGroupBox("Paramètres")
+        group = QGroupBox("Parameters")
         layout = QGridLayout()
 
-        label = QLabel("Profil n°1 :")
+        label = QLabel("Profile n°1 :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
 
-        self.profils1 = QComboBox()
-        for zprofil, pprofil in self.pyLong.projet.profils:
-            self.profils1.addItem(zprofil.intitule)
-        layout.addWidget(self.profils1, 0, 1)
+        self.profiles1 = QComboBox()
+        for zprofile, sprofile in self.pyLong.project.profiles:
+            self.profiles1.addItem(zprofile.title)
+        layout.addWidget(self.profiles1, 0, 1)
 
-        label = QLabel("Profil n°2 :")
+        label = QLabel("Profile n°2 :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
 
-        self.profils2 = QComboBox()
-        for zprofil, pprofil in self.pyLong.projet.profils:
-            self.profils2.addItem(zprofil.intitule)
-        layout.addWidget(self.profils2, 1, 1)
+        self.profiles2 = QComboBox()
+        for zprofile, sprofile in self.pyLong.project.profiles:
+            self.profiles2.addItem(zprofile.title)
+        layout.addWidget(self.profiles2, 1, 1)
 
-        self.interpoler = QCheckBox("Interpolation :")
-        self.interpoler.setChecked(False)
-        layout.addWidget(self.interpoler, 2, 0)
+        self.interpolate = QCheckBox("Interpolation :")
+        self.interpolate.setChecked(False)
+        layout.addWidget(self.interpolate, 2, 0)
 
-        self.pas = QDoubleSpinBox()
-        self.pas.setFixedWidth(70)
-        self.pas.setSuffix(" m")
-        self.pas.setLocale(QLocale('English'))
-        self.pas.setRange(0.1, 999.9)
-        self.pas.setDecimals(1)
-        self.pas.setSingleStep(1)
-        self.pas.setValue(10)
-        layout.addWidget(self.pas, 2, 1)
+        self.step = QDoubleSpinBox()
+        self.step.setFixedWidth(70)
+        self.step.setSuffix(" m")
+        self.step.setLocale(QLocale('English'))
+        self.step.setRange(0.1, 999.9)
+        self.step.setDecimals(1)
+        self.step.setSingleStep(1)
+        self.step.setValue(10)
+        layout.addWidget(self.step, 2, 1)
 
-        label = QLabel("Fichier en sortie :")
+        label = QLabel("Output file :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 3, 0)
 
-        self.chemin = QLineEdit()
-        layout.addWidget(self.chemin, 3, 1)
+        self.path = QLineEdit()
+        layout.addWidget(self.path, 3, 1)
 
-        boutonParcourir = QPushButton("...")
-        boutonParcourir.setAutoDefault(False)
-        boutonParcourir.setFixedWidth(20)
-        boutonParcourir.clicked.connect(self.parcourir)
-        layout.addWidget(boutonParcourir, 3, 2)
+        browse = QPushButton("...")
+        browse.setAutoDefault(False)
+        browse.setFixedWidth(20)
+        browse.clicked.connect(self.browse)
+        layout.addWidget(browse, 3, 2)
 
-        groupe.setLayout(layout)
-        mainlayout.addWidget(groupe)
+        group.setLayout(layout)
+        mainlayout.addWidget(group)
 
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.rejected.connect(self.reject)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(True)
-        buttonBox.button(QDialogButtonBox.Close).setAutoDefault(False)
         buttonBox.button(QDialogButtonBox.Ok).setDefault(True)
 
         mainlayout.addWidget(buttonBox)
 
         self.setLayout(mainlayout)
 
-    def parcourir(self):
-        chemin = QFileDialog.getSaveFileName(caption="Ecarts altimétriques",
-                                             filter="fichier texte (*.txt)")[0]
-        if chemin == "":
+    def browse(self):
+        path = QFileDialog.getSaveFileName(caption="Profiles comparison",
+                                           filter="text file (*.txt)")[0]
+        if path == "":
             return 0
         else:
-            nomFichier = QFileInfo(chemin).fileName()
-            repertoireFichier = QFileInfo(chemin).absolutePath()
-            nomFichier = nomFichier.split(".")[0]
+            fileName = QFileInfo(path).fileName()
+            fileRepertory = QFileInfo(path).absolutePath()
+            fileName = fileName.split(".")[0]
 
-            nomFichier += ".txt"
-            chemin = repertoireFichier + "/" + nomFichier
+            fileName += ".txt"
+            path = fileRepertory + "/" + fileName
 
-            self.chemin.setText(chemin)
+            self.path.setText(path)
 
-    def valider(self):
-        i = self.profils1.currentIndex()
-        j = self.profils2.currentIndex()
+    def validate(self):
+        i = self.profiles1.currentIndex()
+        j = self.profiles2.currentIndex()
 
         if i != -1 and j != -1:
-            zprofil1, pprofil1 = self.pyLong.projet.profils[i]
-            abscisses1 = list(zprofil1.abscisses)
+            zprofile1, sprofile1 = self.pyLong.project.profiles[i]
+            x1 = list(zprofile1.x)
 
-            zprofil2, pprofil2 = self.pyLong.projet.profils[j]
-            abscisses2 = list(zprofil2.abscisses)
+            zprofile2, sprofile2 = self.pyLong.project.profiles[j]
+            x2 = list(zprofile2.x)
 
-            xmin = max(min(abscisses1), min(abscisses2))
-            xmax = min(max(abscisses1), max(abscisses2))
+            xmin = max(min(x1), min(x2))
+            xmax = min(max(x1), max(x2))
 
-            if (xmin in abscisses1) and (xmin in abscisses2):
+            if (xmin in x1) and (xmin in x2):
                 pass
-            elif (xmin in abscisses1) and (not xmin in abscisses2):
-                abscisses2.append(xmin)
-                abscisses2.sort()
-            else:
-                abscisses1.append(xmin)
-                abscisses1.sort()
+            elif (xmin in x1) and (not xmin in x2):
+                x2.append(xmin)
+                x2.sort()
+            elif (not xmin in x1) and (xmin in x2):
+                x1.append(xmin)
+                x1.sort()
 
-            if (xmax in abscisses1) and (xmax in abscisses2):
+            if (xmax in x1) and (xmax in x2):
                 pass
-            elif (xmax in abscisses1) and (not xmax in abscisses2):
-                abscisses2.append(xmax)
-                abscisses2.sort()
-            else:
-                abscisses1.append(xmax)
-                abscisses1.sort()
+            elif (xmax in x1) and (not xmax in x2):
+                x2.append(xmax)
+                x2.sort()
+            elif (not xmax in x1) and (xmax in x2):
+                x1.append(xmax)
+                x1.sort()
 
-            i = abscisses1.index(xmin)
-            j = abscisses1.index(xmax)
-            abscisses1 = abscisses1[i:j+1]
+            i = x1.index(xmin)
+            j = x1.index(xmax)
+            x1 = x1[i:j+1]
 
-            i = abscisses2.index(xmin)
-            j = abscisses2.index(xmax)
-            abscisses2 = abscisses2[i:j + 1]
+            i = x2.index(xmin)
+            j = x2.index(xmax)
+            x2 = x2[i:j+1]
 
-            abscisses = abscisses1 + abscisses2
-            abscisses.sort()
-            abscisses = list(np.unique(abscisses))
+            x = x1 + x2
+            x.sort()
+            x = list(np.unique(x))
 
-            altitudes1 = []
-            altitudes2 = []
+            z1 = []
+            z2 = []
 
-            for i in range(len(abscisses)):
-                altitudes1.append(zprofil1.interpoler(abscisses[i]))
-                altitudes2.append(zprofil2.interpoler(abscisses[i]))
+            for i in range(len(x)):
+                z1.append(zprofile1.interpolate(x[i]))
+                z2.append(zprofile2.interpolate(x[i]))
 
-            abscisses = np.array(abscisses)
-            altitudes1 = np.array(altitudes1)
-            altitudes2 = np.array(altitudes2)
+            x = np.array(x)
+            z1 = np.array(z1)
+            z2 = np.array(z2)
 
-            if not self.interpoler.isChecked():
-                xz = np.array([abscisses, altitudes1 - altitudes2]).T
+            if not self.interpolate.isChecked():
+                xz = np.array([x, z1 - z2]).T
                 xz = pd.DataFrame(xz)
             else:
-                f = interp1d(abscisses, altitudes1 - altitudes2)
+                f = interp1d(x, z1 - z2)
 
-                new_x = np.arange(abscisses[0], abscisses[-1] + self.pas.value(), self.pas.value())
+                new_x = np.arange(x[0], x[-1], self.step.value())
+                new_x = list(new_x)
+                new_x.append(x[-1])
+                new_x = np.array(new_x)
                 new_z = f(new_x)
 
                 xz = np.array([new_x, new_z]).T
                 xz = pd.DataFrame(xz)
 
             try:
-                xz.to_csv(self.chemin.text(),
+                xz.to_csv(self.path.text(),
                           sep="\t",
                           float_format="%.3f",
                           decimal=".",
@@ -179,16 +179,16 @@ class DialogDeltaZ(QDialog):
                           header=['X', 'Dz'])
                 self.accept()
             except:
-                alerte = QMessageBox(self)
-                alerte.setText("Echec de l'écriture du fichier.")
-                alerte.setIcon(QMessageBox.Warning)
-                alerte.exec_()
+                alert = QMessageBox(self)
+                alert.setText("Processing failed.")
+                alert.setIcon(QMessageBox.Warning)
+                alert.exec_()
 
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Renseignez les deux profils.")
-            alerte.setIcon(QMessageBox.Warning)
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("No profiles available.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 
 
 
