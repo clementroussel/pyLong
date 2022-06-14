@@ -2,12 +2,12 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from ColorsComboBox import *
+from interface.colorsComboBox import *
 
-from pyLong.dictionnaires import *
+from pyLong.dictionaries import *
 
 
-class DialogLigneEnergie(QDialog):
+class DialogEnergyLine(QDialog):
 
     def __init__(self, parent):
         super().__init__()
@@ -16,104 +16,104 @@ class DialogLigneEnergie(QDialog):
         
         self.pyLong = parent
         
-        i = self.pyLong.listeCalculs.liste.currentRow()
-        self.ligneEnergie = self.pyLong.projet.calculs[i]
+        i = self.pyLong.calculationsList.list.currentRow()
+        self.energyLine = self.pyLong.project.calculations[i]
         
-        self.setWindowTitle("Ligne d'énergie")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rock.png')))
+        self.setWindowTitle("Enery line")
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/rock.png')))
     
         tableWidget = QTabWidget()
-        onglet_parametres = QWidget()
-        onglet_graphique = QWidget() 
+        parametersTab = QWidget()
+        styleTab = QWidget() 
 
-        tableWidget.addTab(onglet_parametres, "Paramètres de calcul")
-        tableWidget.addTab(onglet_graphique, "Aspect graphique")  
+        tableWidget.addTab(parametersTab, "Parameters")
+        tableWidget.addTab(styleTab, "Style")  
         
-        # onglet paramètres
+        # parameters tab
         layout = QGridLayout()
         
-        label = QLabel("Profil :")
+        label = QLabel("Profile :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.profils = QComboBox()
+        self.profiles = QComboBox()
         
-        for zprofil, pprofil in self.pyLong.projet.profils:
-            self.profils.addItem(zprofil.intitule)
-        layout.addWidget(self.profils, 0, 1, 1, 2)
+        for zprofile, sprofile in self.pyLong.project.profiles:
+            self.profiles.addItem(zprofile.title)
+        layout.addWidget(self.profiles, 0, 1, 1, 2)
         
         try:
-            self.profils.setCurrentIndex(self.ligneEnergie.parametres['profil'])
+            self.profiles.setCurrentIndex(self.energyLine.parameters['zprofile'])
         except:
-            self.profils.setCurrentIndex(0)
+            self.profiles.setCurrentIndex(0)
         
-        label = QLabel("Méthode :")
+        label = QLabel("Method :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0) 
         
-        self.methodes = QComboBox()
-        self.methodes.addItems(["départ + arrivée", "départ + angle", "arrivée + angle"])
-        self.methodes.setCurrentText(self.ligneEnergie.parametres['méthode'])
-        self.methodes.currentTextChanged.connect(self.updateInterface)
-        layout.addWidget(self.methodes, 1, 1, 1, 2)
+        self.methods = QComboBox()
+        self.methods.addItems(["start + end", "start + angle", "end + angle"])
+        self.methods.setCurrentText(self.energyLine.parameters['method'])
+        self.methods.currentTextChanged.connect(self.updateInterface)
+        layout.addWidget(self.methods, 1, 1, 1, 2)
         
-        label = QLabel("Abscisse")
+        label = QLabel("X")
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label, 2, 1)      
 
-        label = QLabel("Altitude")
+        label = QLabel("Z")
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label, 2, 2)
         
-        label = QLabel("Départ :")
+        label = QLabel("Start :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 3, 0)
         
-        label = QLabel("Arrivée :")
+        label = QLabel("End :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 4, 0)
 
-        self.abscisseDepart = QDoubleSpinBox()
-        self.abscisseDepart.setFixedWidth(90)
-        self.abscisseDepart.setSuffix(" m")
-        self.abscisseDepart.setLocale(QLocale('English'))
-        self.abscisseDepart.setSingleStep(1)
-        self.abscisseDepart.setRange(0, 99999.999)
-        self.abscisseDepart.setDecimals(3)
-        self.abscisseDepart.setValue(self.ligneEnergie.parametres['abscisse départ'])
-        layout.addWidget(self.abscisseDepart, 3, 1)        
+        self.xStart = QDoubleSpinBox()
+        self.xStart.setFixedWidth(90)
+        self.xStart.setSuffix(" m")
+        self.xStart.setLocale(QLocale('English'))
+        self.xStart.setSingleStep(1)
+        self.xStart.setRange(0, 99999.999)
+        self.xStart.setDecimals(3)
+        self.xStart.setValue(self.energyLine.parameters['x start'])
+        layout.addWidget(self.xStart, 3, 1)        
 
-        self.altitudeDepart = QDoubleSpinBox()
-        self.altitudeDepart.setFixedWidth(90)
-        self.altitudeDepart.setSuffix(" m")
-        self.altitudeDepart.setLocale(QLocale('English'))
-        self.altitudeDepart.setSingleStep(1)
-        self.altitudeDepart.setRange(0, 99999.999)
-        self.altitudeDepart.setDecimals(3)
-        self.altitudeDepart.setValue(self.ligneEnergie.parametres['altitude départ'])
-        self.altitudeDepart.setReadOnly(True)
-        layout.addWidget(self.altitudeDepart, 3, 2)
+        self.zStart = QDoubleSpinBox()
+        self.zStart.setFixedWidth(90)
+        self.zStart.setSuffix(" m")
+        self.zStart.setLocale(QLocale('English'))
+        self.zStart.setSingleStep(1)
+        self.zStart.setRange(0, 99999.999)
+        self.zStart.setDecimals(3)
+        self.zStart.setValue(self.energyLine.parameters['z start'])
+        self.zStart.setReadOnly(True)
+        layout.addWidget(self.zStart, 3, 2)
 
-        self.abscisseArrivee = QDoubleSpinBox()
-        self.abscisseArrivee.setFixedWidth(90)
-        self.abscisseArrivee.setSuffix(" m")
-        self.abscisseArrivee.setLocale(QLocale('English'))
-        self.abscisseArrivee.setSingleStep(1)
-        self.abscisseArrivee.setRange(0, 99999.999)
-        self.abscisseArrivee.setDecimals(3)
-        self.abscisseArrivee.setValue(self.ligneEnergie.parametres['abscisse arrivée'])
-        layout.addWidget(self.abscisseArrivee, 4, 1)        
+        self.xEnd = QDoubleSpinBox()
+        self.xEnd.setFixedWidth(90)
+        self.xEnd.setSuffix(" m")
+        self.xEnd.setLocale(QLocale('English'))
+        self.xEnd.setSingleStep(1)
+        self.xEnd.setRange(0, 99999.999)
+        self.xEnd.setDecimals(3)
+        self.xEnd.setValue(self.energyLine.parameters['x end'])
+        layout.addWidget(self.xEnd, 4, 1)        
 
-        self.altitudeArrivee = QDoubleSpinBox()
-        self.altitudeArrivee.setFixedWidth(90)
-        self.altitudeArrivee.setSuffix(" m")
-        self.altitudeArrivee.setLocale(QLocale('English'))
-        self.altitudeArrivee.setSingleStep(1)
-        self.altitudeArrivee.setRange(0, 99999.999)
-        self.altitudeArrivee.setDecimals(3)
-        self.altitudeArrivee.setReadOnly(True)
-        self.altitudeArrivee.setValue(self.ligneEnergie.parametres['altitude arrivée'])
-        layout.addWidget(self.altitudeArrivee, 4, 2)
+        self.zEnd = QDoubleSpinBox()
+        self.zEnd.setFixedWidth(90)
+        self.zEnd.setSuffix(" m")
+        self.zEnd.setLocale(QLocale('English'))
+        self.zEnd.setSingleStep(1)
+        self.zEnd.setRange(0, 99999.999)
+        self.zEnd.setDecimals(3)
+        self.zEnd.setReadOnly(True)
+        self.zEnd.setValue(self.energyLine.parameters['z end'])
+        layout.addWidget(self.zEnd, 4, 2)
         
         label = QLabel("Angle :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
@@ -125,108 +125,101 @@ class DialogLigneEnergie(QDialog):
         self.angle.setRange(0, 89.99)
         self.angle.setDecimals(6)
         self.angle.setSingleStep(1)
-        self.angle.setValue(self.ligneEnergie.parametres['angle'])
+        self.angle.setValue(self.energyLine.parameters['angle'])
         layout.addWidget(self.angle, 5, 1, 1, 2)
         
-        onglet_parametres.setLayout(layout)
+        parametersTab.setLayout(layout)
         
-        # onglet aspect graphique
+        # style tab
         layout = QGridLayout()
         
-        label = QLabel("Légende :")
+        label = QLabel("Label :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.legende = QLineEdit()
-        self.legende.setText(self.ligneEnergie.legende)
-        self.legende.textEdited.connect(self.appliquerStyle)
-        layout.addWidget(self.legende, 0, 1)
-
-        actualiser = QPushButton()
-        actualiser.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rafraichir.png')))
-        actualiser.clicked.connect(self.actualiser)
-        actualiser.setAutoDefault(False)
-        layout.addWidget(actualiser, 0, 2)
+        self.label = QLineEdit()
+        self.label.setText(self.energyLine.label)
+        self.label.textEdited.connect(self.updateLegend)
+        layout.addWidget(self.label, 0, 1)
         
-        label = QLabel("Style de ligne :")
+        label = QLabel("Style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.style2ligne = QComboBox()
-        self.style2ligne.insertItems(0, list(styles2ligne.keys()))
-        self.style2ligne.setCurrentText(self.ligneEnergie.ligne['style'])
-        self.style2ligne.currentTextChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.style2ligne, 1, 1, 1, 2)
+        self.lineStyle = QComboBox()
+        self.lineStyle.insertItems(0, list(lineStyles.keys()))
+        self.lineStyle.setCurrentText(self.energyLine.lineProperties['style'])
+        self.lineStyle.currentTextChanged.connect(self.update)
+        layout.addWidget(self.lineStyle, 1, 1, 1, 2)
         
-        label = QLabel("Couleur de ligne :")
+        label = QLabel("Color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)              
         layout.addWidget(label, 2, 0)
         
-        self.couleur2ligne = ColorsComboBox(self.pyLong.appctxt)
-        self.couleur2ligne.setCurrentText(self.ligneEnergie.ligne['couleur'])
-        self.couleur2ligne.currentTextChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.couleur2ligne, 2, 1, 1, 2)
+        self.lineColor = ColorsComboBox(self.pyLong.appctxt)
+        self.lineColor.setCurrentText(self.energyLine.lineProperties['color'])
+        self.lineColor.currentTextChanged.connect(self.update)
+        layout.addWidget(self.lineColor, 2, 1, 1, 2)
         
-        label = QLabel("Épaisseur de ligne :")
+        label = QLabel("Thickness :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)  
         layout.addWidget(label, 3, 0)
         
-        self.epaisseur2ligne = QDoubleSpinBox()
-        self.epaisseur2ligne.setFixedWidth(50)
-        self.epaisseur2ligne.setLocale(QLocale('English'))
-        self.epaisseur2ligne.setRange(0, 99.9)
-        self.epaisseur2ligne.setDecimals(1)
-        self.epaisseur2ligne.setSingleStep(0.1)
-        self.epaisseur2ligne.setValue(self.ligneEnergie.ligne['épaisseur'])
-        self.epaisseur2ligne.valueChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.epaisseur2ligne, 3, 1, 1, 2)
+        self.thickness = QDoubleSpinBox()
+        self.thickness.setFixedWidth(50)
+        self.thickness.setLocale(QLocale('English'))
+        self.thickness.setRange(0, 99.9)
+        self.thickness.setDecimals(1)
+        self.thickness.setSingleStep(0.1)
+        self.thickness.setValue(self.energyLine.lineProperties['thickness'])
+        self.thickness.valueChanged.connect(self.update)
+        layout.addWidget(self.thickness, 3, 1, 1, 2)
         
-        label = QLabel("Opacité :")
+        label = QLabel("Opacity :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 4, 0)
         
-        self.opacite = QDoubleSpinBox()
-        self.opacite.setFixedWidth(50)
-        self.opacite.setLocale(QLocale('English'))
-        self.opacite.setRange(0, 1)
-        self.opacite.setDecimals(1)
-        self.opacite.setSingleStep(0.1)
-        self.opacite.setValue(self.ligneEnergie.opacite)
-        self.opacite.valueChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.opacite, 4, 1, 1, 2)
+        self.opacity = QDoubleSpinBox()
+        self.opacity.setFixedWidth(50)
+        self.opacity.setLocale(QLocale('English'))
+        self.opacity.setRange(0, 1)
+        self.opacity.setDecimals(1)
+        self.opacity.setSingleStep(0.1)
+        self.opacity.setValue(self.energyLine.opacity)
+        self.opacity.valueChanged.connect(self.update)
+        layout.addWidget(self.opacity, 4, 1, 1, 2)
         
-        label = QLabel("Ordre :")
+        label = QLabel("Order :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 5, 0)
         
-        self.ordre = QSpinBox()
-        self.ordre.setFixedWidth(50)
-        self.ordre.setRange(1, 99)
-        self.ordre.setValue(self.ligneEnergie.ordre)
-        self.ordre.valueChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.ordre, 5, 1, 1, 2)
+        self.order = QSpinBox()
+        self.order.setFixedWidth(50)
+        self.order.setRange(1, 99)
+        self.order.setValue(self.energyLine.order)
+        self.order.valueChanged.connect(self.update)
+        layout.addWidget(self.order, 5, 1, 1, 2)
         
-        onglet_graphique.setLayout(layout)
+        styleTab.setLayout(layout)
 
-        label = QLabel("Intitulé :")
+        label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         
-        self.intitule = QLineEdit()
-        self.intitule.setText(self.ligneEnergie.intitule)
-        self.intitule.textChanged.connect(self.updateIntitule)
+        self.title = QLineEdit()
+        self.title.setText(self.energyLine.title)
+        self.title.textChanged.connect(self.updateTitle)
         
         buttonBox = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Ok)
-        buttonBox.button(QDialogButtonBox.Apply).setText("Appliquer")
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(False)
-        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.appliquer)
+        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.apply)
         buttonBox.button(QDialogButtonBox.Apply).setAutoDefault(True)
         buttonBox.button(QDialogButtonBox.Apply).setDefault(True)
         
         layout = QGridLayout()
         
         layout.addWidget(label, 0, 0)
-        layout.addWidget(self.intitule, 0, 1)
+        layout.addWidget(self.title, 0, 1)
         
         layout.addWidget(tableWidget, 1, 0, 1, 2)
         
@@ -235,68 +228,69 @@ class DialogLigneEnergie(QDialog):
         self.setLayout(layout)      
 
         self.updateInterface()
-
-    def actualiser(self):
-        self.pyLong.canvas.dessiner()
     
-    def valider(self):
-        self.appliquer()
+    def validate(self):
+        self.apply()
         self.accept()
 
-    def appliquerStyle(self):
-        self.ligneEnergie.intitule = self.intitule.text()
-        self.ligneEnergie.legende = self.legende.text()
-        self.ligneEnergie.ligne['style'] = self.style2ligne.currentText()
-        self.ligneEnergie.ligne['couleur'] = self.couleur2ligne.currentText()
-        self.ligneEnergie.ligne['épaisseur'] = self.epaisseur2ligne.value()
-        self.ligneEnergie.opacite = self.opacite.value()
-        self.ligneEnergie.ordre = self.ordre.value()
+    def update(self):
+        self.energyLine.lineProperties['style'] = self.lineStyle.currentText()
+        self.energyLine.lineProperties['color'] = self.lineColor.currentText()
+        self.energyLine.lineProperties['thickness'] = self.thickness.value()
+        self.energyLine.opacity = self.opacity.value()
+        self.energyLine.order = self.order.value()
 
-        self.ligneEnergie.update()
-        # self.pyLong.canvas.draw()
-        self.pyLong.canvas.updateLegendes()
+        self.energyLine.update()
+        self.pyLong.canvas.draw()
 
-    def updateIntitule(self):
-        self.ligneEnergie.intitule = self.intitule.text()
-        self.pyLong.listeCalculs.update()
+    def updateLegend(self):
+        self.energyLine.label = self.label.text()
+        self.energyLine.update()
+
+        self.pyLong.canvas.updateLegends()
+
+    def updateTitle(self):
+        self.energyLine.title = self.title.text()
+        self.pyLong.calculationsList.update()
     
-    def appliquer(self):
-        self.ligneEnergie.parametres['profil'] = self.profils.currentIndex()
-        self.ligneEnergie.parametres['méthode'] = self.methodes.currentText()
-        self.ligneEnergie.parametres['abscisse départ'] = self.abscisseDepart.value()
-        self.ligneEnergie.parametres['abscisse arrivée'] = self.abscisseArrivee.value()
-        self.ligneEnergie.parametres['angle'] = self.angle.value()
+    def apply(self):
+        self.energyLine.parameters['zprofile'] = self.pyLong.project.profiles[self.profiles.currentIndex()][0]
+        self.energyLine.parameters['sprofile'] = self.pyLong.project.profiles[self.profiles.currentIndex()][1]
+        self.energyLine.parameters['method'] = self.methods.currentText()
+        self.energyLine.parameters['x start'] = self.xStart.value()
+        self.energyLine.parameters['x end'] = self.xEnd.value()
+        self.energyLine.parameters['angle'] = self.angle.value()
         
         try:
-            self.ligneEnergie.calculer(self.pyLong)
+            self.energyLine.calculate()
         except:
-            self.ligneEnergie.calculReussi = False
+            self.energyLine.success = False
             pass
         
-        if self.ligneEnergie.calculReussi:
-            self.abscisseDepart.setValue(self.ligneEnergie.parametres['abscisse départ'])
-            self.altitudeDepart.setValue(self.ligneEnergie.parametres['altitude départ'])
-            self.abscisseArrivee.setValue(self.ligneEnergie.parametres['abscisse arrivée'])
-            self.altitudeArrivee.setValue(self.ligneEnergie.parametres['altitude arrivée'])
-            self.angle.setValue(self.ligneEnergie.parametres['angle'])
+        if self.energyLine.success:
+            self.xStart.setValue(self.energyLine.parameters['x start'])
+            self.zStart.setValue(self.energyLine.parameters['z start'])
+            self.xEnd.setValue(self.energyLine.parameters['x end'])
+            self.zEnd.setValue(self.energyLine.parameters['z end'])
+            self.angle.setValue(self.energyLine.parameters['angle'])
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Le calcul a échoué.")
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Processing failed.")
+            alert.exec_()
         
-        self.ligneEnergie.update()
+        self.energyLine.update()
         self.pyLong.canvas.draw()
         
     def updateInterface(self):
-        if self.methodes.currentText() == "départ + arrivée":
-            self.abscisseDepart.setReadOnly(False)
-            self.abscisseArrivee.setReadOnly(False)
+        if self.methods.currentText() == "start + end":
+            self.xStart.setReadOnly(False)
+            self.xEnd.setReadOnly(False)
             self.angle.setReadOnly(True)
-        elif self.methodes.currentText() == "départ + angle":
-            self.abscisseDepart.setReadOnly(False)
-            self.abscisseArrivee.setReadOnly(True)
+        elif self.methods.currentText() == "start + angle":
+            self.xStart.setReadOnly(False)
+            self.xEnd.setReadOnly(True)
             self.angle.setReadOnly(False)
         else:
-            self.abscisseDepart.setReadOnly(True)
-            self.abscisseArrivee.setReadOnly(False)
+            self.xStart.setReadOnly(True)
+            self.xEnd.setReadOnly(False)
             self.angle.setReadOnly(False)

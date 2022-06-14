@@ -33,7 +33,7 @@ class DialogToolBox(QDialog):
 
         energyLine = QPushButton("Energy line")
         energyLine.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/rock.png')))
-        # energyLine.clicked.connect(self.energyLine)
+        energyLine.clicked.connect(self.energyLine)
         energyLine.setAutoDefault(False)
         layout.addWidget(energyLine)     
         
@@ -88,12 +88,12 @@ class DialogToolBox(QDialog):
     #     self.accept()
     #     DialogDeltaZ(parent=self.pyLong).exec_()
         
-    # def ligneEnergie(self):
-    #     ligneEnergie = LigneEnergie()
-    #     self.pyLong.projet.calculs.append(ligneEnergie)
-    #     self.pyLong.listeCalculs.update()
-    #     self.pyLong.canvas.ax_z.add_line(ligneEnergie.line)
-    #     self.accept()
+    def energyLine(self):
+        calculation = EnergyLine()
+        self.pyLong.project.calculations.append(calculation)
+        self.pyLong.calculationsList.update()
+        self.pyLong.canvas.ax_z.add_line(calculation.line)
+        self.accept()
 
     # def mezap(self):
     #     mezap = Mezap()

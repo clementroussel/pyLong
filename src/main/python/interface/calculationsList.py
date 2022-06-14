@@ -9,11 +9,11 @@ from pyLong.toolbox.flowR import FlowR
 from pyLong.toolbox.rickenmann import Rickenmann
 from pyLong.toolbox.corominas import Corominas
 
-# from DialogLigneEnergie import *
-# from DialogMezap import *
-# from DialogFlowR import *
-# from DialogRickenmann import *
-# from DialogCorominas import *
+from interface.dialogEnergyLine import *
+from interface.dialogMezap import *
+from interface.dialogFlowR import *
+from interface.dialogRickenmann import *
+from interface.dialogCorominas import *
 
 
 class CalculationsList(List):
@@ -22,8 +22,8 @@ class CalculationsList(List):
 
         self.pyLong = parent
 
-        # self.liste.doubleClicked.connect(self.ouvrirCalcul)
-        # self.liste.itemChanged.connect(self.activer)
+        self.list.doubleClicked.connect(self.calculationProperties)
+        self.list.itemChanged.connect(self.activate)
 
         self.list.setContextMenuPolicy(Qt.CustomContextMenu)
         self.list.customContextMenuRequested.connect(self.contextMenu)
@@ -35,26 +35,25 @@ class CalculationsList(List):
         self.popMenu.addSeparator()
         self.popMenu.addAction(self.pyLong.calculationDeleteAction)
 
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
 
-        sublayout = QHBoxLayout()
+        sublayout = QVBoxLayout()
 
-        sublayout.addWidget(QLabel())
-        # self.goUp.clicked.connect(self.goTop)
+        self.goTop.clicked.connect(self.goTopMethod)
         sublayout.addWidget(self.goTop)
 
-        # moveUp.clicked.connect(self.moveUp)
+        self.moveUp.clicked.connect(self.moveUpMethod)
         sublayout.addWidget(self.moveUp)
 
-        # moveDown.clicked.connect(self.moveDown)
+        self.moveDown.clicked.connect(self.moveDownMethod)
         sublayout.addWidget(self.moveDown)
 
-        # self.goDown.clicked.connect(self.goDown)
+        self.goBottom.clicked.connect(self.goBottomMethod)
         sublayout.addWidget(self.goBottom)
 
+        layout.addWidget(self.list)
         layout.addLayout(sublayout)
 
-        layout.addWidget(self.list)
         self.setLayout(layout)
 
     def contextMenu(self, point):
@@ -74,7 +73,7 @@ class CalculationsList(List):
             self.list.addItem(item)
 
     def selection(self):
-        n = self.liste.count()
+        n = self.list.count()
         selections = []
 
         for i in range(n):
@@ -82,7 +81,7 @@ class CalculationsList(List):
 
         return n > 0 and True in selections
 
-    def open(self):
+    def calculationProperties(self):
         if self.selection():
             i = self.list.currentRow()
             calculation = self.pyLong.project.calculations[i]
@@ -185,3 +184,43 @@ class CalculationsList(List):
                 calculation.update()
 
         self.pyLong.canvas.draw()
+
+    def moveUpMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            if j != 0:
+                self.pyLong.project.calculations[j-1], self.pyLong.project.calculations[j] = \
+                    self.pyLong.project.calculations[j], self.pyLong.project.calculations[j-1]
+                self.update()
+                self.list.setCurrentRow(j-1)
+
+    def moveDownMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            n = self.list.count()
+
+            if j != n-1:
+                self.pyLong.project.calculations[j+1], self.pyLong.project.calculations[j] = \
+                    self.pyLong.project.calculations[j], self.pyLong.project.calculations[j+1]
+                self.update()
+                self.list.setCurrentRow(j+1)
+
+    def goTopMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            while j != 0:
+                self.moveUpMethod()
+                j -= 1
+
+    def goBottomMethod(self):
+        if self.selection():
+            j = self.list.currentRow()
+
+            n = self.list.count()
+
+            while j != n-1:
+                self.moveDownMethod()
+                j += 1

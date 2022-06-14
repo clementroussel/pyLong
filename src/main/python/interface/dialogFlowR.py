@@ -2,9 +2,9 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from ColorsComboBox import *
+from interface.colorsComboBox import *
 
-from pyLong.dictionnaires import *
+from pyLong.dictionaries import *
 
 
 class DialogFlowR(QDialog):

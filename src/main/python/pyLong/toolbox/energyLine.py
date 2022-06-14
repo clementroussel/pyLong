@@ -12,7 +12,7 @@ class EnergyLine():
         
         self.active = True
         
-        self.title = ""
+        self.title = "Energy line n°{}".format(EnergyLine.counter)
         
         self.label = ""
         
@@ -41,8 +41,8 @@ class EnergyLine():
         self.line = Line2D([], [])
         
     def update(self) :
-        self.line.set_data([self.parametres['x start'], self.parametres['x end']],
-                           [self.parametres['z start'], self.parametres['z end']])
+        self.line.set_data([self.parameters['x start'], self.parameters['x end']],
+                           [self.parameters['z start'], self.parameters['z end']])
         if self.active:
             self.line.set_label(self.label)
         else:
