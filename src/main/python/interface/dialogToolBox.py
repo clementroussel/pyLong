@@ -57,30 +57,24 @@ class DialogToolBox(QDialog):
         
         flowR = QPushButton("Flow-R")
         flowR.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/debrisFlow.png')))
-        # flowR.clicked.connect(self.flowR)
+        flowR.clicked.connect(self.flowR)
         flowR.setAutoDefault(False)
         layout.addWidget(flowR)
         
         rickenmann = QPushButton("Rickenmann")
         rickenmann.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/debrisFlow.png')))
-        # rickenmann.clicked.connect(self.rickenmann)
+        rickenmann.clicked.connect(self.rickenmann)
         rickenmann.setAutoDefault(False)
         layout.addWidget(rickenmann)
 
         corominas = QPushButton("Corominas")
         corominas.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/debrisFlow.png')))
-        # corominas.clicked.connect(self.corominas)
+        corominas.clicked.connect(self.corominas)
         corominas.setAutoDefault(False)
         layout.addWidget(corominas)
         
         group.setLayout(layout)
         mainLayout.addWidget(group)
-        
-        # buttonBox = QDialogButtonBox(QDialogButtonBox.Close)
-        # buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        # buttonBox.rejected.connect(self.reject)
-        
-        # mainLayout.addWidget(buttonBox)
 
         self.setLayout(mainLayout)
 
@@ -101,23 +95,23 @@ class DialogToolBox(QDialog):
     #     self.pyLong.listeCalculs.update()
     #     self.accept()
 
-    # def flowR(self):
-    #     flowr = FlowR()
-    #     self.pyLong.projet.calculs.append(flowr)
-    #     self.pyLong.listeCalculs.update()
-    #     self.pyLong.canvas.ax_z.add_line(flowr.line)
-    #     self.accept()
+    def flowR(self):
+        calculation = FlowR()
+        self.pyLong.project.calculations.append(calculation)
+        self.pyLong.calculationsList.update()
+        self.pyLong.canvas.ax_z.add_line(calculation.line)
+        self.accept()
 
-    # def rickenmann(self):
-    #     rickenmann = Rickenmann()
-    #     self.pyLong.projet.calculs.append(rickenmann)
-    #     self.pyLong.listeCalculs.update()
-    #     self.pyLong.canvas.ax_z.add_line(rickenmann.line)
-    #     self.accept()
+    def rickenmann(self):
+        calculation = Rickenmann()
+        self.pyLong.project.calculations.append(calculation)
+        self.pyLong.calculationsList.update()
+        self.pyLong.canvas.ax_z.add_line(calculation.line)
+        self.accept()
 
-    # def corominas(self):
-    #     corominas = Corominas()
-    #     self.pyLong.projet.calculs.append(corominas)
-    #     self.pyLong.listeCalculs.update()
-    #     self.pyLong.canvas.ax_z.add_line(corominas.line)
-    #     self.accept()
+    def corominas(self):
+        calculation = Corominas()
+        self.pyLong.project.calculations.append(calculation)
+        self.pyLong.calculationsList.update()
+        self.pyLong.canvas.ax_z.add_line(calculation.line)
+        self.accept()

@@ -15,95 +15,95 @@ class DialogRickenmann(QDialog):
         
         self.pyLong = parent
         
-        i = self.pyLong.listeCalculs.liste.currentRow()
-        self.rickenmann = self.pyLong.projet.calculs[i]
+        i = self.pyLong.calculationsList.list.currentRow()
+        self.rickenmann = self.pyLong.project.calculations[i]
         
         self.setWindowTitle("Rickenmann")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/lave.png')))
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/debrisFlow.png')))
     
         tableWidget = QTabWidget()
-        onglet_parametres = QWidget()
-        onglet_graphique = QWidget() 
+        parametersTab = QWidget()
+        styleTab = QWidget() 
 
-        tableWidget.addTab(onglet_parametres, "Paramètres de calcul")
-        tableWidget.addTab(onglet_graphique, "Aspect graphique")  
+        tableWidget.addTab(parametersTab, "Parameters")
+        tableWidget.addTab(styleTab, "Style")  
         
-        # onglet paramètres
+        # parameters tab
         layout = QGridLayout()
         
-        label = QLabel("Profil :")
+        label = QLabel("Profile :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.profils = QComboBox()
+        self.profiles = QComboBox()
         
-        for zprofil, pprofil in self.pyLong.projet.profils :
-            self.profils.addItem(zprofil.intitule)
-        layout.addWidget(self.profils, 0, 1, 1, 2)
+        for zprofile, sprofile in self.pyLong.project.profiles :
+            self.profiles.addItem(zprofile.title)
+        layout.addWidget(self.profiles, 0, 1, 1, 2)
         
         try:
-            self.profils.setCurrentIndex(self.rickenmann.parametres['profil'])
+            self.profiles.setCurrentIndex(self.rickenmann.parameters['zprofile'])
         except:
-            self.profils.setCurrentIndex(0)
+            self.profiles.setCurrentIndex(0)
         
-        label = QLabel("Abscisse")
+        label = QLabel("X")
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label, 1, 1)      
 
-        label = QLabel("Altitude")
+        label = QLabel("Z")
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label, 1, 2)
         
-        label = QLabel("Départ :")
+        label = QLabel("Start :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 2, 0)
         
-        label = QLabel("Arrivée :")
+        label = QLabel("End :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 3, 0)
 
-        self.abscisseDepart = QDoubleSpinBox()
-        self.abscisseDepart.setFixedWidth(90)
-        self.abscisseDepart.setSuffix(" m")
-        self.abscisseDepart.setLocale(QLocale('English'))
-        self.abscisseDepart.setSingleStep(0.1)
-        self.abscisseDepart.setRange(-99999.999, 99999.999)
-        self.abscisseDepart.setDecimals(3)
-        self.abscisseDepart.setValue(self.rickenmann.parametres['abscisse départ'])
-        layout.addWidget(self.abscisseDepart, 2, 1)        
+        self.xStart = QDoubleSpinBox()
+        self.xStart.setFixedWidth(90)
+        self.xStart.setSuffix(" m")
+        self.xStart.setLocale(QLocale('English'))
+        self.xStart.setSingleStep(0.1)
+        self.xStart.setRange(-99999.999, 99999.999)
+        self.xStart.setDecimals(3)
+        self.xStart.setValue(self.rickenmann.parameters['x start'])
+        layout.addWidget(self.xStart, 2, 1)        
 
-        self.altitudeDepart = QDoubleSpinBox()
-        self.altitudeDepart.setFixedWidth(90)
-        self.altitudeDepart.setSuffix(" m")
-        self.altitudeDepart.setLocale(QLocale('English'))
-        self.altitudeDepart.setSingleStep(1)
-        self.altitudeDepart.setRange(-99999.999, 99999.999)
-        self.altitudeDepart.setDecimals(3)
-        self.altitudeDepart.setReadOnly(True)
-        self.altitudeDepart.setValue(self.rickenmann.parametres['altitude départ'])
-        layout.addWidget(self.altitudeDepart, 2, 2)
+        self.zStart = QDoubleSpinBox()
+        self.zStart.setFixedWidth(90)
+        self.zStart.setSuffix(" m")
+        self.zStart.setLocale(QLocale('English'))
+        self.zStart.setSingleStep(1)
+        self.zStart.setRange(-99999.999, 99999.999)
+        self.zStart.setDecimals(3)
+        self.zStart.setReadOnly(True)
+        self.zStart.setValue(self.rickenmann.parameters['z start'])
+        layout.addWidget(self.zStart, 2, 2)
 
-        self.abscisseArrivee = QDoubleSpinBox()
-        self.abscisseArrivee.setFixedWidth(90)
-        self.abscisseArrivee.setSuffix(" m")
-        self.abscisseArrivee.setLocale(QLocale('English'))
-        self.abscisseArrivee.setSingleStep(1)
-        self.abscisseArrivee.setRange(-99999.999, 99999.999)
-        self.abscisseArrivee.setDecimals(3)
-        self.abscisseArrivee.setReadOnly(True)
-        self.abscisseArrivee.setValue(self.rickenmann.parametres['abscisse arrivée'])
-        layout.addWidget(self.abscisseArrivee, 3, 1)        
+        self.xEnd = QDoubleSpinBox()
+        self.xEnd.setFixedWidth(90)
+        self.xEnd.setSuffix(" m")
+        self.xEnd.setLocale(QLocale('English'))
+        self.xEnd.setSingleStep(1)
+        self.xEnd.setRange(-99999.999, 99999.999)
+        self.xEnd.setDecimals(3)
+        self.xEnd.setReadOnly(True)
+        self.xEnd.setValue(self.rickenmann.parameters['x end'])
+        layout.addWidget(self.xEnd, 3, 1)        
 
-        self.altitudeArrivee = QDoubleSpinBox()
-        self.altitudeArrivee.setFixedWidth(90)
-        self.altitudeArrivee.setSuffix(" m")
-        self.altitudeArrivee.setLocale(QLocale('English'))
-        self.altitudeArrivee.setSingleStep(1)
-        self.altitudeArrivee.setRange(-99999.999, 99999.999)
-        self.altitudeArrivee.setDecimals(3)
-        self.altitudeArrivee.setReadOnly(True)
-        self.altitudeArrivee.setValue(self.rickenmann.parametres['altitude arrivée'])
-        layout.addWidget(self.altitudeArrivee, 3, 2)
+        self.zEnd = QDoubleSpinBox()
+        self.zEnd.setFixedWidth(90)
+        self.zEnd.setSuffix(" m")
+        self.zEnd.setLocale(QLocale('English'))
+        self.zEnd.setSingleStep(1)
+        self.zEnd.setRange(-99999.999, 99999.999)
+        self.zEnd.setDecimals(3)
+        self.zEnd.setReadOnly(True)
+        self.zEnd.setValue(self.rickenmann.parameters['z end'])
+        layout.addWidget(self.zEnd, 3, 2)
         
         label = QLabel("Volume :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
@@ -114,128 +114,121 @@ class DialogRickenmann(QDialog):
         self.volume.setSuffix(" m^3")
         self.volume.setLocale(QLocale('English'))
         self.volume.setRange(0, 999999)
-        self.volume.setValue(self.rickenmann.parametres['volume'])
+        self.volume.setValue(self.rickenmann.parameters['volume'])
         layout.addWidget(self.volume, 4, 1)
         
         label = QLabel("Pas de calcul :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 5, 0)
         
-        self.pas2calcul = QDoubleSpinBox()
-        self.pas2calcul.setFixedWidth(75)
-        self.pas2calcul.setSuffix(" m")
-        self.pas2calcul.setLocale(QLocale('English'))
-        self.pas2calcul.setRange(0, 1000.0)
-        self.pas2calcul.setDecimals(1)
-        self.pas2calcul.setSingleStep(0.1)
-        self.pas2calcul.setValue(self.rickenmann.parametres['pas de calcul'])
-        layout.addWidget(self.pas2calcul, 5, 1)
+        self.step = QDoubleSpinBox()
+        self.step.setFixedWidth(75)
+        self.step.setSuffix(" m")
+        self.step.setLocale(QLocale('English'))
+        self.step.setRange(0, 1000.0)
+        self.step.setDecimals(1)
+        self.step.setSingleStep(0.1)
+        self.step.setValue(self.rickenmann.parameters['step'])
+        layout.addWidget(self.step, 5, 1)
         
-        self.enveloppe = QCheckBox("utiliser l'équation de type courbe enveloppe")
-        self.enveloppe.setChecked(self.rickenmann.parametres['enveloppe'])
-        layout.addWidget(self.enveloppe, 6, 0, 1, 3)
+        self.envelope = QCheckBox("use envelop-type equation.")
+        self.envelope.setChecked(self.rickenmann.parameters['envelope'])
+        layout.addWidget(self.envelope, 6, 0, 1, 3)
         
-        onglet_parametres.setLayout(layout)
+        parametersTab.setLayout(layout)
         
-        # onglet aspect graphique
+        # style tab
         layout = QGridLayout()
         
-        label = QLabel("Légende :")
+        label = QLabel("Label :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.legende = QLineEdit()
-        self.legende.setText(self.rickenmann.legende)
-        self.legende.textEdited.connect(self.appliquerStyle)
-        layout.addWidget(self.legende, 0, 1)
-
-        actualiser = QPushButton()
-        actualiser.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rafraichir.png')))
-        actualiser.clicked.connect(self.actualiser)
-        actualiser.setAutoDefault(False)
-        layout.addWidget(actualiser, 0, 2)
+        self.label = QLineEdit()
+        self.label.setText(self.rickenmann.label)
+        self.label.textEdited.connect(self.update)
+        layout.addWidget(self.label, 0, 1)
         
-        label = QLabel("Style de ligne :")
+        label = QLabel("Style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.style2ligne = QComboBox()
-        self.style2ligne.insertItems(0, list(styles2ligne.keys()))
-        self.style2ligne.setCurrentText(self.rickenmann.ligne['style'])
-        self.style2ligne.currentTextChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.style2ligne, 1, 1, 1, 2)
+        self.style = QComboBox()
+        self.style.insertItems(0, list(lineStyles.keys()))
+        self.style.setCurrentText(self.rickenmann.lineProperties['style'])
+        self.style.currentTextChanged.connect(self.update)
+        layout.addWidget(self.style, 1, 1, 1, 2)
         
-        label = QLabel("Couleur de ligne :")
+        label = QLabel("Color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)              
         layout.addWidget(label, 2, 0)
         
-        self.couleur2ligne = ColorsComboBox(self.pyLong.appctxt)
-        self.couleur2ligne.setCurrentText(self.rickenmann.ligne['couleur'])
-        self.couleur2ligne.currentTextChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.couleur2ligne, 2, 1, 1, 2)
+        self.color = ColorsComboBox(self.pyLong.appctxt)
+        self.color.setCurrentText(self.rickenmann.lineProperties['color'])
+        self.color.currentTextChanged.connect(self.update)
+        layout.addWidget(self.color, 2, 1, 1, 2)
         
-        label = QLabel("Épaisseur de ligne :")
+        label = QLabel("Thickness :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)  
         layout.addWidget(label, 3, 0)
         
-        self.epaisseur2ligne = QDoubleSpinBox()
-        self.epaisseur2ligne.setFixedWidth(50)
-        self.epaisseur2ligne.setLocale(QLocale('English'))
-        self.epaisseur2ligne.setRange(0, 99.9)
-        self.epaisseur2ligne.setDecimals(1)
-        self.epaisseur2ligne.setSingleStep(0.1)
-        self.epaisseur2ligne.setValue(self.rickenmann.ligne['épaisseur'])
-        self.epaisseur2ligne.valueChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.epaisseur2ligne, 3, 1, 1, 2)
+        self.thickness = QDoubleSpinBox()
+        self.thickness.setFixedWidth(50)
+        self.thickness.setLocale(QLocale('English'))
+        self.thickness.setRange(0, 99.9)
+        self.thickness.setDecimals(1)
+        self.thickness.setSingleStep(0.1)
+        self.thickness.setValue(self.rickenmann.lineProperties['thickness'])
+        self.thickness.valueChanged.connect(self.update)
+        layout.addWidget(self.thickness, 3, 1, 1, 2)
         
-        label = QLabel("Opacité :")
+        label = QLabel("Opacity :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 4, 0)
         
-        self.opacite = QDoubleSpinBox()
-        self.opacite.setFixedWidth(50)
-        self.opacite.setLocale(QLocale('English'))
-        self.opacite.setRange(0, 1)
-        self.opacite.setDecimals(1)
-        self.opacite.setSingleStep(0.1)
-        self.opacite.setValue(self.rickenmann.opacite)
-        self.opacite.valueChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.opacite, 4, 1, 1, 2)
+        self.opacity = QDoubleSpinBox()
+        self.opacity.setFixedWidth(50)
+        self.opacity.setLocale(QLocale('English'))
+        self.opacity.setRange(0, 1)
+        self.opacity.setDecimals(1)
+        self.opacity.setSingleStep(0.1)
+        self.opacity.setValue(self.rickenmann.opacity)
+        self.opacity.valueChanged.connect(self.update)
+        layout.addWidget(self.opacity, 4, 1, 1, 2)
         
-        label = QLabel("Ordre :")
+        label = QLabel("Order :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 5, 0)
         
-        self.ordre = QSpinBox()
-        self.ordre.setFixedWidth(50)
-        self.ordre.setRange(1, 99)
-        self.ordre.setValue(self.rickenmann.ordre)
-        self.ordre.valueChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.ordre, 5, 1, 1, 2)
+        self.order = QSpinBox()
+        self.order.setFixedWidth(50)
+        self.order.setRange(1, 99)
+        self.order.setValue(self.rickenmann.order)
+        self.order.valueChanged.connect(self.update)
+        layout.addWidget(self.order, 5, 1, 1, 2)
         
         layout.addWidget(QWidget(), 6, 0)
         
-        onglet_graphique.setLayout(layout)
+        styleTab.setLayout(layout)
 
-        label = QLabel("Intitulé :")
+        label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         
-        self.intitule = QLineEdit()
-        self.intitule.setText(self.rickenmann.intitule)
-        self.intitule.textChanged.connect(self.updateIntitule)
+        self.title = QLineEdit()
+        self.title.setText(self.rickenmann.title)
+        self.title.textChanged.connect(self.updateTitle)
 
         buttonBox = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Ok)
-        buttonBox.button(QDialogButtonBox.Apply).setText("Appliquer")
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(False)
-        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.appliquer)
+        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.apply)
         buttonBox.button(QDialogButtonBox.Apply).setAutoDefault(True)
         buttonBox.button(QDialogButtonBox.Apply).setDefault(True)
         
         layout = QGridLayout()
         
         layout.addWidget(label, 0, 0)
-        layout.addWidget(self.intitule, 0, 1)
+        layout.addWidget(self.title, 0, 1)
         
         layout.addWidget(tableWidget, 1, 0, 1, 2)
         
@@ -243,52 +236,52 @@ class DialogRickenmann(QDialog):
         
         self.setLayout(layout)    
 
-    def actualiser(self):
-        self.pyLong.canvas.dessiner()
-
-    def valider(self):
-        self.appliquer()
+    def validate(self):
+        self.apply()
         self.accept()
 
-    def updateIntitule(self):
-        self.rickenmann.intitule = self.intitule.text()
-        self.pyLong.listeCalculs.update()
+    def updateTitle(self):
+        self.rickenmann.title = self.title.text()
+        self.pyLong.calculationsList.update()
 
-    def appliquerStyle(self):
-        self.rickenmann.legende = self.legende.text()
-        self.rickenmann.ligne['style'] = self.style2ligne.currentText()
-        self.rickenmann.ligne['couleur'] = self.couleur2ligne.currentText()
-        self.rickenmann.ligne['épaisseur'] = self.epaisseur2ligne.value()
-        self.rickenmann.opacite = self.opacite.value()
-        self.rickenmann.ordre = self.ordre.value()
+    def update(self):
+        self.rickenmann.label = self.label.text()
+        self.rickenmann.lineProperties['style'] = self.style.currentText()
+        self.rickenmann.lineProperties['color'] = self.color.currentText()
+        self.rickenmann.lineProperties['thickness'] = self.thickness.value()
+        self.rickenmann.opacity = self.opacity.value()
+        self.rickenmann.order = self.order.value()
 
         self.rickenmann.update()
-        # self.pyLong.canvas.draw()
-        self.pyLong.canvas.updateLegendes()
+        self.pyLong.canvas.updateLegends()
             
-    def appliquer(self):
-        self.rickenmann.parametres['profil'] = self.profils.currentIndex()
-        self.rickenmann.parametres['abscisse départ'] = self.abscisseDepart.value()
-        self.rickenmann.parametres['volume'] = self.volume.value()
-        self.rickenmann.parametres['pas de calcul'] = self.pas2calcul.value()
-        self.rickenmann.parametres['enveloppe'] = self.enveloppe.isChecked()
+    def apply(self):
+        try:
+            self.rickenmann.parameters['zprofile'] = self.pyLong.project.profiles[self.profiles.currentIndex()][0]
+            self.rickenmann.parameters['sprofile'] = self.pyLong.project.profiles[self.profiles.currentIndex()][1]
+        except:
+            self.rickenmann.parameters['zprofile'] = None
+            self.rickenmann.parameters['sprofile'] = None
+        self.rickenmann.parameters['x start'] = self.xStart.value()
+        self.rickenmann.parameters['volume'] = self.volume.value()
+        self.rickenmann.parameters['step'] = self.step.value()
+        self.rickenmann.parameters['envelope'] = self.envelope.isChecked()
         
         try:
-            self.rickenmann.calculer(self.pyLong)
+            self.rickenmann.calculate()
         except:
-            self.rickenmann.calculReussi = False
+            self.rickenmann.success = False
             pass
         
-        if self.rickenmann.calculReussi:
-            self.abscisseDepart.setValue(self.rickenmann.parametres['abscisse départ'])
-            self.altitudeDepart.setValue(self.rickenmann.parametres['altitude départ'])
-            self.abscisseArrivee.setValue(self.rickenmann.parametres['abscisse arrivée'])
-            self.altitudeArrivee.setValue(self.rickenmann.parametres['altitude arrivée'])
+        if self.rickenmann.success:
+            self.xStart.setValue(self.rickenmann.parameters['x start'])
+            self.zStart.setValue(self.rickenmann.parameters['z start'])
+            self.xEnd.setValue(self.rickenmann.parameters['x end'])
+            self.zEnd.setValue(self.rickenmann.parameters['z end'])
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Le calcul a échoué.")
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Processing failed.")
+            alert.exec_()
         
         self.rickenmann.update()
-        # self.pyLong.canvas.draw()
-        self.pyLong.canvas.updateLegendes()
+        self.pyLong.canvas.draw()

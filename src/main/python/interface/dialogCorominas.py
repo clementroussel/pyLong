@@ -15,95 +15,95 @@ class DialogCorominas(QDialog):
         
         self.pyLong = parent
         
-        i = self.pyLong.listeCalculs.liste.currentRow()
-        self.corominas = self.pyLong.projet.calculs[i]
+        i = self.pyLong.calculationsList.list.currentRow()
+        self.corominas = self.pyLong.project.calculations[i]
         
         self.setWindowTitle("Corominas")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/lave.png')))
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/debrisFlow.png')))
     
         tableWidget = QTabWidget()
-        onglet_parametres = QWidget()
-        onglet_graphique = QWidget() 
+        parametersTab = QWidget()
+        styleTab = QWidget() 
 
-        tableWidget.addTab(onglet_parametres, "Paramètres de calcul")
-        tableWidget.addTab(onglet_graphique, "Aspect graphique")  
+        tableWidget.addTab(parametersTab, "Paramèters")
+        tableWidget.addTab(styleTab, "Style")  
         
-        # onglet paramètres
+        # aramèters tab
         layout = QGridLayout()
         
-        label = QLabel("Profil :")
+        label = QLabel("Profile :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.profils = QComboBox()
+        self.profiles = QComboBox()
         
-        for zprofil, pprofil in self.pyLong.projet.profils:
-            self.profils.addItem(zprofil.intitule)
-        layout.addWidget(self.profils, 0, 1, 1, 2)
+        for zprofile, sprofile in self.pyLong.project.profiles:
+            self.profiles.addItem(zprofile.title)
+        layout.addWidget(self.profiles, 0, 1, 1, 2)
         
         try:
-            self.profils.setCurrentIndex(self.corominas.parametres['profil'])
+            self.profiles.setCurrentIndex(self.corominas.parameters['zprofile'])
         except:
-            self.profils.setCurrentIndex(0)
+            self.profiles.setCurrentIndex(0)
         
-        label = QLabel("Abscisse")
+        label = QLabel("X")
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label, 1, 1)      
 
-        label = QLabel("Altitude")
+        label = QLabel("Z")
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label, 1, 2)
         
-        label = QLabel("Départ :")
+        label = QLabel("Start :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 2, 0)
         
-        label = QLabel("Arrivée :")
+        label = QLabel("End :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 3, 0)
 
-        self.abscisseDepart = QDoubleSpinBox()
-        self.abscisseDepart.setFixedWidth(90)
-        self.abscisseDepart.setSuffix(" m")
-        self.abscisseDepart.setLocale(QLocale('English'))
-        self.abscisseDepart.setSingleStep(0.1)
-        self.abscisseDepart.setRange(-99999.999, 99999.999)
-        self.abscisseDepart.setDecimals(3)
-        self.abscisseDepart.setValue(self.corominas.parametres['abscisse départ'])
-        layout.addWidget(self.abscisseDepart, 2, 1)        
+        self.xStart = QDoubleSpinBox()
+        self.xStart.setFixedWidth(90)
+        self.xStart.setSuffix(" m")
+        self.xStart.setLocale(QLocale('English'))
+        self.xStart.setSingleStep(0.1)
+        self.xStart.setRange(-99999.999, 99999.999)
+        self.xStart.setDecimals(3)
+        self.xStart.setValue(self.corominas.parameters['x start'])
+        layout.addWidget(self.xStart, 2, 1)        
 
-        self.altitudeDepart = QDoubleSpinBox()
-        self.altitudeDepart.setFixedWidth(90)
-        self.altitudeDepart.setSuffix(" m")
-        self.altitudeDepart.setLocale(QLocale('English'))
-        self.altitudeDepart.setSingleStep(1)
-        self.altitudeDepart.setRange(-99999.999, 99999.999)
-        self.altitudeDepart.setDecimals(3)
-        self.altitudeDepart.setReadOnly(True)
-        self.altitudeDepart.setValue(self.corominas.parametres['altitude départ'])
-        layout.addWidget(self.altitudeDepart, 2, 2)
+        self.zStart = QDoubleSpinBox()
+        self.zStart.setFixedWidth(90)
+        self.zStart.setSuffix(" m")
+        self.zStart.setLocale(QLocale('English'))
+        self.zStart.setSingleStep(1)
+        self.zStart.setRange(-99999.999, 99999.999)
+        self.zStart.setDecimals(3)
+        self.zStart.setReadOnly(True)
+        self.zStart.setValue(self.corominas.parameters['z start'])
+        layout.addWidget(self.zStart, 2, 2)
 
-        self.abscisseArrivee = QDoubleSpinBox()
-        self.abscisseArrivee.setFixedWidth(90)
-        self.abscisseArrivee.setSuffix(" m")
-        self.abscisseArrivee.setLocale(QLocale('English'))
-        self.abscisseArrivee.setSingleStep(1)
-        self.abscisseArrivee.setRange(-99999.999, 99999.999)
-        self.abscisseArrivee.setDecimals(3)
-        self.abscisseArrivee.setReadOnly(True)
-        self.abscisseArrivee.setValue(self.corominas.parametres['abscisse arrivée'])
-        layout.addWidget(self.abscisseArrivee, 3, 1)        
+        self.xEnd = QDoubleSpinBox()
+        self.xEnd.setFixedWidth(90)
+        self.xEnd.setSuffix(" m")
+        self.xEnd.setLocale(QLocale('English'))
+        self.xEnd.setSingleStep(1)
+        self.xEnd.setRange(-99999.999, 99999.999)
+        self.xEnd.setDecimals(3)
+        self.xEnd.setReadOnly(True)
+        self.xEnd.setValue(self.corominas.parameters['x end'])
+        layout.addWidget(self.xEnd, 3, 1)        
 
-        self.altitudeArrivee = QDoubleSpinBox()
-        self.altitudeArrivee.setFixedWidth(90)
-        self.altitudeArrivee.setSuffix(" m")
-        self.altitudeArrivee.setLocale(QLocale('English'))
-        self.altitudeArrivee.setSingleStep(1)
-        self.altitudeArrivee.setRange(-99999.999, 99999.999)
-        self.altitudeArrivee.setDecimals(3)
-        self.altitudeArrivee.setReadOnly(True)
-        self.altitudeArrivee.setValue(self.corominas.parametres['altitude arrivée'])
-        layout.addWidget(self.altitudeArrivee, 3, 2)
+        self.zEnd = QDoubleSpinBox()
+        self.zEnd.setFixedWidth(90)
+        self.zEnd.setSuffix(" m")
+        self.zEnd.setLocale(QLocale('English'))
+        self.zEnd.setSingleStep(1)
+        self.zEnd.setRange(-99999.999, 99999.999)
+        self.zEnd.setDecimals(3)
+        self.zEnd.setReadOnly(True)
+        self.zEnd.setValue(self.corominas.parameters['z end'])
+        layout.addWidget(self.zEnd, 3, 2)
         
         label = QLabel("Volume :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
@@ -114,138 +114,131 @@ class DialogCorominas(QDialog):
         self.volume.setSuffix(" m^3")
         self.volume.setLocale(QLocale('English'))
         self.volume.setRange(0, 99999999)
-        self.volume.setValue(self.corominas.parametres['volume'])
+        self.volume.setValue(self.corominas.parameters['volume'])
         layout.addWidget(self.volume, 4, 1, 1, 2)
         
-        label = QLabel("Pas de calcul :")
+        label = QLabel("Step :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 5, 0)
         
-        self.pas2calcul = QDoubleSpinBox()
-        self.pas2calcul.setFixedWidth(75)
-        self.pas2calcul.setSuffix(" m")
-        self.pas2calcul.setLocale(QLocale('English'))
-        self.pas2calcul.setRange(0, 1000.0)
-        self.pas2calcul.setDecimals(1)
-        self.pas2calcul.setSingleStep(0.1)
-        self.pas2calcul.setValue(self.corominas.parametres['pas de calcul'])
-        layout.addWidget(self.pas2calcul, 5, 1)
+        self.step = QDoubleSpinBox()
+        self.step.setFixedWidth(75)
+        self.step.setSuffix(" m")
+        self.step.setLocale(QLocale('English'))
+        self.step.setRange(0, 1000.0)
+        self.step.setDecimals(1)
+        self.step.setSingleStep(0.1)
+        self.step.setValue(self.corominas.parameters['step'])
+        layout.addWidget(self.step, 5, 1)
 
-        label = QLabel("Modèle :")
+        label = QLabel("Modl :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 6, 0)
 
-        self.modele = QComboBox()
-        self.modele.addItems(['Debris flows - All',
+        self.model = QComboBox()
+        self.model.addItems(['Debris flows - All',
                               'Debris flows - Obstructed',
                               'Debris flows - Channelized',
                               'Debris flows - Unobstructed',
                               'Mud flows - All',
                               'Mud flows - Unobstructed'])
-        self.modele.setCurrentText(self.corominas.parametres['modèle'])
-        layout.addWidget(self.modele, 6, 1, 1, 2)
+        self.model.setCurrentText(self.corominas.parameters['model'])
+        layout.addWidget(self.model, 6, 1, 1, 2)
         
-        onglet_parametres.setLayout(layout)
+        parametersTab.setLayout(layout)
         
-        # onglet aspect graphique
+        # style tab
         layout = QGridLayout()
         
-        label = QLabel("Légende :")
+        label = QLabel("Label :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.legende = QLineEdit()
-        self.legende.setText(self.corominas.legende)
-        self.legende.textEdited.connect(self.appliquerStyle)
-        layout.addWidget(self.legende, 0, 1)
-
-        actualiser = QPushButton()
-        actualiser.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rafraichir.png')))
-        actualiser.clicked.connect(self.actualiser)
-        actualiser.setAutoDefault(False)
-        layout.addWidget(actualiser, 0, 2)
+        self.label = QLineEdit()
+        self.label.setText(self.corominas.label)
+        self.label.textEdited.connect(self.update)
+        layout.addWidget(self.label, 0, 1)
         
-        label = QLabel("Style de ligne :")
+        label = QLabel("Style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.style2ligne = QComboBox()
-        self.style2ligne.insertItems(0, list(styles2ligne.keys()))
-        self.style2ligne.setCurrentText(self.corominas.ligne['style'])
-        self.style2ligne.currentTextChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.style2ligne, 1, 1, 1, 2)
+        self.style = QComboBox()
+        self.style.insertItems(0, list(lineStyles.keys()))
+        self.style.setCurrentText(self.corominas.lineProperties['style'])
+        self.style.currentTextChanged.connect(self.update)
+        layout.addWidget(self.style, 1, 1, 1, 2)
         
-        label = QLabel("Couleur de ligne :")
+        label = QLabel("Color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)              
         layout.addWidget(label, 2, 0)
         
-        self.couleur2ligne = ColorsComboBox(self.pyLong.appctxt)
-        self.couleur2ligne.setCurrentText(self.corominas.ligne['couleur'])
-        self.couleur2ligne.currentTextChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.couleur2ligne, 2, 1, 1, 2)
+        self.color = ColorsComboBox(self.pyLong.appctxt)
+        self.color.setCurrentText(self.corominas.lineProperties['color'])
+        self.color.currentTextChanged.connect(self.update)
+        layout.addWidget(self.color, 2, 1, 1, 2)
         
-        label = QLabel("Épaisseur de ligne :")
+        label = QLabel("Thickness :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)  
         layout.addWidget(label, 3, 0)
         
-        self.epaisseur2ligne = QDoubleSpinBox()
-        self.epaisseur2ligne.setFixedWidth(50)
-        self.epaisseur2ligne.setLocale(QLocale('English'))
-        self.epaisseur2ligne.setRange(0, 99.9)
-        self.epaisseur2ligne.setDecimals(1)
-        self.epaisseur2ligne.setSingleStep(0.1)
-        self.epaisseur2ligne.setValue(self.corominas.ligne['épaisseur'])
-        self.epaisseur2ligne.valueChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.epaisseur2ligne, 3, 1, 1, 2)
+        self.thickness = QDoubleSpinBox()
+        self.thickness.setFixedWidth(50)
+        self.thickness.setLocale(QLocale('English'))
+        self.thickness.setRange(0, 99.9)
+        self.thickness.setDecimals(1)
+        self.thickness.setSingleStep(0.1)
+        self.thickness.setValue(self.corominas.lineProperties['thickness'])
+        self.thickness.valueChanged.connect(self.update)
+        layout.addWidget(self.thickness, 3, 1, 1, 2)
         
-        label = QLabel("Opacité :")
+        label = QLabel("Opacity :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 4, 0)
         
-        self.opacite = QDoubleSpinBox()
-        self.opacite.setFixedWidth(50)
-        self.opacite.setLocale(QLocale('English'))
-        self.opacite.setRange(0, 1)
-        self.opacite.setDecimals(1)
-        self.opacite.setSingleStep(0.1)
-        self.opacite.setValue(self.corominas.opacite)
-        self.opacite.valueChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.opacite, 4, 1, 1, 2)
+        self.opacity = QDoubleSpinBox()
+        self.opacity.setFixedWidth(50)
+        self.opacity.setLocale(QLocale('English'))
+        self.opacity.setRange(0, 1)
+        self.opacity.setDecimals(1)
+        self.opacity.setSingleStep(0.1)
+        self.opacity.setValue(self.corominas.opacity)
+        self.opacity.valueChanged.connect(self.update)
+        layout.addWidget(self.opacity, 4, 1, 1, 2)
         
-        label = QLabel("Ordre :")
+        label = QLabel("Order :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) 
         layout.addWidget(label, 5, 0)
         
-        self.ordre = QSpinBox()
-        self.ordre.setFixedWidth(50)
-        self.ordre.setRange(0, 99)
-        self.ordre.setValue(self.corominas.ordre)
-        self.ordre.valueChanged.connect(self.appliquerStyle)
-        layout.addWidget(self.ordre, 5, 1, 1, 2)
+        self.order = QSpinBox()
+        self.order.setFixedWidth(50)
+        self.order.setRange(0, 99)
+        self.order.setValue(self.corominas.order)
+        self.order.valueChanged.connect(self.update)
+        layout.addWidget(self.order, 5, 1, 1, 2)
         
         layout.addWidget(QWidget(), 6, 0)
         
-        onglet_graphique.setLayout(layout)
+        styleTab.setLayout(layout)
 
-        label = QLabel("Intitulé :")
+        label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         
-        self.intitule = QLineEdit()
-        self.intitule.setText(self.corominas.intitule)
-        self.intitule.textChanged.connect(self.updateIntitule)
+        self.title = QLineEdit()
+        self.title.setText(self.corominas.title)
+        self.title.textChanged.connect(self.updateTitle)
 
         buttonBox = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Ok)
-        buttonBox.button(QDialogButtonBox.Apply).setText("Appliquer")
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(False)
-        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.appliquer)
+        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.apply)
         buttonBox.button(QDialogButtonBox.Apply).setAutoDefault(True)
         buttonBox.button(QDialogButtonBox.Apply).setDefault(True)
         
         layout = QGridLayout()
         
         layout.addWidget(label, 0, 0)
-        layout.addWidget(self.intitule, 0, 1)
+        layout.addWidget(self.title, 0, 1)
         
         layout.addWidget(tableWidget, 1, 0, 1, 2)
         
@@ -253,52 +246,52 @@ class DialogCorominas(QDialog):
         
         self.setLayout(layout)
 
-    def actualiser(self):
-        self.pyLong.canvas.dessiner()
-
-    def valider(self):
-        self.appliquer()
+    def validate(self):
+        self.apply()
         self.accept()
 
-    def updateIntitule(self):
-        self.corominas.intitule = self.intitule.text()
-        self.pyLong.listeCalculs.update()
+    def updateTitle(self):
+        self.corominas.title = self.title.text()
+        self.pyLong.calculationsList.update()
 
-    def appliquerStyle(self):
-        self.corominas.legende = self.legende.text()
-        self.corominas.ligne['style'] = self.style2ligne.currentText()
-        self.corominas.ligne['couleur'] = self.couleur2ligne.currentText()
-        self.corominas.ligne['épaisseur'] = self.epaisseur2ligne.value()
-        self.corominas.opacite = self.opacite.value()
-        self.corominas.ordre = self.ordre.value()
+    def update(self):
+        self.corominas.label = self.label.text()
+        self.corominas.lineProperties['style'] = self.style.currentText()
+        self.corominas.lineProperties['color'] = self.color.currentText()
+        self.corominas.lineProperties['thickness'] = self.thickness.value()
+        self.corominas.opacity = self.opacity.value()
+        self.corominas.order = self.order.value()
 
         self.corominas.update()
-        # self.pyLong.canvas.draw()
-        self.pyLong.canvas.updateLegendes()
+        self.pyLong.canvas.updateLegends()
             
-    def appliquer(self):
-        self.corominas.parametres['profil'] = self.profils.currentIndex()
-        self.corominas.parametres['abscisse départ'] = self.abscisseDepart.value()
-        self.corominas.parametres['volume'] = self.volume.value()
-        self.corominas.parametres['pas de calcul'] = self.pas2calcul.value()
-        self.corominas.parametres['modèle'] = self.modele.currentText()
+    def apply(self):
+        try:
+            self.corominas.parameters['zprofile'] = self.pyLong.project.profiles[self.profiles.currentIndex()][0]
+            self.corominas.parameters['sprofile'] = self.pyLong.project.profiles[self.profiles.currentIndex()][1]
+        except:
+            self.corominas.parameters['zprofile'] = None
+            self.corominas.parameters['sprofile'] = None
+        self.corominas.parameters['x start'] = self.xStart.value()
+        self.corominas.parameters['volume'] = self.volume.value()
+        self.corominas.parameters['step'] = self.step.value()
+        self.corominas.parameters['model'] = self.model.currentText()
         
         try:
-            self.corominas.calculer(self.pyLong)
+            self.corominas.calculate()
         except:
-            self.corominas.calculReussi = False
+            self.corominas.success = False
             pass
         
-        if self.corominas.calculReussi:
-            self.abscisseDepart.setValue(self.corominas.parametres['abscisse départ'])
-            self.altitudeDepart.setValue(self.corominas.parametres['altitude départ'])
-            self.abscisseArrivee.setValue(self.corominas.parametres['abscisse arrivée'])
-            self.altitudeArrivee.setValue(self.corominas.parametres['altitude arrivée'])
+        if self.corominas.success:
+            self.xStart.setValue(self.corominas.parameters['x start'])
+            self.zStart.setValue(self.corominas.parameters['z start'])
+            self.xEnd.setValue(self.corominas.parameters['x end'])
+            self.zEnd.setValue(self.corominas.parameters['z end'])
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Le calcul a échoué.")
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Processing failed.")
+            alert.exec_()
         
         self.corominas.update()
-        # self.pyLong.canvas.draw()
-        self.pyLong.canvas.updateLegendes()
+        self.pyLong.canvas.draw()

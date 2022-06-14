@@ -13,7 +13,7 @@ class Rickenmann() :
         
         self.active = True
         
-        self.title = ""
+        self.title = "Rickenmann n°{}".format(Rickenmann.counter)
         
         self.label = ""
         
@@ -25,7 +25,7 @@ class Rickenmann() :
         
         self.order = 1
         
-        self.parameters = {'zprofil': None,
+        self.parameters = {'zprofile': None,
                            'sprofile': None,
                            'x start': 0,
                            'z start': 0,
@@ -62,7 +62,7 @@ class Rickenmann() :
         Rickenmann.counter -= 1
         
     def calculate(self):
-        if self.parametres['zprofile'] is None:
+        if self.parameters['zprofile'] is None:
             self.success = False
             return 0
         
@@ -70,8 +70,8 @@ class Rickenmann() :
         zprofile = self.parameters['zprofile']
         sprofile = self.parameters['sprofile']
         
-        xmin = np.min(zprofile.abscisses)
-        xmax = np.max(zprofile.abscisses)
+        xmin = np.min(zprofile.x)
+        xmax = np.max(zprofile.x)
         
         i = list(zprofile.x).index(xmin)
         zxmin = zprofile.z[i]
@@ -82,12 +82,12 @@ class Rickenmann() :
         if zxmin > zxmax:
             descending = True
             zprofile.sort(mode="descending")
-            sprofile.updateData(zprofile.x, zprofile.z)
             
         else:
             descending = False
             zprofile.sort(mode="ascending")
-            sprofile.updateData(zprofile.x, zprofile.z)               
+        
+        sprofile.updateData(zprofile.x, zprofile.z)               
 
         # getting hands on parameters
         x = zprofile.x
@@ -191,11 +191,11 @@ class Rickenmann() :
                 xInter = xDebrisFlow[-1]
                 zInter = zDebrisFlow[-1]
             
-            self.parameters['abscisse arrivée'] = xInter
-            self.parameters['altitude arrivée'] = zInter
+            self.parameters['x end'] = xInter
+            self.parameters['z end'] = zInter
 
-            self.results['abscisses'] = xDebrisFlow
-            self.resultats['énergies'] = zDebrisFlow
+            self.results['x'] = xDebrisFlow
+            self.results['z'] = zDebrisFlow
             
             if np.abs(xStart - self.parameters['x end']) < 0.01:
                 self.success = False

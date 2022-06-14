@@ -13,7 +13,7 @@ class Corominas():
         
         self.active = True
         
-        self.title = ""
+        self.title = "Corominas n°{}".format(Corominas.counter)
         
         self.label = ""
         
@@ -27,10 +27,10 @@ class Corominas():
         
         self.parameters = {'zprofile': None,
                            'sprofile': None,
-                           'start x': 0,
-                           'start z': 0,
-                           'end x': 0,
-                           'end z': 0,
+                           'x start': 0,
+                           'z start': 0,
+                           'x end': 0,
+                           'z end': 0,
                            'volume': 0,
                            'step': 5,
                            'model': 'Debris flows - All'}
@@ -101,11 +101,11 @@ class Corominas():
             # calculation of zStart
             if xmin < xStart < xmax:
                 zStart = zprofile.interpolate(xStart)
-                self.parameters['zStart'] = zStart
+                self.parameters['z start'] = zStart
             elif xStart == xmin or xStart == xmax:
                 k = list(zprofile.x).index(xStart)
                 zStart = zprofile.z[k]
-                self.parameters['zStart'] = zStart
+                self.parameters['z start'] = zStart
             else:
                 self.success = False
                 return 0
@@ -131,7 +131,7 @@ class Corominas():
                 xInter = xInter[0]
                 zInter = zInter[0]
                 
-                if np.abs(xInter - xStart) < 0.001:
+                if np.abs(xInter - xStart) < 0.01:
                     xInter = xDebrisFlow[-1]
                     zInter = zDebrisFlow[-1]
                 else:
@@ -177,15 +177,15 @@ class Corominas():
             zDebrisFlow = list(np.arange(zStart, zxmax, -step))
             zDebrisFlow.append(zxmax)
 
-            if self.parameters['modèle'] == 'Debris flows - All':
+            if self.parameters['model'] == 'Debris flows - All':
                 xDebrisFlow = [xStart + 10**0.012 * volume**0.105 * (zStart - z) for z in zDebrisFlow]
-            elif self.parameters['modèle'] == 'Debris flows - Obstructed':
+            elif self.parameters['model'] == 'Debris flows - Obstructed':
                 xDebrisFlow = [xStart + 10**0.049 * volume**0.108 * (zStart - z) for z in zDebrisFlow]
-            elif self.parameters['modèle'] == 'Debris flows - Channelized':
+            elif self.parameters['model'] == 'Debris flows - Channelized':
                 xDebrisFlow = [xStart + 10**0.077 * volume**0.109 * (zStart - z) for z in zDebrisFlow]
-            elif self.parameters['modèle'] == 'Debris flows - Unobstructed':
+            elif self.parameters['model'] == 'Debris flows - Unobstructed':
                 xDebrisFlow = [xStart + 10**0.031 * volume**0.102 * (zStart - z) for z in zDebrisFlow]
-            elif self.parameters['modèle'] == 'Mud flows - All':
+            elif self.parameters['model'] == 'Mud flows - All':
                 xDebrisFlow = [xStart + 10**0.214 * volume**0.070 * (zStart - z) for z in zDebrisFlow]
             else:
                 xDebrisFlow = [xStart + 10**0.220 * volume**0.138 * (zStart - z) for z in zDebrisFlow]
@@ -213,7 +213,7 @@ class Corominas():
             self.results['x'] = xDebrisFlow
             self.results['z'] = zDebrisFlow
             
-            if np.abs(xStart - self.parametres['x end']) < 0.01:
+            if np.abs(xStart - self.parameters['x end']) < 0.01:
                 self.success = False
             else:
                 self.success = True

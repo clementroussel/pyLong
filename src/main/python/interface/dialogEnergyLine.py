@@ -146,20 +146,20 @@ class DialogEnergyLine(QDialog):
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 1, 0)
         
-        self.lineStyle = QComboBox()
-        self.lineStyle.insertItems(0, list(lineStyles.keys()))
-        self.lineStyle.setCurrentText(self.energyLine.lineProperties['style'])
-        self.lineStyle.currentTextChanged.connect(self.update)
-        layout.addWidget(self.lineStyle, 1, 1, 1, 2)
+        self.style = QComboBox()
+        self.style.insertItems(0, list(lineStyles.keys()))
+        self.style.setCurrentText(self.energyLine.lineProperties['style'])
+        self.style.currentTextChanged.connect(self.update)
+        layout.addWidget(self.style, 1, 1, 1, 2)
         
         label = QLabel("Color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)              
         layout.addWidget(label, 2, 0)
         
-        self.lineColor = ColorsComboBox(self.pyLong.appctxt)
-        self.lineColor.setCurrentText(self.energyLine.lineProperties['color'])
-        self.lineColor.currentTextChanged.connect(self.update)
-        layout.addWidget(self.lineColor, 2, 1, 1, 2)
+        self.color = ColorsComboBox(self.pyLong.appctxt)
+        self.color.setCurrentText(self.energyLine.lineProperties['color'])
+        self.color.currentTextChanged.connect(self.update)
+        layout.addWidget(self.color, 2, 1, 1, 2)
         
         label = QLabel("Thickness :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)  
@@ -234,8 +234,8 @@ class DialogEnergyLine(QDialog):
         self.accept()
 
     def update(self):
-        self.energyLine.lineProperties['style'] = self.lineStyle.currentText()
-        self.energyLine.lineProperties['color'] = self.lineColor.currentText()
+        self.energyLine.lineProperties['style'] = self.style.currentText()
+        self.energyLine.lineProperties['color'] = self.color.currentText()
         self.energyLine.lineProperties['thickness'] = self.thickness.value()
         self.energyLine.opacity = self.opacity.value()
         self.energyLine.order = self.order.value()
