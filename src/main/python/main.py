@@ -8,7 +8,10 @@ from interface.mainWindow import MainWindow
 import sys
 import time
 
+from interface.welcome import *
+
 if __name__ == '__main__':
+    welcome()
     # # Change sys.stdout and sys.stderr
     # stdout = open('stdout.log', 'w')
     # sys.stdout = stdout
