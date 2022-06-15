@@ -25,7 +25,7 @@ from interface.dialogDeleteLayouts import *
 
 # from DialogLayout import *
 from interface.dialogLayoutAvanced import *
-# from DialogImprimer import *
+from interface.dialogPrint import *
 
 from interface.dialogManageSubplots import *
 
@@ -543,8 +543,8 @@ class MainWindow(QMainWindow):
 #         else:
 #             return 0
 
-#     def imprimer(self):
-#         DialogImprimer(parent=self).exec_()
+    def print(self):
+        DialogPrint(parent=self).exec_()
 
     def adjustVerticalAnnotation(self):
         if self.annotationsList.selection():

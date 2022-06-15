@@ -111,7 +111,7 @@ def createActions(self):
 
     self.printAction = QAction(QIcon(self.appctxt.get_resource('icons/print.png')), "Print", self)
     self.printAction.setShortcut(QKeySequence("Ctrl+P"))
-    #self.printAction.triggered.connect(self.print)
+    self.printAction.triggered.connect(self.print)
     self.figureToolBar.addAction(self.printAction)
 
     self.copyFigureAction = QAction(QIcon(self.appctxt.get_resource('icons/copyFigure.png')), "Copy", self)
