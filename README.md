@@ -5,8 +5,8 @@ Visit the online documentation to learn more about **pyLong** : https://pylong.r
 ## Instructions to build **pyLong** from sources
 
 [On Windows 10](#on-windows-10)  
-[On Ubuntu 20.04](#on-ubuntu-20-04)  
-[On macOS Big Sur](#on-macOS-big-sur)  
+[On Ubuntu 20.04](#on-ubuntu)  
+[On macOS Big Sur](#on-macOS)  
 
 ### On Windows 10
 
@@ -52,11 +52,11 @@ Because *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly c
 
    ```fbs run```
 
-### On Ubuntu 20-04
+### On Ubuntu
 
 balbla
 
-### On macOS Big Sur
+### On macOS
 
 
 
