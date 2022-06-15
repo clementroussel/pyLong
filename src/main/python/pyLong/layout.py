@@ -15,6 +15,8 @@ class Layout:
 
         self.secondaryAxis = False
 
+        self.asKm = False
+
         self.xAxisProperties = {'min': 0.,
                                 'max': 1000.,
                                 'label': 'x (m)',

@@ -90,21 +90,26 @@ class DialogLayout(QDialog):
         self.secondaryAxis.stateChanged.connect(self.updateSecondaryAxis)
         layout.addWidget(self.secondaryAxis, 0, 0, 1, 3)
 
+        self.asKm = QCheckBox("Divide x values by 1000")
+        self.asKm.setChecked(self.layout.asKm)
+        self.asKm.stateChanged.connect(self.updateXAxis)
+        layout.addWidget(self.asKm, 1, 0, 1, 3)
+
         label = QLabel("min.")
         label.setAlignment(Qt.AlignCenter)
-        layout.addWidget(label, 1, 1)
+        layout.addWidget(label, 2, 1)
 
         label = QLabel("max.")
         label.setAlignment(Qt.AlignCenter)
-        layout.addWidget(label, 1, 2)
+        layout.addWidget(label, 2, 2)
 
         label = QLabel("int.")
         label.setAlignment(Qt.AlignCenter)
-        layout.addWidget(label, 1, 3)
+        layout.addWidget(label, 2, 3)
 
         label = QLabel("X-Axis :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        layout.addWidget(label, 2, 0)
+        layout.addWidget(label, 3, 0)
 
         self.xMin = QDoubleSpinBox()
         self.xMin.setFixedWidth(90)
@@ -115,7 +120,7 @@ class DialogLayout(QDialog):
         self.xMin.setDecimals(3)
         self.xMin.setValue(self.layout.xAxisProperties['min'])
         self.xMin.valueChanged.connect(self.updateXAxis)
-        layout.addWidget(self.xMin, 2, 1)
+        layout.addWidget(self.xMin, 3, 1)
 
         self.xMax = QDoubleSpinBox()
         self.xMax.setFixedWidth(90)
@@ -126,7 +131,7 @@ class DialogLayout(QDialog):
         self.xMax.setDecimals(3)
         self.xMax.setValue(self.layout.xAxisProperties['max'])
         self.xMax.valueChanged.connect(self.updateXAxis)
-        layout.addWidget(self.xMax, 2, 2)
+        layout.addWidget(self.xMax, 3, 2)
 
         self.xIntervals = QSpinBox()
         self.xIntervals.setFixedWidth(40)
@@ -134,11 +139,11 @@ class DialogLayout(QDialog):
         self.xIntervals.setRange(1, 99)
         self.xIntervals.setValue(self.layout.xAxisProperties['intervals'])
         self.xIntervals.valueChanged.connect(self.updateXAxis)
-        layout.addWidget(self.xIntervals, 2, 3)
+        layout.addWidget(self.xIntervals, 3, 3)
 
         label = QLabel("Z-Axis :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        layout.addWidget(label, 3, 0)
+        layout.addWidget(label, 4, 0)
 
         self.zMin = QDoubleSpinBox()
         self.zMin.setFixedWidth(90)
@@ -149,7 +154,7 @@ class DialogLayout(QDialog):
         self.zMin.setDecimals(3)
         self.zMin.setValue(self.layout.zAxisProperties['min'])
         self.zMin.valueChanged.connect(self.updateZAxis)
-        layout.addWidget(self.zMin, 3, 1)
+        layout.addWidget(self.zMin, 4, 1)
 
         self.zMax = QDoubleSpinBox()
         self.zMax.setFixedWidth(90)
@@ -160,7 +165,7 @@ class DialogLayout(QDialog):
         self.zMax.setDecimals(3)
         self.zMax.setValue(self.layout.zAxisProperties['max'])
         self.zMax.valueChanged.connect(self.updateZAxis)
-        layout.addWidget(self.zMax, 3, 2)
+        layout.addWidget(self.zMax, 4, 2)
 
         self.zIntervals = QSpinBox()
         self.zIntervals.setFixedWidth(40)
@@ -168,11 +173,11 @@ class DialogLayout(QDialog):
         self.zIntervals.setRange(1, 99)
         self.zIntervals.setValue(self.layout.zAxisProperties['intervals'])
         self.zIntervals.valueChanged.connect(self.updateZAxis)
-        layout.addWidget(self.zIntervals, 3, 3)
+        layout.addWidget(self.zIntervals, 4, 3)
 
         label = QLabel("Slopes-Axis :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        layout.addWidget(label, 4, 0)
+        layout.addWidget(label, 5, 0)
 
         self.sMin = QDoubleSpinBox()
         self.sMin.setFixedWidth(90)
@@ -191,7 +196,7 @@ class DialogLayout(QDialog):
             self.sMin.setValue(self.layout.slopesAxisProperties['min °'])
 
         self.sMin.valueChanged.connect(self.updateSlopesAxis)
-        layout.addWidget(self.sMin, 4, 1)
+        layout.addWidget(self.sMin, 5, 1)
 
         self.sMax = QDoubleSpinBox()
         self.sMax.setFixedWidth(90)
@@ -210,7 +215,7 @@ class DialogLayout(QDialog):
             self.sMax.setValue(self.layout.slopesAxisProperties['max °'])
 
         self.sMax.valueChanged.connect(self.updateSlopesAxis)
-        layout.addWidget(self.sMax, 4, 2)
+        layout.addWidget(self.sMax, 5, 2)
 
         self.sIntervals = QSpinBox()
         self.sIntervals.setFixedWidth(40)
@@ -224,12 +229,12 @@ class DialogLayout(QDialog):
         else:
             self.sIntervals.setValue(self.layout.slopesAxisProperties['intervals °'])
 
-        layout.addWidget(self.sIntervals, 4, 3)
+        layout.addWidget(self.sIntervals, 5, 3)
 
         axisOptions = QPushButton("Options")
         axisOptions.setAutoDefault(False)
         axisOptions.clicked.connect(self.axisOptions)
-        layout.addWidget(axisOptions, 5, 0)
+        layout.addWidget(axisOptions, 6, 0)
 
         axisTab.setLayout(layout)
 
@@ -367,6 +372,7 @@ class DialogLayout(QDialog):
         self.pyLong.canvas.updateFigure()
 
     def updateXAxis(self):
+        self.layout.asKm = self.asKm.isChecked()
         self.layout.xAxisProperties['min'] = self.xMin.value()
         self.layout.xAxisProperties['max'] = self.xMax.value()
         self.layout.xAxisProperties['intervals'] = self.xIntervals.value()
@@ -377,6 +383,20 @@ class DialogLayout(QDialog):
         self.pyLong.canvas.ax_z.set_xticks(np.linspace(self.layout.xAxisProperties['min'],
                                                        self.layout.xAxisProperties['max'],
                                                        self.layout.xAxisProperties['intervals'] + 1))
+
+        
+        values = np.linspace(self.layout.xAxisProperties['min'],
+                             self.layout.xAxisProperties['max'],
+                             self.layout.xAxisProperties['intervals'] + 1)
+
+        if self.asKm.isChecked():
+            values /= 1000
+            values = np.round(values, 2)
+
+            self.pyLong.canvas.ax_z.set_xticklabels(values)
+
+        else:
+            self.pyLong.canvas.ax_z.set_xticklabels(values.astype(int))
 
         for ax in self.pyLong.canvas.subplots:
             ax.set_xlim((self.layout.xAxisProperties['min'] - self.layout.xAxisProperties['left shift'],

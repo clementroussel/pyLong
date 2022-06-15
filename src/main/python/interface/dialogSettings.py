@@ -2,62 +2,62 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from pyLong.dictionnaires import *
-from pyLong.Preference import *
+from pyLong.dictionaries import *
+from pyLong.setting import *
 
-from ColorsComboBox import *
+from interface.colorsComboBox import *
 
-from pyLong.LigneRappel import *
+from pyLong.reminderLine import *
 
 
-class DialogPreferences(QDialog):
+class DialogSettings(QDialog):
     def __init__(self, parent):
         super().__init__()
         
         self.pyLong = parent
         
-        self.setWindowTitle("Préférences")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/preferences.png')))
+        self.setWindowTitle("Settings")
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/settings.png')))
 
         mainLayout = QVBoxLayout()
 
         tableWidget = QTabWidget()
-        onglet_general = QWidget()
-        onglet_apercu = QWidget()
-        onglet_rappel = QWidget()
+        generalTab = QWidget()
+        previewTab = QWidget()
+        reminderTab = QWidget()
 
-        tableWidget.addTab(onglet_general, "Général")
-        tableWidget.addTab(onglet_apercu, "Profil aperçu")
-        tableWidget.addTab(onglet_rappel, "Lignes de rappel")
+        tableWidget.addTab(generalTab, "General")
+        tableWidget.addTab(previewTab, "Preview")
+        tableWidget.addTab(reminderTab, "Reminder lines")
 
-        # onglet général
+        # general tab
         layout = QVBoxLayout()
 
-        groupe = QGroupBox("Préférences")
+        group = QGroupBox("Preferences")
         sublayout = QGridLayout()
 
-        label = QLabel("Expression des pentes :")
+        label = QLabel("Slope unit :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 0, 0)
 
-        self.unitePente = QComboBox()
-        self.unitePente.addItems(["%", "°"])
-        self.unitePente.setCurrentText(self.pyLong.projet.preferences['pente'])
-        sublayout.addWidget(self.unitePente, 0, 1)
+        self.slopeUnit = QComboBox()
+        self.slopeUnit.addItems(["%", "°"])
+        self.slopeUnit.setCurrentText(self.pyLong.project.settings.slopeSymbol)
+        sublayout.addWidget(self.slopeUnit, 0, 1)
 
-        label = QLabel("Sens des profils :")
+        label = QLabel("Profile direction :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 1, 0)
 
-        self.sens = QComboBox()
-        self.sens.addItems(["ascendant", "descendant"])
-        self.sens.setCurrentText(self.pyLong.projet.preferences['sens'])
-        sublayout.addWidget(self.sens, 1, 1)
+        self.direction = QComboBox()
+        self.direction.addItems(["ascending", "descending"])
+        self.direction.setCurrentText(self.pyLong.project.settings.profileDirection)
+        sublayout.addWidget(self.direction, 1, 1)
 
-        groupe.setLayout(sublayout)
-        layout.addWidget(groupe)
+        group.setLayout(sublayout)
+        layout.addWidget(group)
 
-        groupe = QGroupBox("Export de la figure")
+        group = QGroupBox("Figure export")
         sublayout = QGridLayout()
 
         label = QLabel("Format :")
@@ -66,10 +66,10 @@ class DialogPreferences(QDialog):
 
         self.extension = QComboBox()
         self.extension.insertItems(0, list(extensions.keys()))
-        self.extension.setCurrentText(self.pyLong.projet.preferences['extension'])
+        self.extension.setCurrentText(self.pyLong.project.settings.exportFileFormat)
         sublayout.addWidget(self.extension, 0, 1)
 
-        label = QLabel("Résolution :")
+        label = QLabel("Resolution :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 1, 0)
 
@@ -78,186 +78,184 @@ class DialogPreferences(QDialog):
         self.dpi.setSuffix(" dpi")
         self.dpi.setSingleStep(25)
         self.dpi.setRange(25, 1000)
-        self.dpi.setValue(self.pyLong.projet.preferences['dpi'])
+        self.dpi.setValue(self.pyLong.project.settings.figureDpi)
         sublayout.addWidget(self.dpi, 1, 1)
 
-        groupe.setLayout(sublayout)
-        layout.addWidget(groupe)
+        group.setLayout(sublayout)
+        layout.addWidget(group)
 
         layout.addWidget(QLabel())
         layout.addWidget(QLabel())
 
-        onglet_general.setLayout(layout)
+        generalTab.setLayout(layout)
 
-        # onglet aperçu
+        # preview tab
         layout = QVBoxLayout()
 
-        groupe = QGroupBox("Propriétés graphiques")
+        group = QGroupBox("Style")
         sublayout = QGridLayout()
 
-        label = QLabel("Style de ligne :")
+        label = QLabel("Line style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 0, 0)
 
-        self.style2ligne = QComboBox()
-        self.style2ligne.insertItems(0, list(styles2ligne.keys()))
-        self.style2ligne.setCurrentText(self.pyLong.projet.apercu.ligne['style'])
-        sublayout.addWidget(self.style2ligne, 0, 1)
+        self.lineStyle = QComboBox()
+        self.lineStyle.insertItems(0, list(lineStyles.keys()))
+        self.lineStyle.setCurrentText(self.pyLong.project.preview.lineProperties['style'])
+        sublayout.addWidget(self.lineStyle, 0, 1)
 
-        label = QLabel("Couleur de ligne :")
+        label = QLabel("Line color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 1, 0)
 
-        self.couleur2ligne = ColorsComboBox(self.pyLong.appctxt)
-        self.couleur2ligne.setCurrentText(self.pyLong.projet.apercu.ligne['couleur'])
-        sublayout.addWidget(self.couleur2ligne, 1, 1)
+        self.lineColor = ColorsComboBox(self.pyLong.appctxt)
+        self.lineColor.setCurrentText(self.pyLong.project.preview.lineProperties['color'])
+        sublayout.addWidget(self.lineColor, 1, 1)
 
-        label = QLabel("Épaisseur de ligne :")
+        label = QLabel("Thickness :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 2, 0)
 
-        self.epaisseur2ligne = QDoubleSpinBox()
-        self.epaisseur2ligne.setFixedWidth(50)
-        self.epaisseur2ligne.setLocale(QLocale('English'))
-        self.epaisseur2ligne.setDecimals(1)
-        self.epaisseur2ligne.setRange(0, 99.9)
-        self.epaisseur2ligne.setSingleStep(0.1)
-        self.epaisseur2ligne.setValue(self.pyLong.projet.apercu.ligne['épaisseur'])
-        sublayout.addWidget(self.epaisseur2ligne, 2, 1)
+        self.thickness = QDoubleSpinBox()
+        self.thickness.setFixedWidth(50)
+        self.thickness.setLocale(QLocale('English'))
+        self.thickness.setDecimals(1)
+        self.thickness.setRange(0, 99.9)
+        self.thickness.setSingleStep(0.1)
+        self.thickness.setValue(self.pyLong.project.preview.lineProperties['thickness'])
+        sublayout.addWidget(self.thickness, 2, 1)
 
-        label = QLabel("Style de marqueur :")
+        label = QLabel("Marker style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 3, 0)
 
-        self.style2marqueur = QComboBox()
-        self.style2marqueur.insertItems(0, list(styles2marqueur.keys()))
-        self.style2marqueur.setCurrentText(self.pyLong.projet.apercu.marqueur['style'])
-        sublayout.addWidget(self.style2marqueur, 3, 1)
+        self.markerStyle = QComboBox()
+        self.markerStyle.insertItems(0, list(markerStyles.keys()))
+        self.markerStyle.setCurrentText(self.pyLong.project.preview.markerProperties['style'])
+        sublayout.addWidget(self.markerStyle, 3, 1)
 
-        label = QLabel("Couleur du marqueur :")
+        label = QLabel("Marker color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 4, 0)
 
-        self.couleur2marqueur = ColorsComboBox(self.pyLong.appctxt)
-        self.couleur2marqueur.setCurrentText(self.pyLong.projet.apercu.marqueur['couleur'])
-        sublayout.addWidget(self.couleur2marqueur, 4, 1)
+        self.markerColor = ColorsComboBox(self.pyLong.appctxt)
+        self.markerColor.setCurrentText(self.pyLong.project.preview.markerProperties['color'])
+        sublayout.addWidget(self.markerColor, 4, 1)
 
-        label = QLabel("Taille du marqueur :")
+        label = QLabel("Marker size :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 5, 0)
 
-        self.taille2marqueur = QDoubleSpinBox()
-        self.taille2marqueur.setFixedWidth(50)
-        self.taille2marqueur.setLocale(QLocale('English'))
-        self.taille2marqueur.setRange(0, 99.9)
-        self.taille2marqueur.setSingleStep(0.1)
-        self.taille2marqueur.setDecimals(1)
-        self.taille2marqueur.setValue(self.pyLong.projet.apercu.marqueur['taille'])
-        sublayout.addWidget(self.taille2marqueur, 5, 1)
+        self.markerSize = QDoubleSpinBox()
+        self.markerSize.setFixedWidth(50)
+        self.markerSize.setLocale(QLocale('English'))
+        self.markerSize.setRange(0, 99.9)
+        self.markerSize.setSingleStep(0.1)
+        self.markerSize.setDecimals(1)
+        self.markerSize.setValue(self.pyLong.project.preview.markerProperties['size'])
+        sublayout.addWidget(self.markerSize, 5, 1)
 
-        label = QLabel("Opacité :")
+        label = QLabel("Opacity :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 6, 0)
 
-        self.opacite = QDoubleSpinBox()
-        self.opacite.setFixedWidth(50)
-        self.opacite.setLocale(QLocale('English'))
-        self.opacite.setRange(0, 1)
-        self.opacite.setDecimals(1)
-        self.opacite.setSingleStep(0.1)
-        self.opacite.setValue(self.pyLong.projet.apercu.opacite)
-        sublayout.addWidget(self.opacite, 6, 1)
+        self.opacity = QDoubleSpinBox()
+        self.opacity.setFixedWidth(50)
+        self.opacity.setLocale(QLocale('English'))
+        self.opacity.setRange(0, 1)
+        self.opacity.setDecimals(1)
+        self.opacity.setSingleStep(0.1)
+        self.opacity.setValue(self.pyLong.project.preview.opacity)
+        sublayout.addWidget(self.opacity, 6, 1)
 
-        label = QLabel("Ordre :")
+        label = QLabel("Order :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 7, 0)
 
-        self.ordre = QSpinBox()
-        self.ordre.setFixedWidth(50)
-        self.ordre.setRange(0, 99)
-        self.ordre.setValue(self.pyLong.projet.apercu.ordre)
-        sublayout.addWidget(self.ordre, 7, 1)
+        self.order = QSpinBox()
+        self.order.setFixedWidth(50)
+        self.order.setRange(0, 99)
+        self.order.setValue(self.pyLong.project.preview.order)
+        sublayout.addWidget(self.order, 7, 1)
 
-        groupe.setLayout(sublayout)
-        layout.addWidget(groupe)
+        group.setLayout(sublayout)
+        layout.addWidget(group)
 
-        onglet_apercu.setLayout(layout)
+        previewTab.setLayout(layout)
 
-        # onglet rappel
+        # reminder lines tab
         layout = QVBoxLayout()
 
-        groupe = QGroupBox("Propriétés graphiques")
+        group = QGroupBox("Style")
         sublayout = QGridLayout()
 
-        label = QLabel("Style de ligne :")
+        label = QLabel("Line style :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 0, 0)
 
-        self.style2ligneRappel = QComboBox()
-        self.style2ligneRappel.insertItems(0, list(styles2ligne.keys()))
-        self.style2ligneRappel.setCurrentText(self.pyLong.projet.preferences['style rappel'])
-        sublayout.addWidget(self.style2ligneRappel, 0, 1)
+        self.reminderLineStyle = QComboBox()
+        self.reminderLineStyle.insertItems(0, list(lineStyles.keys()))
+        self.reminderLineStyle.setCurrentText(self.pyLong.project.settings.reminderLineProperties['style'])
+        sublayout.addWidget(self.reminderLineStyle, 0, 1)
 
-        label = QLabel("Couleur de ligne :")
+        label = QLabel("Line color :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 1, 0)
 
-        self.couleur2ligneRappel = ColorsComboBox(self.pyLong.appctxt)
-        self.couleur2ligneRappel.setCurrentText(self.pyLong.projet.preferences['couleur rappel'])
-        sublayout.addWidget(self.couleur2ligneRappel, 1, 1)
+        self.reminderLineColor = ColorsComboBox(self.pyLong.appctxt)
+        self.reminderLineColor.setCurrentText(self.pyLong.project.settings.reminderLineProperties['color'])
+        sublayout.addWidget(self.reminderLineColor, 1, 1)
 
-        label = QLabel("Épaisseur de ligne :")
+        label = QLabel("Thickness :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 2, 0)
 
-        self.epaisseur2ligneRappel = QDoubleSpinBox()
-        self.epaisseur2ligneRappel.setFixedWidth(50)
-        self.epaisseur2ligneRappel.setLocale(QLocale('English'))
-        self.epaisseur2ligneRappel.setDecimals(1)
-        self.epaisseur2ligneRappel.setRange(0, 99.9)
-        self.epaisseur2ligneRappel.setSingleStep(0.1)
-        self.epaisseur2ligneRappel.setValue(self.pyLong.projet.preferences['épaisseur rappel'])
-        sublayout.addWidget(self.epaisseur2ligneRappel, 2, 1)
+        self.reminderLineThickness = QDoubleSpinBox()
+        self.reminderLineThickness.setFixedWidth(50)
+        self.reminderLineThickness.setLocale(QLocale('English'))
+        self.reminderLineThickness.setDecimals(1)
+        self.reminderLineThickness.setRange(0, 99.9)
+        self.reminderLineThickness.setSingleStep(0.1)
+        self.reminderLineThickness.setValue(self.pyLong.project.settings.reminderLineProperties['thickness'])
+        sublayout.addWidget(self.reminderLineThickness, 2, 1)
 
-        label = QLabel("Opacité :")
+        label = QLabel("Opacity :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 3, 0)
 
-        self.opaciteRappel = QDoubleSpinBox()
-        self.opaciteRappel.setFixedWidth(50)
-        self.opaciteRappel.setLocale(QLocale('English'))
-        self.opaciteRappel.setRange(0, 1)
-        self.opaciteRappel.setDecimals(1)
-        self.opaciteRappel.setSingleStep(0.1)
-        self.opaciteRappel.setValue(self.pyLong.projet.preferences['opacité rappel'])
-        sublayout.addWidget(self.opaciteRappel, 3, 1)
+        self.reminderLineOpacity = QDoubleSpinBox()
+        self.reminderLineOpacity.setFixedWidth(50)
+        self.reminderLineOpacity.setLocale(QLocale('English'))
+        self.reminderLineOpacity.setRange(0, 1)
+        self.reminderLineOpacity.setDecimals(1)
+        self.reminderLineOpacity.setSingleStep(0.1)
+        self.reminderLineOpacity.setValue(self.pyLong.project.settings.reminderLineProperties['opacity'])
+        sublayout.addWidget(self.reminderLineOpacity, 3, 1)
 
-        label = QLabel("Ordre :")
+        label = QLabel("Order :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         sublayout.addWidget(label, 4, 0)
 
-        self.ordreRappel = QSpinBox()
-        self.ordreRappel.setFixedWidth(50)
-        self.ordreRappel.setRange(0, 99)
-        self.ordreRappel.setValue(self.pyLong.projet.preferences['ordre rappel'])
-        sublayout.addWidget(self.ordreRappel, 4, 1)
+        self.reminderLineOrder = QSpinBox()
+        self.reminderLineOrder.setFixedWidth(50)
+        self.reminderLineOrder.setRange(0, 99)
+        self.reminderLineOrder.setValue(self.pyLong.project.settings.reminderLineProperties['order'])
+        sublayout.addWidget(self.reminderLineOrder, 4, 1)
 
         sublayout.addWidget(QLabel(), 5, 0)
         sublayout.addWidget(QLabel(), 6, 0)
         sublayout.addWidget(QLabel(), 7, 0)
 
-        groupe.setLayout(sublayout)
-        layout.addWidget(groupe)
+        group.setLayout(sublayout)
+        layout.addWidget(group)
 
-        onglet_rappel.setLayout(layout)
+        reminderTab.setLayout(layout)
 
         mainLayout.addWidget(tableWidget)
         
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Apply)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
-        buttonBox.button(QDialogButtonBox.Apply).setText("Actualiser")
-        buttonBox.button(QDialogButtonBox.Apply).setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rafraichir.png')))
-        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.appliquer)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
+        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.apply)
         buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(False)
         buttonBox.button(QDialogButtonBox.Apply).setAutoDefault(True)
         buttonBox.button(QDialogButtonBox.Apply).setDefault(True)
@@ -266,29 +264,29 @@ class DialogPreferences(QDialog):
         
         self.setLayout(mainLayout)
 
-    def valider(self):
-        self.appliquer()
+    def validate(self):
+        self.apply()
         self.accept()
         
-    def appliquer(self):
-        self.pyLong.projet.preferences['pente'] = self.unitePente.currentText()
-        self.pyLong.projet.preferences['sens'] = self.sens.currentText()
-        self.pyLong.projet.preferences['extension'] = self.extension.currentText()
-        self.pyLong.projet.preferences['dpi'] = self.dpi.value()
+    def apply(self):
+        self.pyLong.project.settings.slopeSymbol = self.slopeUnit.currentText()
+        self.pyLong.project.settings.profileDirection = self.direction.currentText()
+        self.pyLong.project.settings.exportFileFormat = self.extension.currentText()
+        self.pyLong.project.settings.figureDpi = self.dpi.value()
         
-        self.pyLong.projet.apercu.ligne['style'] = self.style2ligne.currentText()
-        self.pyLong.projet.apercu.ligne['couleur'] = self.couleur2ligne.currentText()
-        self.pyLong.projet.apercu.ligne['épaisseur'] = self.epaisseur2ligne.value()
-        self.pyLong.projet.apercu.marqueur['style'] = self.style2marqueur.currentText()
-        self.pyLong.projet.apercu.marqueur['couleur'] = self.couleur2marqueur.currentText()
-        self.pyLong.projet.apercu.marqueur['taille'] = self.taille2marqueur.value()
-        self.pyLong.projet.apercu.opacite = self.opacite.value()
-        self.pyLong.projet.apercu.ordre = self.ordre.value()
+        self.pyLong.project.preview.lineProperties['style'] = self.lineStyle.currentText()
+        self.pyLong.project.preview.lineProperties['color'] = self.lineColor.currentText()
+        self.pyLong.project.preview.lineProperties['thickness'] = self.thickness.value()
+        self.pyLong.project.preview.markerProperties['style'] = self.markerStyle.currentText()
+        self.pyLong.project.preview.markerProperties['color'] = self.markerColor.currentText()
+        self.pyLong.project.preview.markerProperties['size'] = self.markerSize.value()
+        self.pyLong.project.preview.opacity = self.opacity.value()
+        self.pyLong.project.preview.order = self.order.value()
 
-        self.pyLong.projet.preferences['style rappel'] = self.style2ligneRappel.currentText()
-        self.pyLong.projet.preferences['couleur rappel'] = self.couleur2ligneRappel.currentText()
-        self.pyLong.projet.preferences['épaisseur rappel'] = self.epaisseur2ligneRappel.value()
-        self.pyLong.projet.preferences['opacité rappel'] = self.opaciteRappel.value()
-        self.pyLong.projet.preferences['ordre rappel'] = self.ordreRappel.value()
+        self.pyLong.project.settings.reminderLineProperties['style'] = self.reminderLineStyle.currentText()
+        self.pyLong.project.settings.reminderLineProperties['color'] = self.reminderLineColor.currentText()
+        self.pyLong.project.settings.reminderLineProperties['thickness'] = self.reminderLineThickness.value()
+        self.pyLong.project.settings.reminderLineProperties['opacity'] = self.reminderLineOpacity.value()
+        self.pyLong.project.settings.reminderLineProperties['order'] = self.reminderLineOrder.value()
         
-        self.pyLong.canvas.dessiner()
+        self.pyLong.canvas.updateFigure()

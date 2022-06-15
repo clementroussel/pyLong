@@ -17,7 +17,7 @@ from interface.dialogLayout import DialogLayout
 # from ListeCalculs import *
 # from ListeAutresDonnees import *
 
-# from DialogPreferences import *
+from interface.dialogSettings import *
 
 from interface.dialogAddLayout import *
 from interface.dialogRenameLayout import *
@@ -38,7 +38,7 @@ from interface.dialogSimplify import *
 from interface.dialogExport import *
 
 from interface.dialogAdjustAnnotations import *
-# from DialogGestionGroupes import *
+from interface.dialogManageGroups import *
 
 from interface.dialogReminderLines import *
 
@@ -307,13 +307,13 @@ class MainWindow(QMainWindow):
     def subplotsManager(self):
         DialogManageSubplots(parent=self).exec_()
 
-#     def gestionGroupes(self):
-#         i = self.annotationsList.groupes.currentIndex()
-#         DialogGestionGroupes(parent=self).exec_()
-#         self.annotationsList.updateGroupes()
-#         self.annotationsList.groupes.setCurrentIndex(i)
-#         self.annotationsList.updateListe()
-#         self.canvas.dessiner()
+    def groupsManager(self):
+        i = self.annotationsList.groups.currentIndex()
+        DialogManageGroups(parent=self).exec_()
+        self.annotationsList.updateGroups()
+        self.annotationsList.groups.setCurrentIndex(i)
+        self.annotationsList.updateList()
+        self.canvas.updateFigure()
 
     def duplicate(self):
         if self.annotationsList.selection():
@@ -960,8 +960,7 @@ class MainWindow(QMainWindow):
         DialogAddLayout(parent=self).exec_()
 
     def settings(self):
-        print("Settings")
-        # DialogSettings(parent=self).exec_()
+        DialogSettings(parent=self).exec_()
 
     def layout(self):
         DialogLayout(self).exec_()

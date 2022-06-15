@@ -257,7 +257,7 @@ def createActions(self):
     self.annotationToolBar.addAction(self.duplicateAction)
 
     self.groupsManagerAction = QAction(QIcon(self.appctxt.get_resource('icons/groupsManager.png')), "Groups manager", self)
-    #self.groupsManagerAction.triggered.connect(self.groupsManager)
+    self.groupsManagerAction.triggered.connect(self.groupsManager)
     self.annotationToolBar.addAction(self.groupsManagerAction)
 
     self.annotationDeleteAction = QAction(QIcon(self.appctxt.get_resource('icons/delete.png')), "Delete", self)

@@ -97,6 +97,19 @@ class Canvas(FigureCanvas):
                                              layout.xAxisProperties['max'],
                                              layout.xAxisProperties['intervals'] + 1))
 
+            values = np.linspace(layout.xAxisProperties['min'],
+                                 layout.xAxisProperties['max'],
+                                 layout.xAxisProperties['intervals'] + 1)
+
+            if layout.asKm:
+                values /= 1000
+                values = np.round(values, 2)
+
+                self.ax_z.set_xticklabels(values)
+
+            else:
+                self.ax_z.set_xticklabels(values.astype(int))
+
             self.ax_z.set_ylim((layout.zAxisProperties['min'] - layout.zAxisProperties['lower shift'],
                                 layout.zAxisProperties['max'] + layout.zAxisProperties['upper shift']))
 

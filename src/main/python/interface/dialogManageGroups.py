@@ -3,64 +3,62 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 
-class DialogGestionGroupes(QDialog):
+class DialogManageGroups(QDialog):
     def __init__(self, parent):
         super().__init__()
         
         self.pyLong = parent
         
-        self.setWindowTitle("Gestion des groupes d'annotations")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/gestion_groupes.png')))
+        self.setWindowTitle("Groups manager")
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/groupsManager.png')))
         
         mainLayout = QVBoxLayout()
         
         layout = QHBoxLayout()
         sublayout = QVBoxLayout()
         
-        self.listeGroupesGauche = QComboBox()
-        for groupe in self.pyLong.projet.groupes:
-            self.listeGroupesGauche.addItem(groupe.intitule)
-        self.listeGroupesGauche.currentIndexChanged.connect(self.updateInterface)
+        self.leftGroupsList = QComboBox()
+        for group in self.pyLong.project.groups:
+            self.leftGroupsList.addItem(group.title)
+        self.leftGroupsList.currentIndexChanged.connect(self.updateInterface)
         
-        self.listeAnnotationsGauche = QListWidget()
-        self.listeAnnotationsGauche.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.leftAnnotationsList = QListWidget()
+        self.leftAnnotationsList.setSelectionMode(QAbstractItemView.ExtendedSelection)
         
-        sublayout.addWidget(self.listeGroupesGauche)
-        sublayout.addWidget(self.listeAnnotationsGauche)
-        
-        layout.addLayout(sublayout)
-        
-        sublayout = QVBoxLayout()
-
-        deplacerVersLaDroite = QPushButton()
-        deplacerVersLaDroite.setAutoDefault(False)
-        deplacerVersLaDroite.setToolTip("Déplacer vers la droite")
-        deplacerVersLaDroite.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/droite.png')))
-        deplacerVersLaDroite.clicked.connect(self.deplacerVersDroite)
-
-        deplacerVersLaGauche = QPushButton()
-        deplacerVersLaGauche.setAutoDefault(False)
-        deplacerVersLaGauche.setToolTip("Déplacer vers la gauche")
-        deplacerVersLaGauche.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/gauche.png')))
-        deplacerVersLaGauche.clicked.connect(self.deplacerVersGauche)
-
-        sublayout.addWidget(deplacerVersLaDroite)
-        sublayout.addWidget(deplacerVersLaGauche)
+        sublayout.addWidget(self.leftGroupsList)
+        sublayout.addWidget(self.leftAnnotationsList)
         
         layout.addLayout(sublayout)
         
         sublayout = QVBoxLayout()
+
+        moveToRight = QPushButton()
+        moveToRight.setAutoDefault(False)
+        moveToRight.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/right.png')))
+        moveToRight.clicked.connect(self.moveToRight)
+
+        moveToLeft = QPushButton()
+        moveToLeft.setAutoDefault(False)
+        moveToLeft.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/left.png')))
+        moveToLeft.clicked.connect(self.moveToLeft)
+
+        sublayout.addWidget(moveToRight)
+        sublayout.addWidget(moveToLeft)
         
-        self.listeGroupesDroite = QComboBox()
-        for groupe in self.pyLong.projet.groupes:
-            self.listeGroupesDroite.addItem(groupe.intitule)
-        self.listeGroupesDroite.currentIndexChanged.connect(self.updateInterface)
+        layout.addLayout(sublayout)
         
-        self.listeAnnotationsDroite = QListWidget()
-        self.listeAnnotationsDroite.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        sublayout = QVBoxLayout()
         
-        sublayout.addWidget(self.listeGroupesDroite)
-        sublayout.addWidget(self.listeAnnotationsDroite)
+        self.rightGroupsList = QComboBox()
+        for group in self.pyLong.project.groups:
+            self.rightGroupsList.addItem(group.title)
+        self.rightGroupsList.currentIndexChanged.connect(self.updateInterface)
+        
+        self.rightAnnotationsList = QListWidget()
+        self.rightAnnotationsList.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        
+        sublayout.addWidget(self.rightGroupsList)
+        sublayout.addWidget(self.rightAnnotationsList)
         
         layout.addLayout(sublayout)        
 
@@ -71,51 +69,49 @@ class DialogGestionGroupes(QDialog):
         self.updateInterface()
 
     def updateInterface(self):
-        self.listeAnnotationsGauche.clear()
-        self.listeAnnotationsDroite.clear()
+        self.leftAnnotationsList.clear()
+        self.rightAnnotationsList.clear()
 
-        i = self.listeGroupesGauche.currentIndex()
-        for annotation in self.pyLong.projet.groupes[i].annotations :
-            self.listeAnnotationsGauche.addItem(annotation.intitule)
+        i = self.leftGroupsList.currentIndex()
+        for annotation in self.pyLong.project.groups[i].annotations :
+            self.leftAnnotationsList.addItem(annotation.title)
 
-        j = self.listeGroupesDroite.currentIndex()
-        for annotation in self.pyLong.projet.groupes[j].annotations :
-            self.listeAnnotationsDroite.addItem(annotation.intitule)
+        j = self.rightGroupsList.currentIndex()
+        for annotation in self.pyLong.project.groups[j].annotations :
+            self.rightAnnotationsList.addItem(annotation.title)
 
-    def deplacerVersDroite(self):
-        i = self.listeGroupesGauche.currentIndex()
-        j = self.listeGroupesDroite.currentIndex()
+    def moveToRight(self):
+        i = self.leftGroupsList.currentIndex()
+        j = self.rightGroupsList.currentIndex()
 
-        indices = []
-        for item in self.listeAnnotationsGauche.selectedIndexes():
-            indices.append(item.row())
+        indexes = []
+        for item in self.leftAnnotationsList.selectedIndexes():
+            indexes.append(item.row())
 
-        indices.sort()
-        indices.reverse()
+        indexes.sort()
+        indexes.reverse()
 
-        for k in indices:
-            annotation = self.pyLong.projet.groupes[i].annotations[k]
-            self.pyLong.projet.groupes[j].annotations.append(annotation)
-            self.pyLong.projet.groupes[i].annotations.pop(k)
-
-        self.updateInterface()
-
-    def deplacerVersGauche(self):
-        i = self.listeGroupesGauche.currentIndex()
-        j = self.listeGroupesDroite.currentIndex()
-
-        indices = []
-        for item in self.listeAnnotationsDroite.selectedIndexes():
-            indices.append(item.row())
-
-        indices.sort()
-        indices.reverse()
-
-        for k in indices:
-            annotation = self.pyLong.projet.groupes[j].annotations[k]
-            self.pyLong.projet.groupes[i].annotations.append(annotation)
-            self.pyLong.projet.groupes[j].annotations.pop(k)
+        for k in indexes:
+            annotation = self.pyLong.project.groups[i].annotations[k]
+            self.pyLong.project.groups[j].annotations.append(annotation)
+            self.pyLong.project.groups[i].annotations.pop(k)
 
         self.updateInterface()
+
+    def moveToLeft(self):
+        i = self.leftGroupsList.currentIndex()
+        j = self.rightGroupsList.currentIndex()
+
+        indexes = []
+        for item in self.rightAnnotationsList.selectedIndexes():
+            indexes.append(item.row())
+
+        indexes.sort()
+        indexes.reverse()
+
+        for k in indexes:
+            annotation = self.pyLong.project.groups[j].annotations[k]
+            self.pyLong.project.groups[i].annotations.append(annotation)
+            self.pyLong.project.groups[j].annotations.pop(k)
 
         self.updateInterface()
