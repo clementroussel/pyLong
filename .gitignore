@@ -2,6 +2,7 @@ ToDo.txt
 stdout.log
 stderr.log
 venv/
+docs/
 target/
 src/main/python/__pycache__/
 src/main/python/interface/__pycache__/
