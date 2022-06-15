@@ -48,6 +48,10 @@ Because *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly c
 
    ```fbs run```
 
+### On Ubuntu 20.04
+
+
+
 #### About *fbs*
 
 To learn more about *fbs* module, visit https://build-system.fman.io/.
