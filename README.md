@@ -4,6 +4,8 @@ Visit the online documentation to learn more about **pyLong** : https://pylong.r
 
 ## Instructions to build **pyLong** from sources
 
+[On Windows 10](#on-windows-10)
+
 ### On Windows 10
 
 #### Python installation
