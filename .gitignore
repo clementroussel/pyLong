@@ -1,7 +1,6 @@
 ToDo.txt
 stdout.log
 stderr.log
-test/
 venv/
 target/
 src/main/python/__pycache__/
