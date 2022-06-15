@@ -16,6 +16,6 @@ class Setting():
 
         self.reminderLineProperties = {'style': 'dashed',
                                        'color': 'Black',
-                                       'thickness': 0.8,
+                                       'thickness': 1,
                                        'opacity': 1,
                                        'order': 1}

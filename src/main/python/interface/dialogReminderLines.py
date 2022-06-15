@@ -2,184 +2,179 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from pyLong.LigneRappel import *
+from pyLong.reminderLine import *
 
-from DialogConfigLigneRappel import *
+from interface.dialogConfigReminderLine import *
 
-from pyLong.dictionnaires import *
+from pyLong.dictionaries import *
 
 
-class DialogLignesRappel(QDialog):
+class DialogReminderLines(QDialog):
     def __init__(self, parent):
         super().__init__()
         
         self.pyLong = parent
 
-        i = self.pyLong.listeLayouts.currentIndex()
-        self.layout = self.pyLong.projet.layouts[i]
+        i = self.pyLong.layoutsList.currentIndex()
+        self.layout = self.pyLong.project.layouts[i]
 
         self.setMinimumWidth(225)
-        self.setWindowTitle("Gestion des lignes de rappel")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rappel.png')))
+        self.setWindowTitle("Reminder lines manager")
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/reminderLinesManager.png')))
         
         mainLayout = QVBoxLayout()
         
-        self.liste = QListWidget()
-        self.liste.doubleClicked.connect(self.proprietes)
-        self.liste.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        self.liste.itemChanged.connect(self.update_actif)
-        for ligneRappel in self.pyLong.projet.lignesRappel:
+        self.list = QListWidget()
+        self.list.doubleClicked.connect(self.properties)
+        self.list.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.list.itemChanged.connect(self.activate)
+        for line in self.pyLong.project.reminderLines:
             item = QListWidgetItem()
-            item.setText("X = {} m".format(ligneRappel.abscisse))
+            item.setText("X = {} m".format(line.x))
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            if ligneRappel.actif:
+            if line.active:
                 item.setCheckState(Qt.Checked)
             else:
                 item.setCheckState(Qt.Unchecked)
-            self.liste.addItem(item)
+            self.list.addItem(item)
 
-        mainLayout.addWidget(self.liste)
+        mainLayout.addWidget(self.list)
 
         layout = QHBoxLayout()
 
-        ascendant = QPushButton()
-        ascendant.setAutoDefault(False)
-        ascendant.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/monter.png')))
-        ascendant.setFixedSize(QSize(25, 25))
-        ascendant.clicked.connect(self.ascendant)
-        layout.addWidget(ascendant)
+        moveUp = QPushButton()
+        moveUp.setAutoDefault(False)
+        moveUp.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/moveUp.png')))
+        moveUp.setFixedSize(QSize(25, 25))
+        moveUp.clicked.connect(self.moveUp)
+        layout.addWidget(moveUp)
 
-        descendant = QPushButton()
-        descendant.setAutoDefault(False)
-        descendant.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/descendre.png')))
-        descendant.setFixedSize(QSize(25, 25))
-        descendant.clicked.connect(self.descendant)
-        layout.addWidget(descendant)
-
-        layout.addWidget(QLabel())
-
-        proprietes = QPushButton()
-        proprietes.setAutoDefault(False)
-        proprietes.setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/config.png')))
-        proprietes.setFixedSize(QSize(25, 25))
-        proprietes.clicked.connect(self.proprietes)
-        layout.addWidget(proprietes)
+        moveDown = QPushButton()
+        moveDown.setAutoDefault(False)
+        moveDown.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/moveDown.png')))
+        moveDown.setFixedSize(QSize(25, 25))
+        moveDown.clicked.connect(self.moveDown)
+        layout.addWidget(moveDown)
 
         layout.addWidget(QLabel())
 
-        ajouter = QPushButton("+")
-        ajouter.setAutoDefault(False)
-        ajouter.setFixedSize(QSize(25, 25))
-        ajouter.clicked.connect(self.ajouter)
-        layout.addWidget(ajouter)
+        properties = QPushButton()
+        properties.setAutoDefault(False)
+        properties.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/config.png')))
+        properties.setFixedSize(QSize(25, 25))
+        properties.clicked.connect(self.properties)
+        layout.addWidget(properties)
 
-        supprimer = QPushButton("-")
-        supprimer.setAutoDefault(False)
-        supprimer.setFixedSize(QSize(25, 25))
-        supprimer.clicked.connect(self.supprimer)
-        layout.addWidget(supprimer)
+        layout.addWidget(QLabel())
+
+        add = QPushButton("+")
+        add.setAutoDefault(False)
+        add.setFixedSize(QSize(25, 25))
+        add.clicked.connect(self.add)
+        layout.addWidget(add)
+
+        delete = QPushButton("-")
+        delete.setAutoDefault(False)
+        delete.setFixedSize(QSize(25, 25))
+        delete.clicked.connect(self.delete)
+        layout.addWidget(delete)
 
         mainLayout.addLayout(layout)
 
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close | QDialogButtonBox.Apply)
-        buttonBox.button(QDialogButtonBox.Apply).setText("Actualiser")
-        buttonBox.button(QDialogButtonBox.Apply).setIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rafraichir.png')))
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.appliquer)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
-        buttonBox.rejected.connect(self.reject)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Apply)
+        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.apply)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(False)
-        buttonBox.button(QDialogButtonBox.Close).setAutoDefault(False)
         buttonBox.button(QDialogButtonBox.Apply).setAutoDefault(True)
         buttonBox.button(QDialogButtonBox.Apply).setDefault(True)
 
         mainLayout.addWidget(buttonBox)
         self.setLayout(mainLayout)
 
-    def update_actif(self):
-        for i in range(self.liste.count()):
-            ligne = self.pyLong.projet.lignesRappel[i]
-            if self.liste.item(i).checkState() == Qt.Checked:
-                ligne.actif = True
+    def activate(self):
+        for i in range(self.list.count()):
+            line = self.pyLong.project.reminderLines[i]
+            if self.list.item(i).checkState() == Qt.Checked:
+                line.active = True
             else:
-                ligne.actif = False
+                line.active = False
 
-    def valider(self):
-        self.appliquer()
+    def validate(self):
+        self.apply()
         self.accept()
 
-    def appliquer(self):
-        self.pyLong.canvas.dessiner()
+    def apply(self):
+        self.pyLong.canvas.updateFigure()
 
-    def ascendant(self):
-        self.pyLong.projet.lignesRappel.sort()
+    def moveUp(self):
+        self.pyLong.project.reminderLines.sort()
         self.update()
 
-    def descendant(self):
-        self.pyLong.projet.lignesRappel.sort(reverse=True)
+    def moveDown(self):
+        self.pyLong.project.reminderLines.sort(reverse=True)
         self.update()
 
-    def proprietes(self):
+    def properties(self):
         if self.selection():
-            DialogConfigLigneRappel(parent=self).exec_()
+            DialogConfigReminderLine(parent=self).exec_()
 
     def selection(self):
-        n = self.liste.count()
+        n = self.list.count()
         selections = []
 
         for i in range(n):
-            selections.append(self.liste.item(i).isSelected())
+            selections.append(self.list.item(i).isSelected())
 
         return n > 0 and True in selections
 
-    def supprimer(self):
+    def delete(self):
         if self.selection():
-            indices = []
-            for item in self.liste.selectedIndexes():
-                indices.append(item.row())
+            indexes = []
+            for item in self.list.selectedIndexes():
+                indexes.append(item.row())
 
-            indices.sort()
-            indices.reverse()
+            indexes.sort()
+            indexes.reverse()
 
-            if len(indices) == 1:
-                i = indices[0]
+            if len(indexes) == 1:
+                i = indexes[0]
 
-                self.pyLong.projet.lignesRappel.pop(i)
+                self.pyLong.project.reminderLines.pop(i)
                 self.update()
 
                 try:
-                    self.liste.setCurrentRow(i)
+                    self.list.setCurrentRow(i)
                 except:
                     pass
 
             else:
-                for i in indices:
-                    self.pyLong.projet.lignesRappel.pop(i)
+                for i in indexes:
+                    self.pyLong.project.reminderLines.pop(i)
 
                 self.update()
 
                 try:
-                    self.liste.setCurrentRow(i)
+                    self.list.setCurrentRow(i)
                 except:
                     pass
 
         else:
             pass
 
-    def ajouter(self):
-        ligne = LigneRappel()
-        ligne.subplots = list(self.pyLong.projet.subplots)
-        self.pyLong.projet.lignesRappel.append(ligne)
+    def add(self):
+        line = ReminderLine()
+        line.subplots = list(self.pyLong.project.subplots)
+        self.pyLong.project.reminderLines.append(line)
         self.update()
 
     def update(self):
-        self.liste.clear()
-        for ligneRappel in self.pyLong.projet.lignesRappel:
+        self.list.clear()
+        for line in self.pyLong.project.reminderLines:
             item = QListWidgetItem()
-            item.setText("X = {} m".format(ligneRappel.abscisse))
+            item.setText("X = {} m".format(line.x))
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            if ligneRappel.actif:
+            if line.active:
                 item.setCheckState(Qt.Checked)
             else:
                 item.setCheckState(Qt.Unchecked)
-            self.liste.addItem(item)
+            self.list.addItem(item)

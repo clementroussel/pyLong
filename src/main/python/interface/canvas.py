@@ -427,12 +427,22 @@ class Canvas(FigureCanvas):
                                                   [layout.subplots[i].yAxisProperties['min'] - layout.subplots[i].yAxisProperties['lower shift'],
                                                    layout.subplots[i].yAxisProperties['max'] + layout.subplots[i].yAxisProperties['upper shift']],
                                                   linestyle=lineStyles[pyLong.project.settings.reminderLineProperties['style']],
-                                                  color=colors[pyLong.projet.settings.reminderLineProperties['color']],
+                                                  color=colors[pyLong.project.settings.reminderLineProperties['color']],
                                                   linewidth=pyLong.project.settings.reminderLineProperties['thickness'],
                                                   alpha=pyLong.project.settings.reminderLineProperties['opacity'],
                                                   zorder=pyLong.project.settings.reminderLineProperties['order'])
                         except:
                             pass
+
+                    if line.mainSubplot:
+                        self.ax_z.plot([line.x, line.x],
+                                       [layout.zAxisProperties['min'] - layout.zAxisProperties['lower shift'],
+                                        line.z],
+                                       linestyle=lineStyles[pyLong.project.settings.reminderLineProperties['style']],
+                                       color=colors[pyLong.project.settings.reminderLineProperties['color']],
+                                       linewidth=pyLong.project.settings.reminderLineProperties['thickness'],
+                                       alpha=pyLong.project.settings.reminderLineProperties['opacity'],
+                                       zorder=pyLong.project.settings.reminderLineProperties['order'])
 
             self.draw()
 

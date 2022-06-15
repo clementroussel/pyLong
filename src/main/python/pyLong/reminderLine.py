@@ -7,6 +7,10 @@ class ReminderLine:
 
         self.x = 0.
 
+        self.mainSubplot = True
+
+        self.z = 0.
+
         self.subplots = []
 
     def __eq__(self, other):

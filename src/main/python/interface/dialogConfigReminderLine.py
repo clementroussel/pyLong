@@ -2,130 +2,100 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
-from pyLong.dictionnaires import *
-from CheckableComboBox import *
+from pyLong.dictionaries import *
+from interface.checkableComboBox import *
 
 
-class DialogConfigLigneRappel(QDialog):
+class DialogConfigReminderLine(QDialog):
     def __init__(self, parent):
         super().__init__()
 
         self.parent = parent
         self.pyLong = parent.pyLong
         
-        i = self.parent.liste.currentRow()
-        self.ligne = self.pyLong.projet.lignesRappel[i]
+        i = self.parent.list.currentRow()
+        self.line = self.pyLong.project.reminderLines[i]
         
-        self.setWindowTitle("Propriétés")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/config.png')))
+        self.setWindowTitle("Properties")
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/config.png')))
         
         mainLayout = QVBoxLayout()
 
         layout = QGridLayout()
-        
-        # label = QLabel("Délimiteur :")
-        # label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        # layout.addWidget(label, 0, 0)
-        #
-        # self.delimiteur = QComboBox()
-        # self.delimiteur.insertItems(0, list(delimiteurs.keys()))
-        # self.delimiteur.setCurrentText("tabulation")
-        # layout.addWidget(self.delimiteur, 0, 1)
-        #
-        # label = QLabel("Séparateur décimal :")
-        # label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        # layout.addWidget(label, 1, 0)
-        #
-        # self.separateur = QComboBox()
-        # self.separateur.insertItems(0, list(separateurs.keys()))
-        # layout.addWidget(self.separateur, 1, 1)
     
-        label = QLabel("Abscisse :")
+        label = QLabel("X :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
 
-        self.abscisse = QDoubleSpinBox()
-        self.abscisse.setFixedWidth(90)
-        self.abscisse.setSuffix(" m")
-        self.abscisse.setLocale(QLocale('English'))
-        self.abscisse.setRange(0, 99999.999)
-        self.abscisse.setSingleStep(0.1)
-        self.abscisse.setDecimals(3)
-        self.abscisse.setValue(self.ligne.abscisse)
-        layout.addWidget(self.abscisse, 0, 1)
+        self.x = QDoubleSpinBox()
+        self.x.setFixedWidth(90)
+        self.x.setSuffix(" m")
+        self.x.setLocale(QLocale('English'))
+        self.x.setRange(0, 99999.999)
+        self.x.setSingleStep(0.1)
+        self.x.setDecimals(3)
+        self.x.setValue(self.line.x)
+        layout.addWidget(self.x, 0, 1)
 
-        # label = QLabel("Subplots :")
-        # label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        # layout.addWidget(label, 1, 0)
+        self.mainSubplot = QCheckBox("Draw in the main plot too")
+        self.mainSubplot.setChecked(self.line.mainSubplot)
+        self.mainSubplot.stateChanged.connect(self.updateInterface)
+        layout.addWidget(self.mainSubplot, 1, 0, 1, 2)
+
+        label = QLabel("Z :")
+        label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        layout.addWidget(label, 2, 0)
+
+        self.z = QDoubleSpinBox()
+        self.z.setFixedWidth(90)
+        self.z.setSuffix(" m")
+        self.z.setLocale(QLocale('English'))
+        self.z.setRange(0, 99999.999)
+        self.z.setSingleStep(0.1)
+        self.z.setDecimals(3)
+        self.z.setValue(self.line.z)
+        layout.addWidget(self.z, 2, 1)
+
         mainLayout.addLayout(layout)
 
-        groupe = QGroupBox("Subplots")
+        group = QGroupBox("Subplots")
         sublayout = QVBoxLayout()
 
-        self.liste = QListWidget()
-        for subplot in self.pyLong.projet.subplots:
+        self.list = QListWidget()
+        for subplot in self.pyLong.project.subplots:
             item = QListWidgetItem()
             item.setText(subplot)
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            if subplot in self.ligne.subplots:
+            if subplot in self.line.subplots:
                 item.setCheckState(Qt.Checked)
             else:
                 item.setCheckState(Qt.Unchecked)
-            self.liste.addItem(item)
+            self.list.addItem(item)
 
-        sublayout.addWidget(self.liste)
-        groupe.setLayout(sublayout)
+        sublayout.addWidget(self.list)
+        group.setLayout(sublayout)
 
 
-        mainLayout.addWidget(groupe)
+        mainLayout.addWidget(group)
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
-        buttonBox.rejected.connect(self.reject)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         
         mainLayout.addWidget(buttonBox)        
         self.setLayout(mainLayout)
 
-    def valider(self):
-        self.ligne.abscisse = self.abscisse.value()
-        self.ligne.subplots.clear()
+    def validate(self):
+        self.line.x = self.x.value()
+        self.line.mainSubplot = self.mainSubplot.isChecked()
+        self.line.z = self.z.value()
+        self.line.subplots.clear()
 
-        for i in range(self.liste.count()):
-            if self.liste.item(i).checkState() == Qt.Checked:
-                self.ligne.subplots.append(self.liste.item(i).text())
+        for i in range(self.list.count()):
+            if self.list.item(i).checkState() == Qt.Checked:
+                self.line.subplots.append(self.list.item(i).text())
 
         self.parent.update()
         self.accept()
 
-    # def exporter(self):
-    #     try:
-    #         i = self.pyLong.listeProfils.liste.currentRow()
-    #         zprofil, pprofil = self.pyLong.projet.profils[i]
-    #
-    #         chemin = QFileDialog.getSaveFileName(caption="Exporter un profil",
-    #                                              filter="fichier texte (*.txt)")[0]
-    #
-    #         if chemin == "":
-    #             return 0
-    #
-    #         else:
-    #             nomFichier = QFileInfo(chemin).fileName()
-    #             repertoireFichier = QFileInfo(chemin).absolutePath()
-    #             nomFichier = nomFichier.split(".")[0]
-    #             nomFichier += ".txt"
-    #             chemin = repertoireFichier + "/" + nomFichier
-    #
-    #             delimiteur = delimiteurs[self.delimiteur.currentText()]
-    #             formatage = "%.{}f".format(self.decimales.value())
-    #             separateur = separateurs[self.separateur.currentText()]
-    #
-    #             zprofil.exporter(chemin, delimiteur, formatage, separateur)
-    #
-    #         self.accept()
-    #
-    #     except:
-    #         alerte = QMessageBox(self)
-    #         alerte.setText("L'exportation a échoué !")
-    #         alerte.exec_()
-    #         pass
+    def updateInterface(self, value):
+        self.z.setEnabled(value)

@@ -353,98 +353,108 @@ class AnnotationsList(List):
 
         self.pyLong.canvas.updateFigure()
 
-    # def creerLigneRappel(self):
-    #     if self.selection():
-    #         indexes = []
-    #         for item in self.liste.selectedIndexes():
-    #             indexes.append(item.row())
+    def reminderLine(self):
+        if self.selection():
+            indexes = []
+            for item in self.list.selectedIndexes():
+                indexes.append(item.row())
 
-    #         indexes.sort()
-    #         indexes.reverse()
+            indexes.sort()
+            indexes.reverse()
 
-    #         if len(indexes) == 1:
-    #             i = indexes[0]
-    #             annotation = self.pyLong.projet.groupes[self.groupes.currentIndex()].annotations[i]
+            if len(indexes) == 1:
+                i = indexes[0]
+                annotation = self.pyLong.project.groups[self.groups.currentIndex()].annotations[i]
 
-    #             if type(annotation) == Texte:
-    #                 pass
+                if type(annotation) == Text:
+                    pass
 
-    #             elif type(annotation) == AnnotationPonctuelle:
-    #                 ligne = LigneRappel()
-    #                 ligne.abscisse = annotation.abscisse
-    #                 ligne.subplots = list(self.pyLong.projet.subplots)
-    #                 self.pyLong.projet.lignesRappel.append(ligne)
+                elif type(annotation) == VerticalAnnotation:
+                    line = ReminderLine()
+                    line.x = annotation.position['x coordinate']
+                    line.z = annotation.position['z coordinate']
+                    line.subplots = list(self.pyLong.project.subplots)
+                    self.pyLong.project.reminderLines.append(line)
 
-    #             elif type(annotation) == AnnotationLineaire:
-    #                 ligne1 = LigneRappel()
-    #                 ligne1.abscisse = annotation.fleche['abscisse de début']
-    #                 ligne1.subplots = list(self.pyLong.projet.subplots)
-    #                 self.pyLong.projet.lignesRappel.append(ligne1)
+                elif type(annotation) == LinearAnnotation:
+                    line1 = ReminderLine()
+                    line1.x = annotation.arrowProperties['x start']
+                    line1.z = annotation.arrowProperties['z coordinate']
+                    line1.subplots = list(self.pyLong.project.subplots)
+                    self.pyLong.project.reminderLines.append(line1)
 
-    #                 ligne2 = LigneRappel()
-    #                 ligne2.abscisse = annotation.fleche['abscisse de fin']
-    #                 ligne2.subplots = list(self.pyLong.projet.subplots)
-    #                 self.pyLong.projet.lignesRappel.append(ligne2)
+                    line2 = ReminderLine()
+                    line2.x = annotation.arrowProperties['x end']
+                    line2.z = annotation.arrowProperties['z coordinate']
+                    line2.subplots = list(self.pyLong.project.subplots)
+                    self.pyLong.project.reminderLines.append(line2)
 
-    #             elif type(annotation) == Zone:
-    #                 ligne1 = LigneRappel()
-    #                 ligne1.abscisse = annotation.zone['abscisse de début']
-    #                 ligne1.subplots = list(self.pyLong.projet.subplots)
-    #                 self.pyLong.projet.lignesRappel.append(ligne1)
+                elif type(annotation) == Interval:
+                    line1 = ReminderLine()
+                    line1.x = annotation.limits['x start']
+                    line1.z = annotation.limits['z start']
+                    line1.subplots = list(self.pyLong.project.subplots)
+                    self.pyLong.project.reminderLines.append(line1)
 
-    #                 ligne2 = LigneRappel()
-    #                 ligne2.abscisse = annotation.zone['abscisse de fin']
-    #                 ligne2.subplots = list(self.pyLong.projet.subplots)
-    #                 self.pyLong.projet.lignesRappel.append(ligne2)
+                    line2 = ReminderLine()
+                    line2.x = annotation.limits['x end']
+                    line2.z = annotation.limits['z end']
+                    line2.subplots = list(self.pyLong.project.subplots)
+                    self.pyLong.project.reminderLines.append(line2)
 
-    #             elif type(annotation) == Rectangle:
-    #                 pass
+                elif type(annotation) == Rectangle:
+                    pass
 
-    #             self.pyLong.canvas.dessiner()
+                self.pyLong.canvas.updateFigure()
 
-    #         else:
-    #             for i in indexes:
-    #                 annotation = self.pyLong.projet.groupes[self.groupes.currentIndex()].annotations[i]
+            else:
+                for i in indexes:
+                    annotation = self.pyLong.project.groups[self.groups.currentIndex()].annotations[i]
 
-    #                 if type(annotation) == Texte:
-    #                     pass
+                    if type(annotation) == Text:
+                        pass
 
-    #                 elif type(annotation) == AnnotationPonctuelle:
-    #                     ligne = LigneRappel()
-    #                     ligne.abscisse = annotation.abscisse
-    #                     ligne.subplots = list(self.pyLong.projet.subplots)
-    #                     self.pyLong.projet.lignesRappel.append(ligne)
+                    elif type(annotation) == VerticalAnnotation:
+                        line = ReminderLine()
+                        line.x = annotation.position['x coordinate']
+                        line.z = annotation.position['z coordinate']
+                        line.subplots = list(self.pyLong.project.subplots)
+                        self.pyLong.project.reminderLines.append(line)
 
-    #                 elif type(annotation) == AnnotationLineaire:
-    #                     ligne1 = LigneRappel()
-    #                     ligne1.abscisse = annotation.fleche['abscisse de début']
-    #                     ligne1.subplots = list(self.pyLong.projet.subplots)
-    #                     self.pyLong.projet.lignesRappel.append(ligne1)
+                    elif type(annotation) == LinearAnnotation:
+                        line1 = ReminderLine()
+                        line1.x = annotation.arrowProperties['x start']
+                        line1.z = annotation.arrowProperties['z coordinate']
+                        line1.subplots = list(self.pyLong.project.subplots)
+                        self.pyLong.project.reminderLines.append(line1)
 
-    #                     ligne2 = LigneRappel()
-    #                     ligne2.abscisse = annotation.fleche['abscisse de fin']
-    #                     ligne2.subplots = list(self.pyLong.projet.subplots)
-    #                     self.pyLong.projet.lignesRappel.append(ligne2)
+                        line2 = ReminderLine()
+                        line2.x = annotation.arrowProperties['x end']
+                        line2.z = annotation.arrowProperties['z coordinate']
+                        line2.subplots = list(self.pyLong.project.subplots)
+                        self.pyLong.project.reminderLines.append(line2)
 
-    #                 elif type(annotation) == Zone:
-    #                     ligne1 = LigneRappel()
-    #                     ligne1.abscisse = annotation.zone['abscisse de début']
-    #                     ligne1.subplots = list(self.pyLong.projet.subplots)
-    #                     self.pyLong.projet.lignesRappel.append(ligne1)
+                    elif type(annotation) == Interval:
+                        line1 = ReminderLine()
+                        line1.x = annotation.limits['x start']
+                        line1.z = annotation.limits['z start']
+                        line1.subplots = list(self.pyLong.project.subplots)
+                        self.pyLong.project.reminderLines.append(line1)
 
-    #                     ligne2 = LigneRappel()
-    #                     ligne2.abscisse = annotation.zone['abscisse de fin']
-    #                     ligne2.subplots = list(self.pyLong.projet.subplots)
-    #                     self.pyLong.projet.lignesRappel.append(ligne2)
+                        line2 = ReminderLine()
+                        line2.x = annotation.limits['x end']
+                        line2.z = annotation.limits['z end']
+                        line2.subplots = list(self.pyLong.project.subplots)
+                        self.pyLong.project.reminderLines.append(line2)
 
-    #                 elif type(annotation) == Rectangle:
-    #                     pass
+                    elif type(annotation) == Rectangle:
+                        pass
 
-    #             self.pyLong.canvas.dessiner()
+                self.pyLong.canvas.updateFigure()
 
-    #     else:
-    #         alerte = QMessageBox(self)
-    #         alerte.setText("Sélectionnez une ou plusieurs annotation(s) avant de lancer cette commande.")
-    #         alerte.setIcon(QMessageBox.Warning)
-    #         alerte.exec_()
+        else:
+            alert = QMessageBox(self)
+            alert.setText("Select at least one annotation before running this command.")
+            alert.setIcon(QMessageBox.Warning)
+            alert.exec_()
 

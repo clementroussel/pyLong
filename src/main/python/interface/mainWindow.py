@@ -40,7 +40,7 @@ from interface.dialogExport import *
 from interface.dialogAdjustAnnotations import *
 # from DialogGestionGroupes import *
 
-# from DialogLignesRappel import *
+from interface.dialogReminderLines import *
 
 from interface.dialogToolBox import *
 
@@ -198,11 +198,11 @@ class MainWindow(QMainWindow):
     def annotationStyle(self):
         self.annotationsList.annotationStyle()
 
-#     def annotations2ligneRappel(self):
-#         self.annotationsList.creerLigneRappel()
+    def annotation2reminderLine(self):
+        self.annotationsList.reminderLine()
 
-#     def lignesRappel(self):
-#         DialogLignesRappel(parent=self).exec_()
+    def reminderLinesManager(self):
+        DialogReminderLines(parent=self).exec_()
 
     def adjustWidth(self):
         self.canvas.adjustWidth()

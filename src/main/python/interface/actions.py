@@ -272,11 +272,11 @@ def createActions(self):
     self.reminderLineToolBar.setIconSize(QSize(20, 20))
 
     self.annotation2reminderLineAction = QAction(QIcon(self.appctxt.get_resource('icons/annotation2reminderLine.png')), "Annotation >>> Reminder line", self)
-    #self.annotation2reminderLineAction.triggered.connect(self.annotation2reminderLine)
+    self.annotation2reminderLineAction.triggered.connect(self.annotation2reminderLine)
     self.reminderLineToolBar.addAction(self.annotation2reminderLineAction)
 
     self.reminderLinesManagerAction = QAction(QIcon(self.appctxt.get_resource('icons/reminderLinesManager.png')), "Reminder lines manager", self)
-    #self.reminderLinesManagerAction.triggered.connect(self.reminderLinesManager)
+    self.reminderLinesManagerAction.triggered.connect(self.reminderLinesManager)
     self.reminderLineToolBar.addAction(self.reminderLinesManagerAction)
 
     self.reminderLineToolBar.addSeparator()
