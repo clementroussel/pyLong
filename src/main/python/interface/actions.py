@@ -347,8 +347,8 @@ def createActions(self):
     self.projectMenu.addSeparator()
     self.projectMenu.addAction(self.openProjectAction)
     self.recentFilesMenu = self.projectMenu.addMenu("Open a recent project")
-    # for path in self.recentFiles:
-    #     self.menuRecent.addAction(f"{chemin}", lambda path=chemin: self.ouvrirProjetRecent(chemin=path))
+    for path in self.recentFiles:
+        self.recentFilesMenu.addAction(f"{path}", lambda path=path: self.openRecentProject(path=path))
     self.projectMenu.addSeparator()
     self.projectMenu.addAction(self.saveProjectAction)
     self.projectMenu.addAction(self.saveProjectAsAction)
@@ -358,7 +358,7 @@ def createActions(self):
     
     self.quitPyLongAction = QAction("Quit pyLong", self)
     self.quitPyLongAction.setShortcut(QKeySequence("Ctrl+Q"))
-    #self.quitPyLongAction.triggered.connect(self.quitPylong)
+    self.quitPyLongAction.triggered.connect(self.quitPylong)
     self.projectMenu.addAction(self.quitPyLongAction)
 
     self.interfaceMenu = menu.addMenu("Interface")

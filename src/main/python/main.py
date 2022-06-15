@@ -2,13 +2,13 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QSplashScreen
 
 from fbs_runtime.application_context.PyQt5 import ApplicationContext
+from fbs_runtime.platform import *
 
 from interface.mainWindow import MainWindow
+from interface.welcome import *
 
 import sys
 import time
-
-from interface.welcome import *
 
 if __name__ == '__main__':
     welcome()
@@ -21,7 +21,8 @@ if __name__ == '__main__':
     # sys.stderr = stderr
 
     appctxt = ApplicationContext()       # 1. Instantiate ApplicationContext
-    appctxt.app.setStyle("Fusion")
+    if is_windows():
+        appctxt.app.setStyle("Fusion")
 
     # Create and display the splash screen
     splashImage = QPixmap(appctxt.get_resource('images/splashImage_600px.png'))

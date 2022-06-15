@@ -1,3 +1,5 @@
+from fbs_runtime.platform import *
+
 from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QScrollArea, QMessageBox, QApplication
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QPalette, QImage
@@ -48,6 +50,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 import os
 from pickle import Pickler, Unpickler
 import json
+import webbrowser
 
 # pyLong modules
 from pyLong.project import Project
@@ -76,7 +79,7 @@ class MainWindow(QMainWindow):
         self.appctxt = appctxt
 
         with open(self.appctxt.get_resource('recent/projects.json')) as file:
-            self.recentFiles = json.load(file)['chemins']
+            self.recentFiles = json.load(file)['paths']
 
         self.project = Project()
 
@@ -85,7 +88,6 @@ class MainWindow(QMainWindow):
         self.freeze = False
 
         self.canvas = Canvas(parent=self)
-#         self.canvas.mpl_connect('button_press_event', self.onDoubleClick)
 
         self.navigationBar = NavigationBar(self.canvas, self)
         self.navigationBar.setIconSize(QSize(20, 20))
@@ -129,56 +131,56 @@ class MainWindow(QMainWindow):
     def createActions(self):
         createActions(self)
 
-#     def ouvrirProjetRecent(self, chemin):
-#         self.nouveauProjet()
+    def openRecentProject(self, path):
+        self.newProject()
 
-#         try:
-#             with open(chemin, 'rb') as fichier:
-#                 myUnpickler = Unpickler(fichier)
-#                 projet = myUnpickler.load()
+        try:
+            with open(path, 'rb') as file:
+                myUnpickler = Unpickler(file)
+                project = myUnpickler.load()
 
-#             self.freeze = True
-#             self.projet.charger(projet)
+            self.freeze = True
+            self.project.load(project)
 
-#             self.setWindowTitle(self.projet.chemin)
+            self.setWindowTitle(self.project.path)
 
-#             self.listeLayouts.clear()
-#             for layout in self.projet.layouts:
-#                 self.listeLayouts.addItem(layout.intitule)
+            self.layoutsList.clear()
+            for layout in self.project.layouts:
+                self.layoutsList.addItem(layout.title)
 
-#             self.profilesList.update()
-#             self.annotationsList.updateGroupes()
-#             self.annotationsList.updateListe()
-#             self.calculationsList.update()
-#             self.otherDataList.update()
+            self.profilesList.update()
+            self.annotationsList.updateGroups()
+            self.annotationsList.updateList()
+            self.calculationsList.update()
+            self.otherDataList.update()
 
-#             self.freeze = False
-#             self.canvas.dessiner()
+            self.freeze = False
+            self.canvas.updateFigure()
 
-#         except:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Le chargement du projet a échoué.")
-#             alerte.exec_()
-#             pass
+        except:
+            alert = QMessageBox(self)
+            alert.setText("Loading failed.")
+            alert.exec_()
+            pass
 
-#     def updateProjetsRecents(self, chemin):
-#         chemins = self.recentFiles
+    def updateRecentProjects(self, path):
+        paths = self.recentFiles
 
-#         chemins.reverse()
-#         if chemin not in chemins:
-#             chemins.append(chemin)
+        paths.reverse()
+        if path not in paths:
+            paths.append(path)
 
-#         chemins.reverse()
+        paths.reverse()
 
-#         if len(chemins) > 20:
-#             chemins.pop()
+        if len(paths) > 20:
+            paths.pop()
 
-#         with open(self.appctxt.get_resource('recent/projets.json'), 'w') as file:
-#             json.dump({"chemins": chemins}, file)
+        with open(self.appctxt.get_resource('recent/projects.json'), 'w') as file:
+            json.dump({"paths": paths}, file)
 
-#         self.menuRecent.clear()
-#         for chemin in chemins:
-#             self.menuRecent.addAction(f"{chemin}", lambda path=chemin: self.ouvrirProjetRecent(chemin=path))
+        self.recentFilesMenu.clear()
+        for path in paths:
+            self.recentFilesMenu.addAction(f"{path}", lambda path=path: self.openRecentProject(path=path))
 
     def calculation(self):
         self.calculationsList.calculationProperties()
@@ -255,42 +257,36 @@ class MainWindow(QMainWindow):
             self.calculationsList.setVisible(True)
             self.otherDataList.setVisible(True)
 
-#     def quitterPylong(self):
-#         dialogue = QMessageBox(self)
-#         dialogue.setWindowTitle("Quitter pyLong")
-#         dialogue.setText("Enregistrer le projet ?")
-#         dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
-#         dialogue.button(QMessageBox.Yes).setText("Oui")
-#         dialogue.button(QMessageBox.No).setText("Non")
-#         dialogue.button(QMessageBox.Cancel).setText("Annuler")
-#         dialogue.setIcon(QMessageBox.Question)
-#         reponse = dialogue.exec_()
+    def quitPylong(self):
+        dialog = QMessageBox(self)
+        dialog.setWindowTitle("Quit pyLong")
+        dialog.setText("Save current project ?")
+        dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+        dialog.setIcon(QMessageBox.Question)
+        answer = dialog.exec_()
 
-#         if reponse == QMessageBox.Yes:
-#             self.enregistrerProjet()
-#             self.appctxt.app.quit()
-#         elif reponse == QMessageBox.No:
-#             self.appctxt.app.quit()
-#         else:
-#             pass
+        if answer == QMessageBox.Yes:
+            self.saveProject()
+            self.appctxt.app.quit()
+        elif answer == QMessageBox.No:
+            self.appctxt.app.quit()
+        else:
+            pass
 
-#     def closeEvent(self, event):
-#         dialogue = QMessageBox(self)
-#         dialogue.setWindowTitle("Quitter pyLong")
-#         dialogue.setText("Enregistrer le projet ?")
-#         dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
-#         dialogue.button(QMessageBox.Yes).setText("Oui")
-#         dialogue.button(QMessageBox.No).setText("Non")
-#         dialogue.button(QMessageBox.Cancel).setText("Annuler")
-#         dialogue.setIcon(QMessageBox.Question)
-#         reponse = dialogue.exec_()
+    def closeEvent(self, event):
+        dialog = QMessageBox(self)
+        dialog.setWindowTitle("Quit pyLong")
+        dialog.setText("Save current project ?")
+        dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+        dialog.setIcon(QMessageBox.Question)
+        answer = dialog.exec_()
 
-#         if reponse == QMessageBox.Yes:
-#             self.enregistrerProjet()
-#         elif reponse == QMessageBox.No:
-#             event.accept()
-#         else:
-#             event.ignore()
+        if answer == QMessageBox.Yes:
+            self.saveProject()
+        elif answer == QMessageBox.No:
+            event.accept()
+        else:
+            event.ignore()
 
     def subplotsManager(self):
         DialogManageSubplots(parent=self).exec_()
@@ -395,14 +391,14 @@ class MainWindow(QMainWindow):
                         myPickler = Pickler(file)
                         myPickler.dump(self.project)
 
-                    # self.updateProjetsRecents(self.projet.chemin)
+                    self.updateRecentProjects(self.project.path)
 
             else:
                 with open(self.project.path, 'wb') as file:
                     myPickler = Pickler(file)
                     myPickler.dump(self.project)
 
-                # self.updateProjetsRecents(self.projet.chemin)
+                self.updateRecentProjects(self.project.path)
 
         except:
             alert = QMessageBox(self)
@@ -431,7 +427,7 @@ class MainWindow(QMainWindow):
                     myPickler = Pickler(file)
                     myPickler.dump(self.project)
 
-                # self.updateProjetsRecents(self.projet.chemin)
+                self.updateRecentProjects(self.project.path)
 
         except:
             alert = QMessageBox(self)
@@ -473,7 +469,7 @@ class MainWindow(QMainWindow):
                 self.freeze = False
                 self.canvas.updateFigure()
 
-                # self.updateProjetsRecents(chemin)
+                self.updateRecentProjects(self.project.path)
 
         except:
             alert = QMessageBox(self)
@@ -972,8 +968,7 @@ class MainWindow(QMainWindow):
             pass
 
     def documentation(self):
-        cmd = r"start https://pyLong-doc.readthedocs.io/fr/latest/#"
-        os.system(cmd)
+        webbrowser.open("https://pyLong-doc.readthedocs.io/fr/latest/#")
 
     def about(self):
         text = "<center>" \
@@ -990,10 +985,9 @@ class MainWindow(QMainWindow):
                "Support : Clément ROUSSEL<br/>" \
                "clement.roussel@onf.fr<\p>"
                
-        dialogue = QMessageBox(self)
-        dialogue.setText(text)
-        dialogue.exec_()
+        dialog = QMessageBox(self)
+        dialog.setText(text)
+        dialog.exec_()
 
     def onf(self):
-        cmd = r"start https://www.onf.fr/onf"
-        os.system(cmd)
+        webbrowser.open("https://www.onf.fr/onf")

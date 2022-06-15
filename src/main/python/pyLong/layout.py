@@ -25,8 +25,8 @@ class Layout:
                                 'label color': 'Black',
                                 'value size': 9.,
                                 'value color': 'Black',
-                                'left shift': 5,
-                                'right shift': 5}
+                                'left shift': 0,
+                                'right shift': 0}
 
         self.zAxisProperties = {'min': 0.,
                                 'max': 1000.,
@@ -36,8 +36,8 @@ class Layout:
                                 'label color': 'Black',
                                 'value size': 9.,
                                 'value color': 'Black',
-                                'lower shift': 5,
-                                'upper shift': 5}
+                                'lower shift': 0,
+                                'upper shift': 0}
 
         self.slopesAxisProperties = {'min %': 0.,
                                      'max %': 100.,
@@ -50,10 +50,10 @@ class Layout:
                                      'label color': 'Black',
                                      'value size': 9.,
                                      'value color': 'Black',
-                                     'lower shift %': 5,
-                                     'upper shift %': 5,
-                                     'lower shift °': 5,
-                                     'upper shift °': 5}
+                                     'lower shift %': 0,
+                                     'upper shift %': 0,
+                                     'lower shift °': 0,
+                                     'upper shift °': 0}
 
         self.grid = {'active': True,
                      'style': 'dashed',
