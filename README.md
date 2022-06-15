@@ -54,6 +54,8 @@ Because *pyLong* depends on *fbs==0.9.0*, it needs *python 3.6* to be properly c
 
 ### On Ubuntu 20.04
 
+balbla
+
 ### On macOS Big Sur
 
 
