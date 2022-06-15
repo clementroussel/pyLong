@@ -14,13 +14,13 @@ import matplotlib.pyplot as plt
 
 
 class Mezap():
-    compteur = 0
+    counter = 0
     def __init__(self):
-        Mezap.compteur += 1
+        Mezap.counter += 1
         
         self.actif = True
         
-        self.intitule = "Mezap n°{}".format(Mezap.compteur)
+        self.intitule = "Mezap n°{}".format(Mezap.counter)
         
         self.legender = True
         
@@ -55,7 +55,7 @@ class Mezap():
         self.lineForte = Line2D([], [])
         
     def __del__(self) :
-        Mezap.compteur -= 1
+        Mezap.counter -= 1
 
     def clear(self):
         self.lineFaible = Line2D([], [])

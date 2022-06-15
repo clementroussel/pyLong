@@ -3,7 +3,6 @@ from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QPalette, QImage
 
 # PyQt5 custom modules
-# from barreOutils import *
 from interface.actions import createActions
 from interface.canvas import Canvas
 
@@ -12,18 +11,13 @@ from interface.annotationsList import AnnotationsList
 from interface.calculationsList import CalculationsList
 from interface.otherDataList import OtherDataList
 
-from interface.dialogLayout import DialogLayout
-# from ListeAnnotations import *
-# from ListeCalculs import *
-# from ListeAutresDonnees import *
-
 from interface.dialogSettings import *
 
 from interface.dialogAddLayout import *
 from interface.dialogRenameLayout import *
 from interface.dialogDeleteLayouts import *
 
-# from DialogLayout import *
+from interface.dialogLayout import DialogLayout
 from interface.dialogLayoutAvanced import *
 from interface.dialogPrint import *
 
@@ -52,10 +46,8 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 
 # python modules
 import os
-# import pickle
-# from pickle import Pickler, Unpickler
+from pickle import Pickler, Unpickler
 import json
-# from main.python.pyLong.verticalAnnotation import VerticalAnnotation
 
 # pyLong modules
 from pyLong.project import Project
@@ -98,11 +90,7 @@ class MainWindow(QMainWindow):
         self.navigationBar = NavigationBar(self.canvas, self)
         self.navigationBar.setIconSize(QSize(20, 20))
 
-#         menusEtOutils(self, self.appctxt)
         self.createActions()
-
-        # self.navigationBar._actions['pan'].setText("Se déplacer")
-        # self.navigationBar._actions['zoom'].setText("Zoomer")
 
         self.canvas.addContextMenu()
 
@@ -385,163 +373,163 @@ class MainWindow(QMainWindow):
             alert.setIcon(QMessageBox.Warning)
             alert.exec_()
 
-#     def enregistrerProjet(self):
-#         try:
-#             if self.projet.chemin == "":
-#                 chemin = QFileDialog.getSaveFileName(caption="Enregistrer le projet pyLong",
-#                                                      filter="fichier pyLong (*.pyLong)")[0]
-#                 if chemin == "":
-#                     return 0
-#                 else:
-#                     nomProjet = QFileInfo(chemin).fileName()
-#                     repertoireProjet = QFileInfo(chemin).absolutePath()
-#                     nomProjet = nomProjet.split(".")[0]
+    def saveProject(self):
+        try:
+            if self.project.path == "":
+                path = QFileDialog.getSaveFileName(caption="Save",
+                                                     filter="pyLong file (*.pyLong)")[0]
+                if path == "":
+                    return 0
+                else:
+                    fileName = QFileInfo(path).fileName()
+                    repertory = QFileInfo(path).absolutePath()
+                    fileName = fileName.split(".")[0]
 
-#                     nomProjet += ".pyLong"
-#                     chemin = repertoireProjet + "/" + nomProjet
+                    fileName += ".pyLong"
+                    path = repertory + "/" + fileName
 
-#                     self.projet.chemin = chemin
-#                     self.setWindowTitle(chemin)
+                    self.project.path = path
+                    self.setWindowTitle(path)
 
-#                     with open(chemin, 'wb') as fichier:
-#                         myPickler = Pickler(fichier)
-#                         myPickler.dump(self.projet)
+                    with open(path, 'wb') as file:
+                        myPickler = Pickler(file)
+                        myPickler.dump(self.project)
 
-#                     self.updateProjetsRecents(self.projet.chemin)
+                    # self.updateProjetsRecents(self.projet.chemin)
 
-#             else:
-#                 with open(self.projet.chemin, 'wb') as fichier:
-#                     myPickler = Pickler(fichier)
-#                     myPickler.dump(self.projet)
+            else:
+                with open(self.project.path, 'wb') as file:
+                    myPickler = Pickler(file)
+                    myPickler.dump(self.project)
 
-#                 self.updateProjetsRecents(self.projet.chemin)
+                # self.updateProjetsRecents(self.projet.chemin)
 
-#         except:
-#             alerte = QMessageBox(self)
-#             alerte.setText("L'enregistrement du projet a échoué.")
-#             alerte.exec_()
-#             pass
+        except:
+            alert = QMessageBox(self)
+            alert.setText("Saving failed.")
+            alert.exec_()
+            pass
 
-#     def enregistrerProjetSous(self):
-#         try:
-#             chemin = QFileDialog.getSaveFileName(caption="Enregistrer le projet pyLong sous...",
-#                                                  filter="fichier pyLong (*.pyLong)")[0]
-#             if chemin == "":
-#                 return 0
-#             else:
-#                 nomProjet = QFileInfo(chemin).fileName()
-#                 repertoireProjet = QFileInfo(chemin).absolutePath()
-#                 nomProjet = nomProjet.split(".")[0]
+    def saveProjectAs(self):
+        try:
+            path = QFileDialog.getSaveFileName(caption="Save as...",
+                                                 filter="pyLong file (*.pyLong)")[0]
+            if path == "":
+                return 0
+            else:
+                fileName = QFileInfo(path).fileName()
+                repertory = QFileInfo(path).absolutePath()
+                fileName = fileName.split(".")[0]
 
-#                 nomProjet += ".pyLong"
-#                 chemin = repertoireProjet + "/" + nomProjet
+                fileName += ".pyLong"
+                path = repertory + "/" + fileName
 
-#                 self.projet.chemin = chemin
-#                 self.setWindowTitle(chemin)
+                self.project.path = path
+                self.setWindowTitle(path)
 
-#                 with open(chemin, 'wb') as fichier:
-#                     myPickler = Pickler(fichier)
-#                     myPickler.dump(self.projet)
+                with open(path, 'wb') as file:
+                    myPickler = Pickler(file)
+                    myPickler.dump(self.project)
 
-#                 self.updateProjetsRecents(self.projet.chemin)
+                # self.updateProjetsRecents(self.projet.chemin)
 
-#         except:
-#             alerte = QMessageBox(self)
-#             alerte.setText("L'enregistrement du projet a échoué.")
-#             alerte.exec_()
-#             pass
+        except:
+            alert = QMessageBox(self)
+            alert.setText("Saving failed.")
+            alert.exec_()
+            pass
 
-#     def ouvrirProjet(self):
-#         self.nouveauProjet()
+    def openProject(self):
+        i = self.newProject()
 
-#         try:
-#             chemin = QFileDialog.getOpenFileName(caption="Ouvrir un projet pyLong",
-#                                                  filter="fichier pyLong (*.pyLong)")[0]
-#             if chemin == "":
-#                 return 0
-#             else:
-#                 with open(chemin, 'rb') as fichier:
-#                     myUnpickler = Unpickler(fichier)
-#                     projet = myUnpickler.load()
+        if i == 0:
+            return 0
 
-#                 self.freeze = True
-#                 self.projet.charger(projet)
+        try:
+            path = QFileDialog.getOpenFileName(caption="Open a pyLong project",
+                                                 filter="pyLong file (*.pyLong)")[0]
+            if path == "":
+                return 0
+            else:
+                with open(path, 'rb') as file:
+                    myUnpickler = Unpickler(file)
+                    project = myUnpickler.load()
 
-#                 self.setWindowTitle(self.projet.chemin)
+                self.freeze = True
+                self.project.load(project)
 
-#                 self.listeLayouts.clear()
-#                 for layout in self.projet.layouts:
-#                     self.listeLayouts.addItem(layout.intitule)
+                self.setWindowTitle(self.project.path)
 
-#                 self.profilesList.update()
-#                 self.annotationsList.updateGroupes()
-#                 self.annotationsList.updateListe()
-#                 self.calculationsList.update()
-#                 self.otherDataList.update()
+                self.layoutsList.clear()
+                for layout in self.project.layouts:
+                    self.layoutsList.addItem(layout.title)
 
-#                 self.freeze = False
-#                 self.canvas.dessiner()
+                self.profilesList.update()
+                self.annotationsList.updateGroups()
+                self.annotationsList.updateList()
+                self.calculationsList.update()
+                self.otherDataList.update()
 
-#                 self.updateProjetsRecents(chemin)
+                self.freeze = False
+                self.canvas.updateFigure()
 
-#         except:
-#             alerte = QMessageBox(self)
-#             alerte.setText("Le chargement du projet a échoué.")
-#             alerte.exec_()
-#             pass
+                # self.updateProjetsRecents(chemin)
 
-#     def nouveauProjet(self):
-#         dialogue = QMessageBox(self)
-#         dialogue.setWindowTitle("Nouveau projet pyLong")
-#         dialogue.setText("Voulez-vous enregistrer le projet actuel ?")
-#         dialogue.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
-#         dialogue.button(QMessageBox.Yes).setText("Oui")
-#         dialogue.button(QMessageBox.No).setText("Non")
-#         dialogue.button(QMessageBox.Cancel).setText("Annuler")
-#         dialogue.setIcon(QMessageBox.Question)
-#         reponse = dialogue.exec_()
+        except:
+            alert = QMessageBox(self)
+            alert.setText("Loading failed.")
+            alert.exec_()
+            pass
 
-#         if reponse == QMessageBox.Yes:
-#             self.enregistrerProjet()
+    def newProject(self):
+        dialog = QMessageBox(self)
+        dialog.setWindowTitle("New pyLong project")
+        dialog.setText("Save current projet ?")
+        dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+        dialog.setIcon(QMessageBox.Question)
+        answer = dialog.exec_()
 
-#             self.freeze = True
-#             self.projet.nouveau()
+        if answer == QMessageBox.Yes:
+            self.saveProject()
 
-#             self.listeLayouts.clear()
-#             for layout in self.projet.layouts:
-#                 self.listeLayouts.addItem(layout.intitule)
+            self.freeze = True
+            self.project.new()
 
-#             self.profilesList.update()
-#             self.annotationsList.updateGroupes()
-#             self.annotationsList.updateListe()
-#             self.calculationsList.update()
-#             self.otherDataList.update()
+            self.layoutsList.clear()
+            for layout in self.project.layouts:
+                self.layoutsList.addItem(layout.title)
 
-#             self.setWindowTitle("pyLong")
+            self.profilesList.update()
+            self.annotationsList.updateGroups()
+            self.annotationsList.updateList()
+            self.calculationsList.update()
+            self.otherDataList.update()
 
-#             self.freeze = False
-#             self.canvas.dessiner()
+            self.setWindowTitle("pyLong")
 
-#         elif reponse == QMessageBox.No:
-#             self.freeze = True
-#             self.projet.nouveau()
+            self.freeze = False
+            self.canvas.updateFigure()
 
-#             self.listeLayouts.clear()
-#             for layout in self.projet.layouts:
-#                 self.listeLayouts.addItem(layout.intitule)
+        elif answer == QMessageBox.No:
+            self.freeze = True
+            self.project.new()
 
-#             self.profilesList.update()
-#             self.annotationsList.updateGroupes()
-#             self.annotationsList.updateListe()
-#             self.calculationsList.update()
-#             self.otherDataList.update()
+            self.layoutsList.clear()
+            for layout in self.project.layouts:
+                self.layoutsList.addItem(layout.title)
 
-#             self.setWindowTitle("pyLong")
+            self.profilesList.update()
+            self.annotationsList.updateGroups()
+            self.annotationsList.updateList()
+            self.calculationsList.update()
+            self.otherDataList.update()
 
-#             self.freeze = False
-#             self.canvas.dessiner()
-#         else:
-#             return 0
+            self.setWindowTitle("pyLong")
+
+            self.freeze = False
+            self.canvas.updateFigure()
+        else:
+            return 0
 
     def print(self):
         DialogPrint(parent=self).exec_()
@@ -579,9 +567,6 @@ class MainWindow(QMainWindow):
         #     alerte.setText("Sélectionnez un profil avant de lancer cette commande.")
         #     alerte.setIcon(QMessageBox.Warning)
         #     alerte.exec_()
-
-#     def onDoubleClick(self, event):
-#         pass
 
     def profileStyle(self):
         self.checkNavigationTools()

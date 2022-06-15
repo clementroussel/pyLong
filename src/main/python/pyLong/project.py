@@ -13,13 +13,13 @@ from pyLong.linearAnnotation import LinearAnnotation
 from pyLong.interval import Interval
 from pyLong.rectangle import Rectangle
 
-#from pyLong.LigneEnergie import *
-#from pyLong.Mezap import *
-#from pyLong.FlowR import *
-#from pyLong.Rickenmann import *
-#from pyLong.Corominas import *
+from pyLong.toolbox.energyLine import *
+from pyLong.toolbox.mezap import *
+from pyLong.toolbox.flowR import *
+from pyLong.toolbox.rickenmann import *
+from pyLong.toolbox.corominas import *
 
-#from pyLong.Donnee import *
+from pyLong.otherData import *
 
 
 class Project:
@@ -58,6 +58,10 @@ class Project:
     def new(self):
         self.path = ""
 
+        self.settings = Setting()
+
+        self.preview = Preview()
+
         self.layouts.clear()
         Layout.counter = -1
         self.layouts.append(Layout())
@@ -79,13 +83,13 @@ class Project:
         Rectangle.counter = 0
 
         self.calculations.clear()
-        #LigneEnergie.compteur = 0
-        #Mezap.compteur = 0
-        #FlowR.compteur = 0
-        #Rickenmann.compteur = 0
-        #Corominas.compteur = 0
+        EnergyLine.counter = 0
+        Mezap.counter = 0
+        FlowR.counter = 0
+        Rickenmann.counter = 0
+        Corominas.counter = 0
 
-        self.otherDatas.clear()
+        self.otherData.clear()
         OtherData.counter = 0
 
         self.reminderLines.clear()
@@ -93,7 +97,7 @@ class Project:
     def load(self, project):
         self.path = project.path
 
-        #self.preferences = projet.preferences
+        self.settings = project.settings
 
         self.preview = project.preview
 
@@ -104,7 +108,7 @@ class Project:
         self.subplots = project.subplots
 
         zProfile.counter = len(project.profiles)
-        sProfil.counter = len(project.profiles)
+        sProfile.counter = len(project.profiles)
         self.profiles = project.profiles
 
         self.groups.clear()
@@ -132,31 +136,31 @@ class Project:
 
         self.calculations = project.calculations
 
-        # n_ligneEnergie = 0
-        # n_mezap = 0
-        # n_rickenmann = 0
-        # n_flowr = 0
-        # n_corominas = 0
+        energyLineCounter = 0
+        mezapCounter = 0
+        rickenmannCounter = 0
+        flowrCounter = 0
+        corominasCounter = 0
 
-        # for calcul in self.calculs:
-        #     if type(calcul) == LigneEnergie:
-        #         n_ligneEnergie += 1
-        #     elif type(calcul) == Mezap:
-        #         n_mezap += 1
-        #     elif type(calcul) == Rickenmann:
-        #         n_rickenmann += 1
-        #     elif type(calcul) == FlowR:
-        #         n_flowr += 1
-        #     else:
-        #         n_corominas += 1
+        for calcul in self.calculations:
+            if type(calcul) == EnergyLine:
+                energyLineCounter += 1
+            elif type(calcul) == Mezap:
+                mezapCounter += 1
+            elif type(calcul) == Rickenmann:
+                rickenmannCounter += 1
+            elif type(calcul) == FlowR:
+                flowrCounter += 1
+            else:
+                corominasCounter += 1
 
-        # LigneEnergie.compteur = n_ligneEnergie
-        # Mezap.compteur = n_mezap
-        # Rickenmann.compteur = n_rickenmann
-        # FlowR.compteur = n_flowr
-        # Corominas.compteur = n_corominas
+        EnergyLine.counter = energyLineCounter
+        Mezap.counter = mezapCounter
+        Rickenmann.counter = rickenmannCounter
+        FlowR.counter = flowrCounter
+        Corominas.counter = corominasCounter
 
-        OtherData.counter = len(project.otherDatas)
-        self.otherDatas = project.otherDatas
+        OtherData.counter = len(project.otherData)
+        self.otherData = project.otherData
 
         self.reminderLines = project.reminderLines

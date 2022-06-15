@@ -6,7 +6,7 @@ class Group:
         
         self.active = True
         
-        self.title = ""
+        self.title = "group {}".format(Group.counter)
         
         self.annotations = []
         

@@ -9,22 +9,22 @@ def createActions(self):
 
     self.newProjectAction = QAction(QIcon(self.appctxt.get_resource('icons/newProject.png')), "New project", self)
     self.newProjectAction.setShortcut(QKeySequence("Ctrl+N"))
-    #self.newProjectAction.triggered.connect(self.newProject)
+    self.newProjectAction.triggered.connect(self.newProject)
     self.projectToolBar.addAction(self.newProjectAction)
 
     self.openProjectAction = QAction(QIcon(self.appctxt.get_resource('icons/openProject.png')), "Open a project", self)
     self.openProjectAction.setShortcut(QKeySequence("Ctrl+O"))
-    #self.openProjectAction.triggered.connect(self.openProject)
+    self.openProjectAction.triggered.connect(self.openProject)
     self.projectToolBar.addAction(self.openProjectAction)
 
     self.saveProjectAction = QAction(QIcon(self.appctxt.get_resource('icons/saveProject.png')), "Save project", self)
     self.saveProjectAction.setShortcut(QKeySequence("Ctrl+S"))
-    #self.saveProjectAction.triggered.connect(self.saveProject)
+    self.saveProjectAction.triggered.connect(self.saveProject)
     self.projectToolBar.addAction(self.saveProjectAction)
 
     self.saveProjectAsAction = QAction(QIcon(self.appctxt.get_resource('icons/saveProjectAs.png')), "Save project as... ", self)
     self.saveProjectAsAction.setShortcut(QKeySequence("Shift+Ctrl+S"))
-    #self.saveProjectAsAction.triggered.connect(self.saveProjectAs)
+    self.saveProjectAsAction.triggered.connect(self.saveProjectAs)
     self.projectToolBar.addAction(self.saveProjectAsAction)
 
     self.settingsAction = QAction(QIcon(self.appctxt.get_resource('icons/settings.png')), "Settings", self)

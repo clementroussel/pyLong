@@ -234,6 +234,7 @@ class DialogEnergyLine(QDialog):
         self.accept()
 
     def update(self):
+        self.energyLine.label = self.label.text()
         self.energyLine.lineProperties['style'] = self.style.currentText()
         self.energyLine.lineProperties['color'] = self.color.currentText()
         self.energyLine.lineProperties['thickness'] = self.thickness.value()
@@ -241,13 +242,7 @@ class DialogEnergyLine(QDialog):
         self.energyLine.order = self.order.value()
 
         self.energyLine.update()
-        self.pyLong.canvas.draw()
-
-    def updateLegend(self):
-        self.energyLine.label = self.label.text()
-        self.energyLine.update()
-
-        self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.updateLegends()      
 
     def updateTitle(self):
         self.energyLine.title = self.title.text()
