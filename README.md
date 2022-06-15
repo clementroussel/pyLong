@@ -4,9 +4,9 @@ Visit the online documentation to learn more about **pyLong** : https://pylong.r
 
 ## Instructions to build **pyLong** from sources
 
-[On Windows 10](#on-windows-10)
-[On Ubuntu 20.04](#on-ubuntu-20.04)
-[On macOS Big Sur](#on-macOS-big-sur)
+[On Windows 10](#on-windows-10)  
+[On Ubuntu 20.04](#on-ubuntu-20.04)  
+[On macOS Big Sur](#on-macOS-big-sur)  
 
 ### On Windows 10
 
