@@ -172,7 +172,7 @@ class DialogFlowR(QDialog):
         
         self.label = QLineEdit()
         self.label.setText(self.flowr.label)
-        self.label.textEdited.connect(self.update)
+        self.label.textEdited.connect(self.updateLabel)
         layout.addWidget(self.label, 0, 1)
         
         label = QLabel("Style :")
@@ -271,6 +271,12 @@ class DialogFlowR(QDialog):
         self.flowr.title = self.title.text()
         self.pyLong.calculationsList.update()
 
+    def updateLabel(self):
+        self.flowr.label = self.label.text()
+        self.flowr.update()
+
+        self.pyLong.canvas.updateLegends()
+
     def update(self):
         self.flowr.label = self.label.text()
         self.flowr.lineProperties['style'] = self.style.currentText()
@@ -280,7 +286,8 @@ class DialogFlowR(QDialog):
         self.flowr.order = self.order.value()
 
         self.flowr.update()
-        self.pyLong.canvas.updateLegends()
+
+        self.pyLong.canvas.draw()
     
     def apply(self):
         try:

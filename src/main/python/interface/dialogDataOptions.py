@@ -52,7 +52,7 @@ class DialogDataOptions(QDialog):
         
         self.label = QLineEdit()
         self.label.setText(self.data.label)
-        self.label.textChanged.connect(self.update)
+        self.label.textChanged.connect(self.updateLabel)
         layout.addWidget(self.label, 1, 1)
         
         label = QLabel("Line style :")
@@ -162,6 +162,12 @@ class DialogDataOptions(QDialog):
         self.setWindowTitle("Style <{}>".format(value))
         self.pyLong.otherDataList.update()
 
+    def updateLabel(self):
+        self.data.label = self.label.text()
+        self.data.update()
+
+        self.pyLong.canvas.updateLegends()
+
     def update(self):
         self.data.label = self.label.text()
         self.data.lineProperties['style'] = self.lineStyle.currentText()
@@ -174,4 +180,4 @@ class DialogDataOptions(QDialog):
         self.data.order = self.order.value()
 
         self.data.update()
-        self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()

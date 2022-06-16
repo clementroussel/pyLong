@@ -146,7 +146,7 @@ class DialogRickenmann(QDialog):
         
         self.label = QLineEdit()
         self.label.setText(self.rickenmann.label)
-        self.label.textEdited.connect(self.update)
+        self.label.textEdited.connect(self.updateLabel)
         layout.addWidget(self.label, 0, 1)
         
         label = QLabel("Style :")
@@ -244,6 +244,12 @@ class DialogRickenmann(QDialog):
         self.rickenmann.title = self.title.text()
         self.pyLong.calculationsList.update()
 
+    def updateLabel(self):
+        self.rickenmann.label = self.label.text()
+
+        self.rickenmann.update()
+        self.pyLong.canvas.updateLegends()
+
     def update(self):
         self.rickenmann.label = self.label.text()
         self.rickenmann.lineProperties['style'] = self.style.currentText()
@@ -253,7 +259,7 @@ class DialogRickenmann(QDialog):
         self.rickenmann.order = self.order.value()
 
         self.rickenmann.update()
-        self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
             
     def apply(self):
         try:

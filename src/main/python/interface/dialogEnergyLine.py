@@ -139,7 +139,7 @@ class DialogEnergyLine(QDialog):
         
         self.label = QLineEdit()
         self.label.setText(self.energyLine.label)
-        self.label.textEdited.connect(self.updateLegend)
+        self.label.textEdited.connect(self.updateLabel)
         layout.addWidget(self.label, 0, 1)
         
         label = QLabel("Style :")
@@ -233,6 +233,12 @@ class DialogEnergyLine(QDialog):
         self.apply()
         self.accept()
 
+    def updateLabel(self):
+        self.energyLine.label = self.label.text()
+        self.energyLine.update()
+
+        self.pyLong.canvas.updateLegends()
+
     def update(self):
         self.energyLine.label = self.label.text()
         self.energyLine.lineProperties['style'] = self.style.currentText()
@@ -242,7 +248,7 @@ class DialogEnergyLine(QDialog):
         self.energyLine.order = self.order.value()
 
         self.energyLine.update()
-        self.pyLong.canvas.updateLegends()      
+        self.pyLong.canvas.draw()      
 
     def updateTitle(self):
         self.energyLine.title = self.title.text()

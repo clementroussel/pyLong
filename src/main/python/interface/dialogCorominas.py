@@ -156,7 +156,7 @@ class DialogCorominas(QDialog):
         
         self.label = QLineEdit()
         self.label.setText(self.corominas.label)
-        self.label.textEdited.connect(self.update)
+        self.label.textEdited.connect(self.updateLabel)
         layout.addWidget(self.label, 0, 1)
         
         label = QLabel("Style :")
@@ -254,6 +254,12 @@ class DialogCorominas(QDialog):
         self.corominas.title = self.title.text()
         self.pyLong.calculationsList.update()
 
+    def updateLabel(self):
+        self.corominas.label = self.label.text()
+        self.corominas.update()
+
+        self.pyLong.canvas.updateLegends()
+
     def update(self):
         self.corominas.label = self.label.text()
         self.corominas.lineProperties['style'] = self.style.currentText()
@@ -263,7 +269,7 @@ class DialogCorominas(QDialog):
         self.corominas.order = self.order.value()
 
         self.corominas.update()
-        self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
             
     def apply(self):
         try:
