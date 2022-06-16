@@ -312,7 +312,7 @@ class DialogRectangle(QDialog):
         
         self.rect.update()
 
-        self.pyLong.canvas.updateFigure()
+        self.pyLong.canvas.draw()
         
     def point(self):
         self.pyLong.checkNavigationTools()

@@ -333,53 +333,63 @@ class DialogProfileOptions(QDialog):
     def updateProfileVisible(self, value):
         self.zprofile.visible = value
         self.zprofile.update()
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateProfileLineStyle(self, value):
         self.zprofile.lineProperties['style'] = value
         self.zprofile.line.set_linestyle(lineStyles[value])
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateProfileLineColor(self, value):
         self.zprofile.lineProperties['color'] = value
         self.zprofile.line.set_color(colors[value])
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateProfileLineThickness(self, value):
         self.zprofile.lineProperties['thickness'] = value
         self.zprofile.line.set_linewidth(value)
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateProfileMarkerStyle(self, value):
         self.zprofile.markerProperties['style'] = value
         self.zprofile.line.set_marker(markerStyles[value])
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateProfileMarkerColor(self, value):
         self.zprofile.markerProperties['color'] = value
         self.zprofile.line.set_markeredgecolor(colors[value])
         self.zprofile.line.set_markerfacecolor(colors[value])
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateProfileMarkerSize(self, value):
         self.zprofile.markerProperties['size'] = value
         self.zprofile.line.set_markersize(value)
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateProfileOpacity(self, value):
-        self.zprofile.opacit = value
+        self.zprofile.opacity = value
         self.zprofile.line.set_alpha(value)
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateProfileOrder(self, value):
         self.zprofile.order = value
         self.zprofile.line.set_zorder(value)
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateSlopeMarkersVisible(self, value):
         self.sprofile.markersVisible = value
         self.sprofile.update()
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateSlopeLabel(self, value):
         self.sprofile.label = value
@@ -394,7 +404,8 @@ class DialogProfileOptions(QDialog):
         self.sprofile.linePercents.set_marker(markerStyles[value])
         self.sprofile.lineDegrees.set_marker(markerStyles[value])
         self.sprofile.trickLine.set_marker(markerStyles[value])
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateSlopeMarkerColor(self, value):
         self.sprofile.markerProperties['color'] = value
@@ -406,7 +417,8 @@ class DialogProfileOptions(QDialog):
         self.sprofile.linePercents.set_markerfacecolor(colors[value])
         self.sprofile.lineDegrees.set_markerfacecolor(colors[value])
         self.sprofile.trickLine.set_markerfacecolor(colors[value])
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateSlopeMarkerSize(self, value):
         self.sprofile.markerProperties['size'] = value
@@ -414,7 +426,8 @@ class DialogProfileOptions(QDialog):
         self.sprofile.linePercents.set_markersize(value)
         self.sprofile.lineDegrees.set_markersize(value)
         self.sprofile.trickLine.set_markersize(value)
-        self.pyLong.canvas.updateLegends()
+        # self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.draw()
 
     def updateSlopeOpacity(self, value):
         self.sprofile.opacity = value
@@ -422,7 +435,7 @@ class DialogProfileOptions(QDialog):
         self.sprofile.linePercents.set_alpha(value)
         self.sprofile.lineDegrees.set_alpha(value)
         self.sprofile.trickLine.set_alpha(value)
-        self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.updateFigure()
 
     def updateSlopeOrder(self, value):
         self.sprofile.order = value
@@ -430,7 +443,7 @@ class DialogProfileOptions(QDialog):
         self.sprofile.linePercents.set_zorder(value)
         self.sprofile.lineDegrees.set_zorder(value)
         self.sprofile.trickLine.set_zorder(value)
-        self.pyLong.canvas.updateLegends()
+        self.pyLong.canvas.updateFigure()
 
     def updateSlopeAnnotationsVisible(self, value):
         self.sprofile.annotationsVisible = value
