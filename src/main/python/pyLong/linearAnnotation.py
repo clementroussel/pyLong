@@ -56,6 +56,8 @@ class LinearAnnotation(Annotation):
         self.annotation.xy = (self.arrowProperties['x start'], self.arrowProperties['z coordinate'])
         self.annotation.set_x(self.arrowProperties['x end'])
         self.annotation.set_y(self.arrowProperties['z coordinate'])
+        self.annotation.set_alpha(self.opacity)
+        self.annotation.set_zorder(self.order)
         self.annotation.set_visible(self.active)
         
         self.text.set_text(self.label)
