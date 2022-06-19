@@ -18,136 +18,132 @@ class DialogMezap(QDialog):
         
         self.pyLong = parent
         
-        i = self.pyLong.listeCalculs.liste.currentRow()
-        self.mezap = self.pyLong.projet.calculs[i]
+        i = self.pyLong.calculationsList.list.currentRow()
+        self.mezap = self.pyLong.project.calculations[i]
         
-        self.setWindowTitle("Lignes d'énergie (MEZAP)")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icones/rock.png')))
+        self.setWindowTitle("Energy line (MEZAP)")
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/rock.png')))
     
         tableWidget = QTabWidget()
-        onglet_parametres = QWidget()
+        parametersTab = QWidget()
 
-        tableWidget.addTab(onglet_parametres, "Paramètres de calcul")
+        tableWidget.addTab(parametersTab, "Parameters")
         
-        # onglet paramètres
+        # parameters tab
         layout = QGridLayout()
         
-        label = QLabel("Profil :")
+        label = QLabel("Profile :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.profils = QComboBox()
+        self.profiles = QComboBox()
         
-        for zprofil, pprofil in self.pyLong.projet.profils:
-            self.profils.addItem(zprofil.intitule)
+        for zprofile, sprofile in self.pyLong.project.profiles:
+            self.profiles.addItem(zprofile.title)
 
         try:
-            self.profils.setCurrentIndex(self.mezap.parametres['profil'])
+            self.profiles.setCurrentText(self.mezap.parameters['zprofile'].title)
         except:
             pass
 
-        layout.addWidget(self.profils, 0, 1, 1, 2)
+        layout.addWidget(self.profiles, 0, 1, 1, 2)
         
-        label = QLabel("Abscisse")
+        label = QLabel("X")
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label, 1, 1)      
 
-        label = QLabel("Altitude")
+        label = QLabel("Z")
         label.setAlignment(Qt.AlignCenter)
         label.setVisible(False)
         layout.addWidget(label, 1, 2)
         
-        label = QLabel("Départ :")
+        label = QLabel("Start :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 2, 0)
 
-        self.abscisseDepart = QDoubleSpinBox()
-        self.abscisseDepart.setFixedWidth(90)
-        self.abscisseDepart.setSuffix(" m")
-        self.abscisseDepart.setLocale(QLocale('English'))
-        self.abscisseDepart.setSingleStep(1)
-        self.abscisseDepart.setRange(0, 99999.999)
-        self.abscisseDepart.setDecimals(3)
-        self.abscisseDepart.setValue(self.mezap.parametres['abscisse départ'])
-        layout.addWidget(self.abscisseDepart, 2, 1)        
+        self.xStart = QDoubleSpinBox()
+        self.xStart.setFixedWidth(90)
+        self.xStart.setSuffix(" m")
+        self.xStart.setLocale(QLocale('English'))
+        self.xStart.setSingleStep(1)
+        self.xStart.setRange(0, 99999.999)
+        self.xStart.setDecimals(3)
+        self.xStart.setValue(self.mezap.parameters['x start'])
+        layout.addWidget(self.xStart, 2, 1)        
 
-        self.altitudeDepart = QDoubleSpinBox()
-        self.altitudeDepart.setFixedWidth(90)
-        self.altitudeDepart.setSuffix(" m")
-        self.altitudeDepart.setLocale(QLocale('English'))
-        self.altitudeDepart.setSingleStep(1)
-        self.altitudeDepart.setRange(0, 99999.999)
-        self.altitudeDepart.setDecimals(3)
-        self.altitudeDepart.setReadOnly(True)
-        self.altitudeDepart.setValue(self.mezap.parametres['altitude départ'])
-        self.altitudeDepart.setVisible(False)
-        layout.addWidget(self.altitudeDepart, 2, 2)
+        self.zStart = QDoubleSpinBox()
+        self.zStart.setFixedWidth(90)
+        self.zStart.setSuffix(" m")
+        self.zStart.setLocale(QLocale('English'))
+        self.zStart.setSingleStep(1)
+        self.zStart.setRange(0, 99999.999)
+        self.zStart.setDecimals(3)
+        self.zStart.setReadOnly(True)
+        self.zStart.setValue(self.mezap.parameters['z start'])
+        self.zStart.setVisible(False)
+        layout.addWidget(self.zStart, 2, 2)
         
-        label = QLabel("Rapport :")
+        label = QLabel("Report :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 3, 0)
         
         sublayout = QHBoxLayout()
         
-        self.cheminRapport = QLineEdit()
-        self.cheminRapport.setText(self.mezap.cheminRapport)
-        sublayout.addWidget(self.cheminRapport)
+        self.reportPath = QLineEdit()
+        self.reportPath.setText(self.mezap.reportPath)
+        sublayout.addWidget(self.reportPath)
         
-        self.boutonParcourir = QPushButton("...")
-        self.boutonParcourir.setFixedWidth(20)
-        self.boutonParcourir.clicked.connect(self.parcourir)
-        self.boutonParcourir.setAutoDefault(False)
-        sublayout.addWidget(self.boutonParcourir)
+        browserReportPath = QPushButton("...")
+        browserReportPath.setFixedWidth(20)
+        browserReportPath.clicked.connect(self.browseReportPath)
+        browserReportPath.setAutoDefault(False)
+        sublayout.addWidget(browserReportPath)
 
         layout.addLayout(sublayout, 3, 1, 1, 2)
 
-        self.exporterValeurs = QCheckBox("Exporter angles d'énergie et aires normalisées")
-        self.exporterValeurs.setChecked(self.mezap.exporterValeurs)
+        self.exportValues = QCheckBox("Export angles and normalized areas.")
+        self.exportValues.setChecked(self.mezap.exportValues)
 
-        layout.addWidget(self.exporterValeurs, 4, 0, 1, 3)
+        layout.addWidget(self.exportValues, 4, 0, 1, 3)
 
-        label = QLabel("Chemin :")
+        label = QLabel("Path :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 5, 0)
 
         sublayout = QHBoxLayout()
 
-        self.cheminValeurs = QLineEdit()
-        self.cheminValeurs.setText(self.mezap.cheminValeur)
-        sublayout.addWidget(self.cheminValeurs)
+        self.exportValuesPath = QLineEdit()
+        self.exportValuesPath.setText(self.mezap.exportValuesPath)
+        sublayout.addWidget(self.exportValuesPath)
 
-        self.boutonParcourirValeurs = QPushButton("...")
-        self.boutonParcourirValeurs.setFixedWidth(20)
-        self.boutonParcourirValeurs.clicked.connect(self.parcourirValeurs)
-        self.boutonParcourirValeurs.setAutoDefault(False)
-        sublayout.addWidget(self.boutonParcourirValeurs)
+        browserValuesPath = QPushButton("...")
+        browserValuesPath.setFixedWidth(20)
+        browserValuesPath.clicked.connect(self.browseValuesPath)
+        browserValuesPath.setAutoDefault(False)
+        sublayout.addWidget(browserValuesPath)
 
         layout.addLayout(sublayout, 5, 1, 1, 2)
         
-        onglet_parametres.setLayout(layout)
+        parametersTab.setLayout(layout)
 
-        label = QLabel("Intitulé :")
+        label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         
-        self.intitule = QLineEdit()
-        self.intitule.setText(self.mezap.intitule)
-        self.intitule.textChanged.connect(self.updateIntitule)
+        self.title = QLineEdit()
+        self.title.setText(self.mezap.title)
+        self.title.textChanged.connect(self.updateTitle)
         
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Ok | QDialogButtonBox.Close)
-        buttonBox.button(QDialogButtonBox.Close).setText("Fermer")
-        buttonBox.button(QDialogButtonBox.Apply).setText("Appliquer")
-        buttonBox.rejected.connect(self.accept)
-        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.valider)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Ok)
+        buttonBox.button(QDialogButtonBox.Ok).clicked.connect(self.validate)
         buttonBox.button(QDialogButtonBox.Ok).setAutoDefault(False)
-        buttonBox.button(QDialogButtonBox.Close).setAutoDefault(False)
-        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.appliquer)
+        buttonBox.button(QDialogButtonBox.Apply).clicked.connect(self.apply)
         buttonBox.button(QDialogButtonBox.Apply).setAutoDefault(True)
         buttonBox.button(QDialogButtonBox.Apply).setDefault(True)
         
         layout = QGridLayout()
         
         layout.addWidget(label, 0, 0)
-        layout.addWidget(self.intitule, 0, 1)
+        layout.addWidget(self.title, 0, 1)
         
         layout.addWidget(tableWidget, 1, 0, 1, 2)
         
@@ -155,76 +151,77 @@ class DialogMezap(QDialog):
         
         self.setLayout(layout)
 
-    def parcourir(self):
-        chemin = QFileDialog.getSaveFileName(caption="Enregistrer le rapport de calcul",
-                                             filter="fichier pdf (*.pdf)")[0]
+    def browseReportPath(self):
+        path = QFileDialog.getSaveFileName(caption="Report",
+                                           filter="pdf file (*.pdf)")[0]
+        if path == "":
+            return 0
+        else:
+            fileName = QFileInfo(path).fileName()
+            repertory = QFileInfo(path).absolutePath()
+            fileName = fileName.split(".")[0]
+
+            fileName += ".pdf"
+            path = repertory + "/" + fileName
+
+            self.reportPath.setText(path)
+
+    def browseValuesPath(self):
+        path = QFileDialog.getSaveFileName(caption="Angles and normalized areas",
+                                             filter="text file (*.txt)")[0]
         if chemin == "":
             return 0
         else:
-            nomFichier = QFileInfo(chemin).fileName()
-            repertoireFichier = QFileInfo(chemin).absolutePath()
-            nomFichier = nomFichier.split(".")[0]
+            fileName = QFileInfo(path).fileName()
+            repertory = QFileInfo(path).absolutePath()
+            fileName = fileName.split(".")[0]
 
-            nomFichier += ".pdf"
-            chemin = repertoireFichier + "/" + nomFichier
+            fileName += ".txt"
+            path = repertory + "/" + fileName
 
-            self.cheminRapport.setText(chemin)
+            self.exportValuesPath.setText(path)
 
-    def parcourirValeurs(self):
-        chemin = QFileDialog.getSaveFileName(caption="Exporter angles d'énergie et aires normalisées",
-                                             filter="fichier txt (*.txt)")[0]
-        if chemin == "":
-            return 0
-        else:
-            nomFichier = QFileInfo(chemin).fileName()
-            repertoireFichier = QFileInfo(chemin).absolutePath()
-            nomFichier = nomFichier.split(".")[0]
+    def updateTitle(self):
+        self.mezap.title = self.title.text()
+        self.pyLong.calculationsList.update()
 
-            nomFichier += ".txt"
-            chemin = repertoireFichier + "/" + nomFichier
-
-            self.cheminValeurs.setText(chemin)
-
-    def updateIntitule(self):
-        self.mezap.intitule = self.intitule.text()
-        self.pyLong.listeCalculs.update()
-
-    def valider(self):
-        self.appliquer()
+    def validate(self):
+        self.apply()
         self.accept()
 
-    def appliquer(self):
-        self.mezap.intitule = self.intitule.text()
-        self.mezap.cheminRapport = self.cheminRapport.text()
+    def apply(self):
+        self.mezap.title = self.title.text()
+        self.mezap.reportPath = self.reportPath.text()
 
-        self.mezap.parametres['profil'] = self.profils.currentIndex()
-        self.mezap.parametres['abscisse départ'] = self.abscisseDepart.value()
+        self.mezap.parameters['zprofile'] = self.pyLong.project.profiles[self.profiles.currentIndex()][0]
+        self.mezap.parameters['sprofile'] = self.pyLong.project.profiles[self.profiles.currentIndex()][1]
+        self.mezap.parameters['x start'] = self.xStart.value()
 
-        self.mezap.exporterValeurs = self.exporterValeurs.isChecked()
-        self.mezap.cheminValeur = self.cheminValeurs.text()
+        self.mezap.exportValues = self.exportValues.isChecked()
+        self.mezap.exportValuesPath = self.exportValuesPath.text()
 
-        self.mezap.calculer(self.pyLong)
+        self.mezap.calculate()
 
-        if self.mezap.calculReussi:
+        if self.mezap.success:
             try:
-                if self.exporterValeurs.isChecked():
-                    data = np.array([self.mezap.abscisses, self.mezap.angles, self.mezap.airesNormalisees]).T
+                if self.exportValues.isChecked():
+                    data = np.array([self.mezap.x, self.mezap.angles, self.mezap.normalizedAreas]).T
                     data = pd.DataFrame(data)
-                    data.to_csv(self.cheminValeurs.text(),
+                    data.to_csv(self.exportValuesPath.text(),
                                 sep="\t",
                                 float_format="%.3f",
                                 decimal=".",
                                 index=False,
-                                header=['X', 'Angle_Energie', 'Aire_Normalisee'])
+                                header=['X', 'Angle', 'Area'])
 
-                self.mezap.abscisses = []
+                self.mezap.x = []
                 self.mezap.angles = []
-                self.mezap.airesNormalisees = []
+                self.mezap.normalizedAreas = []
 
-                os.startfile(self.mezap.cheminRapport)
+                # os.startfile(self.mezap.reportPath)
             except:
                 pass
         else:
-            alerte = QMessageBox(self)
-            alerte.setText("Le calcul a échoué.")
-            alerte.exec_()
+            alert = QMessageBox(self)
+            alert.setText("Processing failed.")
+            alert.exec_()

@@ -66,6 +66,9 @@ class Canvas(FigureCanvas):
             for ax in self.figure.axes:
                 ax.clear()
 
+    def format_coord(self, x, y):
+        return "x = {}, y = {}".format(np.round(x, 3), np.round(y, 3))
+
     def updateLayout(self):
         if not self.pyLong.freeze:
             self.erase()
@@ -215,12 +218,15 @@ class Canvas(FigureCanvas):
                                                 {'color': colors[layout.xAxisProperties['label color']],
                                                  'fontsize': layout.xAxisProperties['label size']})
 
+                self.subplots[i].format_coord = self.format_coord
+
             self.figure.align_ylabels()
             self.figure.tight_layout(pad=1.75)
             self.figure.subplots_adjust(hspace=layout.hspace)
 
             self.ax_z.set_zorder(self.ax_p.get_zorder() + 1)
             self.ax_z.patch.set_visible(False)
+            self.ax_z.format_coord = self.format_coord
 
     def adjustRatio(self):
         i = self.pyLong.layoutsList.currentIndex()

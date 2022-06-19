@@ -45,7 +45,7 @@ class DialogToolBox(QDialog):
 
         mezap = QPushButton("Energy line")
         mezap.setIcon(QIcon(self.pyLong.appctxt.get_resource('icons/rock.png')))
-        # mezap.clicked.connect(self.mezap)
+        mezap.clicked.connect(self.mezap)
         mezap.setAutoDefault(False)
         layout.addWidget(mezap)
 
@@ -89,11 +89,11 @@ class DialogToolBox(QDialog):
         self.pyLong.canvas.ax_z.add_line(calculation.line)
         self.accept()
 
-    # def mezap(self):
-    #     mezap = Mezap()
-    #     self.pyLong.projet.calculs.append(mezap)
-    #     self.pyLong.listeCalculs.update()
-    #     self.accept()
+    def mezap(self):
+        mezap = Mezap()
+        self.pyLong.project.calculations.append(mezap)
+        self.pyLong.calculationsList.update()
+        self.accept()
 
     def flowR(self):
         calculation = FlowR()

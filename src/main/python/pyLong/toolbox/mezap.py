@@ -18,90 +18,91 @@ class Mezap():
     def __init__(self):
         Mezap.counter += 1
         
-        self.actif = True
+        self.active = True
         
-        self.intitule = "Mezap n°{}".format(Mezap.counter)
+        self.title = "Mezap n°{}".format(Mezap.counter)
         
-        self.legender = True
+        # self.legender = True
         
-        self.cheminRapport = ""
+        self.reportPath = ""
 
-        self.exporterValeurs = False
+        self.exportValues = False
 
-        self.cheminValeur = ""
+        self.exportValuesPath = ""
         
-        self.ligne = {'style': 'solide',
-                      'épaisseur': 0.8}
+        self.lineProperties = {'style': 'solid',
+                               'thickness': 1}
         
-        self.opacite = 1.
+        self.opacity = 1.
         
-        self.ordre = 1
+        self.order = 1
         
-        self.parametres = {'profil': -1,
-                           'abscisse départ': 0,
-                           'altitude départ': 0,
-                           'abscisses arrivée': [0, 0, 0],
-                           'altitudes arrivée': [0, 0, 0],
-                           'angles': [0,0,0]}
+        self.parameters = {'zprofile': None,
+                           'sprofile': None,
+                           'x start': 0,
+                           'z start': 0,
+                           'x end': [0, 0, 0],
+                           'z end': [0, 0, 0],
+                           'angles': [0, 0, 0]}
 
-        self.abscisses = []
+        self.x = []
         self.angles = []
-        self.airesNormalisees = []
+        self.normalizedArea = []
         
-        self.calculReussi = False
+        self.success = False
 
-        self.lineFaible = Line2D([], [])
-        self.lineMoyenne = Line2D([], [])
-        self.lineForte = Line2D([], [])
+        # self.lineFaible = Line2D([], [])
+        # self.lineMoyenne = Line2D([], [])
+        # self.lineForte = Line2D([], [])
         
     def __del__(self) :
         Mezap.counter -= 1
 
-    def clear(self):
-        self.lineFaible = Line2D([], [])
-        self.lineMoyenne = Line2D([], [])
-        self.lineForte = Line2D([], [])
+    # def clear(self):
+    #     self.lineFaible = Line2D([], [])
+    #     self.lineMoyenne = Line2D([], [])
+    #     self.lineForte = Line2D([], [])
 
-    def update(self):
-        self.lineFaible.set_data([self.parametres['abscisse départ'], self.parametres['abscisses arrivée'][0]],
-                                 [self.parametres['altitude départ'], self.parametres['altitudes arrivée'][0]])
-        self.lineMoyenne.set_data([self.parametres['abscisse départ'], self.parametres['abscisses arrivée'][1]],
-                                 [self.parametres['altitude départ'], self.parametres['altitudes arrivée'][1]])
-        self.lineForte.set_data([self.parametres['abscisse départ'], self.parametres['abscisses arrivée'][2]],
-                                 [self.parametres['altitude départ'], self.parametres['altitudes arrivée'][2]])
+    # def update(self):
+    #     self.lineFaible.set_data([self.parametres['abscisse départ'], self.parametres['abscisses arrivée'][0]],
+    #                              [self.parametres['altitude départ'], self.parametres['altitudes arrivée'][0]])
+    #     self.lineMoyenne.set_data([self.parametres['abscisse départ'], self.parametres['abscisses arrivée'][1]],
+    #                              [self.parametres['altitude départ'], self.parametres['altitudes arrivée'][1]])
+    #     self.lineForte.set_data([self.parametres['abscisse départ'], self.parametres['abscisses arrivée'][2]],
+    #                              [self.parametres['altitude départ'], self.parametres['altitudes arrivée'][2]])
 
-        if self.actif == True and self.legender == True :
-            self.lineFaible.set_label("proba. d'atteinte faible ({}°)".format(np.round(self.parametres['angles'][0], 1)))
-            self.lineMoyenne.set_label("proba. d'atteinte moyenne ({}°)".format(np.round(self.parametres['angles'][1], 1)))
-            self.lineForte.set_label("proba. d'atteinte forte ({}°)".format(np.round(self.parametres['angles'][2], 1)))
-        else:
-            self.lineFaible.set_label("")
-            self.lineMoyenne.set_label("")
-            self.lineForte.set_label("")
+    #     if self.actif == True and self.legender == True :
+    #         self.lineFaible.set_label("proba. d'atteinte faible ({}°)".format(np.round(self.parametres['angles'][0], 1)))
+    #         self.lineMoyenne.set_label("proba. d'atteinte moyenne ({}°)".format(np.round(self.parametres['angles'][1], 1)))
+    #         self.lineForte.set_label("proba. d'atteinte forte ({}°)".format(np.round(self.parametres['angles'][2], 1)))
+    #     else:
+    #         self.lineFaible.set_label("")
+    #         self.lineMoyenne.set_label("")
+    #         self.lineForte.set_label("")
 
-        self.lineFaible.set_linestyle(styles2ligne[self.ligne['style']])
-        self.lineMoyenne.set_linestyle(styles2ligne[self.ligne['style']])
-        self.lineForte.set_linestyle(styles2ligne[self.ligne['style']])
+    #     self.lineFaible.set_linestyle(styles2ligne[self.ligne['style']])
+    #     self.lineMoyenne.set_linestyle(styles2ligne[self.ligne['style']])
+    #     self.lineForte.set_linestyle(styles2ligne[self.ligne['style']])
 
-        self.lineFaible.set_color("Green")
-        self.lineMoyenne.set_color("Orange")
-        self.lineForte.set_color("Red")
+    #     self.lineFaible.set_color("Green")
+    #     self.lineMoyenne.set_color("Orange")
+    #     self.lineForte.set_color("Red")
 
-        self.lineFaible.set_linewidth(self.ligne['épaisseur'])
-        self.lineMoyenne.set_linewidth(self.ligne['épaisseur'])
-        self.lineForte.set_linewidth(self.ligne['épaisseur'])
+    #     self.lineFaible.set_linewidth(self.ligne['épaisseur'])
+    #     self.lineMoyenne.set_linewidth(self.ligne['épaisseur'])
+    #     self.lineForte.set_linewidth(self.ligne['épaisseur'])
 
-        self.lineFaible.set_alpha(self.opacite)
-        self.lineMoyenne.set_alpha(self.opacite)
-        self.lineForte.set_alpha(self.opacite)
+    #     self.lineFaible.set_alpha(self.opacite)
+    #     self.lineMoyenne.set_alpha(self.opacite)
+    #     self.lineForte.set_alpha(self.opacite)
 
-        self.lineFaible.set_zorder(self.ordre)
-        self.lineMoyenne.set_zorder(self.ordre)
-        self.lineForte.set_zorder(self.ordre)
+    #     self.lineFaible.set_zorder(self.ordre)
+    #     self.lineMoyenne.set_zorder(self.ordre)
+    #     self.lineForte.set_zorder(self.ordre)
 
-        self.lineFaible.set_visible(self.actif and self.calculReussi)
-        self.lineMoyenne.set_visible(self.actif and self.calculReussi)
-        self.lineForte.set_visible(self.actif and self.calculReussi)
+    #     self.lineFaible.set_visible(self.actif and self.calculReussi)
+    #     self.lineMoyenne.set_visible(self.actif and self.calculReussi)
+    #     self.lineForte.set_visible(self.actif and self.calculReussi)
 
     def calculer(self, pyLong):
         if self.parametres['profil'] == -1:

@@ -14,11 +14,11 @@ if __name__ == '__main__':
     welcome()
     
     # Change sys.stdout and sys.stderr
-    stdout = open('stdout.log', 'w')
-    sys.stdout = stdout
+    # stdout = open('stdout.log', 'w')
+    # sys.stdout = stdout
 
-    stderr = open('stderr.log', 'w')
-    sys.stderr = stderr
+    # stderr = open('stderr.log', 'w')
+    # sys.stderr = stderr
 
     appctxt = ApplicationContext()       # 1. Instantiate ApplicationContext
     if is_windows():
