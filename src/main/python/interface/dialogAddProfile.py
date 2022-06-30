@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QGroupBox, QGridLayout, QLabel, QComboBox, QRadioButton, QLineEdit, QPushButton, QHBoxLayout, QDialogButtonBox, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 
@@ -19,10 +19,19 @@ class DialogAddProfile(QDialog):
         
         self.setWindowTitle("Add a new profile")
         self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/addProfile.png')))
+
+        tabWidget = QTabWidget()
+        textTab = QWidget()
+        shpTab = QWidget()
+        dbfTab = QWidget()
+
+        tabWidget.addTab(textTab, "txt file")
+        tabWidget.addTab(shpTab, "shape file")
+        tabWidget.addTab(dbfTab, "database file")
         
         mainLayout = QVBoxLayout()
         
-        group = QGroupBox("Parameters")
+        # group = QGroupBox("Parameters")
         layout = QGridLayout()
         
         label = QLabel("Delimiter :")
@@ -73,8 +82,11 @@ class DialogAddProfile(QDialog):
         self.title.setText("profile n°{}".format(zProfile.counter + 1))
         layout.addWidget(self.title, 6, 1)
     
-        group.setLayout(layout)
-        mainLayout.addWidget(group)
+        # group.setLayout(layout)
+        # mainLayout.addWidget(group)
+        textTab.setLayout(layout)
+
+        mainLayout.addWidget(tabWidget)
         
         layout = QHBoxLayout()
         
