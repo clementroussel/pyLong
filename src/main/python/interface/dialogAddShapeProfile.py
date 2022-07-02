@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 
 import pandas as pd
 import numpy as np
+import shapefile
 
 from pyLong.dictionaries import separators, delimiters
 from pyLong.zProfile import zProfile
@@ -11,67 +12,39 @@ from pyLong.sProfile import sProfile
 from pyLong.verticalAnnotation import VerticalAnnotation
 
 
-class DialogAddProfile(QDialog):
+class DialogAddShapeProfile(QDialog):
     def __init__(self, parent):
         super().__init__()
         
         self.pyLong = parent
         
-        self.setWindowTitle("Add a text profile")
-        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/addProfile.png')))
+        self.setWindowTitle("Add a shape profile")
+        self.setWindowIcon(QIcon(self.pyLong.appctxt.get_resource('icons/addShapeProfile.png')))
         
         mainLayout = QVBoxLayout()
         
         group = QGroupBox("Parameters")
         layout = QGridLayout()
         
-        label = QLabel("Delimiter :")
+        label = QLabel("Path :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         layout.addWidget(label, 0, 0)
         
-        self.delimiter = QComboBox()
-        self.delimiter.insertItems(0, list(delimiters.keys()))
-        self.delimiter.setCurrentText("tabulation")
-        layout.addWidget(self.delimiter, 0, 1)
-        
-        label = QLabel("Decimal separator :")
-        label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        layout.addWidget(label, 1, 0)
-        
-        self.separator = QComboBox()
-        self.separator.insertItems(0, list(separators.keys()))
-        self.separator.setCurrentText("point")
-        layout.addWidget(self.separator, 1, 1)
-        
-        self.profileOnly = QRadioButton("Import profile only")
-        self.profileOnly.setChecked(True)
-        layout.addWidget(self.profileOnly, 2, 0, 1, 2)
-
-        self.annotationsWithProfile = QRadioButton("Import profile with annotations")
-        layout.addWidget(self.annotationsWithProfile, 3, 0, 1, 2)
-
-        self.annotationsOnly = QRadioButton("Import annotations only")
-        layout.addWidget(self.annotationsOnly, 4, 0, 1, 2)
-        
-        label = QLabel("Path :")
-        label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        layout.addWidget(label, 5, 0)
-        
         self.path = QLineEdit()
-        layout.addWidget(self.path, 5, 1)
+        layout.addWidget(self.path, 0, 1)
         
         browse = QPushButton("...")
         browse.setFixedWidth(20)
         browse.clicked.connect(self.browse)
-        layout.addWidget(browse, 5, 2)
+        layout.addWidget(browse, 0, 2)
         
         label = QLabel("Title :")
         label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        layout.addWidget(label, 6, 0)
+        layout.addWidget(label, 1, 0)
         
         self.title = QLineEdit()
         self.title.setText("profile n°{}".format(zProfile.counter + 1))
-        layout.addWidget(self.title, 6, 1)
+        layout.addWidget(self.title, 1, 1)
     
         group.setLayout(layout)
         mainLayout.addWidget(group)
@@ -115,19 +88,29 @@ class DialogAddProfile(QDialog):
         self.pyLong.canvas.draw()
         
     def browse(self):
-        path = QFileDialog.getOpenFileName(caption="Add a text profile",
-                                           filter="text file (*.txt)")[0]
+        path = QFileDialog.getOpenFileName(caption="Add a shape profile",
+                                           filter="shape file (*.shp)")[0]
         self.path.setText(path)
 
     def importProfile(self):
         try:
-            profile = pd.read_csv(self.path.text(),
-                                  delimiter=delimiters[self.delimiter.currentText()],
-                                  decimal=separators[self.separator.currentText()],
-                                  skiprows=0,
-                                  encoding='utf-8').values
+            sf = shapefile.Reader(self.path.text())
+            shapes = sf.shapes()
 
-            xz = np.array(profile[:,:2].astype('float'))
+            if len(shapes) == 0 or shapes[0].shapeType != 13:
+                alert = QMessageBox(self)
+                alert.setText("Import failed.")
+                alert.exec_()
+                return 0
+            else:
+                shape = shapes[0]
+                dist = [0]
+                for i, (x,y) in enumerate(shape.points):
+                    if i != 0:
+                        d = ((x - shape.points[i-1][0])**2 + (y - shape.points[i-1][1])**2)**0.5
+                        dist.append(d + dist[i-1])
+
+                xz = np.array([dist, shape.z]).T
 
             if np.shape(xz[:,0])[0] < 2:
                 alert = QMessageBox(self)
@@ -145,21 +128,15 @@ class DialogAddProfile(QDialog):
                 zprofile.sort(mode=self.pyLong.project.settings.profileDirection)
                 zprofile.update()
 
-                if zprofile.z[0] == xz[0, 1]:
-                    sorted = False
-                else:
-                    sorted = True
-
                 sprofile = sProfile()
                 sprofile.updateData(zprofile.x, zprofile.z)
                 sprofile.update()
 
-                if self.profileOnly.isChecked() or self.annotationsWithProfile.isChecked():
-                    self.pyLong.project.profiles.append((zprofile, sprofile))
-                    self.pyLong.profilesList.update()
-                    self.pyLong.canvas.ax_z.add_line(zprofile.line)
-                    self.pyLong.canvas.ax_z.add_line(sprofile.trickLine)
-                    self.pyLong.canvas.updateLegends()
+                self.pyLong.project.profiles.append((zprofile, sprofile))
+                self.pyLong.profilesList.update()
+                self.pyLong.canvas.ax_z.add_line(zprofile.line)
+                self.pyLong.canvas.ax_z.add_line(sprofile.trickLine)
+                self.pyLong.canvas.updateLegends()
 
                 if len(self.pyLong.project.profiles) == 1:
                     i = self.pyLong.layoutsList.currentIndex()
@@ -173,39 +150,6 @@ class DialogAddProfile(QDialog):
 
                     self.updateAxis()
 
-            if self.annotationsOnly.isChecked() or self.annotationsWithProfile.isChecked():
-                try:
-                    annotations = list(profile[:, 2])
-                    for i, label in enumerate(annotations):
-                        if label is not np.nan and str(label) != 'nan':
-                            annotation = VerticalAnnotation()
-                            annotation.label = str(label)
-                            annotation.title = str(label)
-
-                            if not sorted:
-                                annotation.position['x coordinate'] = xz[i, 0]
-                            else:
-                                n = len(annotations)
-                                annotation.position['x coordinate'] = zprofile.x[n-1-i]
-
-                            annotation.position['z coordinate'] = xz[i, 1]
-                            annotation.update()
-
-                            j = self.pyLong.annotationsList.groups.currentIndex()
-                            self.pyLong.project.groups[j].annotations.append(annotation)
-
-                            self.pyLong.canvas.ax_z.add_artist(annotation.annotation)
-
-                    self.pyLong.annotationsList.updateList()
-                    self.pyLong.canvas.draw()
-                    self.accept()
-
-                except:
-                    alert = QMessageBox(self)
-                    alert.setText("Annotations import failed.")
-                    alert.exec_()
-
-            else:
                 self.accept()
 
         except:

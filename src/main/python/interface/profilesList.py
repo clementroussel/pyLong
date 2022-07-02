@@ -18,6 +18,7 @@ class ProfilesList(List):
 
         self.popMenu = QMenu(self)
         self.popMenu.addAction(self.pyLong.addProfileAction)
+        self.popMenu.addAction(self.pyLong.addShapeProfileAction)
         self.popMenu.addSeparator()
         self.popMenu.addAction(self.pyLong.tableAction)
         self.popMenu.addSeparator()

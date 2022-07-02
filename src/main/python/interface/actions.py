@@ -135,9 +135,13 @@ def createActions(self):
     self.profileToolBar.setMovable(False)
     self.profileToolBar.setIconSize(QSize(20, 20))
 
-    self.addProfileAction = QAction(QIcon(self.appctxt.get_resource('icons/addProfile.png')), "Add a new profile", self)
+    self.addProfileAction = QAction(QIcon(self.appctxt.get_resource('icons/addProfile.png')), "Add a text profile", self)
     self.addProfileAction.triggered.connect(self.addProfile)
     self.profileToolBar.addAction(self.addProfileAction)
+
+    self.addShapeProfileAction = QAction(QIcon(self.appctxt.get_resource('icons/addShapeProfile.png')), "Add a shape profile", self)
+    self.addShapeProfileAction.triggered.connect(self.addShapeProfile)
+    self.profileToolBar.addAction(self.addShapeProfileAction)
 
     self.tableAction = QAction(QIcon(self.appctxt.get_resource('icons/table.png')), "Profile Values ​​Table", self)
     #self.tableAction.triggered.connect(self.table)
@@ -397,6 +401,7 @@ def createActions(self):
     self.profileMenu = menu.addMenu("Profile")
 
     self.profileMenu.addAction(self.addProfileAction)
+    self.profileMenu.addAction(self.addShapeProfileAction)
     self.profileMenu.addSeparator()
     self.profileMenu.addAction(self.tableAction)
     self.profileMenu.addSeparator()
