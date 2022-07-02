@@ -27,6 +27,7 @@ from interface.dialogManageSubplots import *
 
 from interface.dialogAddProfile import DialogAddProfile
 from interface.dialogAddShapeProfile import DialogAddShapeProfile
+from interface.dialogAddDataBaseProfile import DialogAddDataBaseProfile
 from interface.dialogProfileOptions import *
 # from DialogTableauValeurs import *
 from interface.dialogSort import *
@@ -870,6 +871,9 @@ class MainWindow(QMainWindow):
 
     def addShapeProfile(self):
         DialogAddShapeProfile(self).exec_()
+
+    def addDataBaseProfile(self):
+        DialogAddDataBaseProfile(self).exec_()
 
     def addText(self):
         annotation = Text()

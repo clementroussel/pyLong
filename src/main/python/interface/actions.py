@@ -5,7 +5,7 @@ from PyQt5.QtCore import QSize, Qt
 def createActions(self):
     self.projectToolBar = self.addToolBar("Project")
     self.projectToolBar.setMovable(False)
-    self.projectToolBar.setIconSize(QSize(20, 20))
+    self.projectToolBar.setIconSize(QSize(25,25))
 
     self.newProjectAction = QAction(QIcon(self.appctxt.get_resource('icons/newProject.png')), "New project", self)
     self.newProjectAction.setShortcut(QKeySequence("Ctrl+N"))
@@ -35,7 +35,7 @@ def createActions(self):
 
     self.interfaceToolBar = self.addToolBar("Interface")
     self.interfaceToolBar.setMovable(False)
-    self.interfaceToolBar.setIconSize(QSize(20, 20))
+    self.interfaceToolBar.setIconSize(QSize(25,25))
 
     self.fullScreenAction = QAction(QIcon(self.appctxt.get_resource('icons/fullScreen.png')), "Full screen", self)
     self.fullScreenAction.setCheckable(True)
@@ -65,7 +65,7 @@ def createActions(self):
 
     self.figureToolBar = self.addToolBar("Figure")
     self.figureToolBar.setMovable(False)
-    self.figureToolBar.setIconSize(QSize(20, 20))
+    self.figureToolBar.setIconSize(QSize(25,25))
 
     ##################################################
     # liste des mises en pages + son menu contextuel #
@@ -123,7 +123,7 @@ def createActions(self):
 
     self.subplotToolBar = self.addToolBar("Subplot")
     self.subplotToolBar.setMovable(False)
-    self.subplotToolBar.setIconSize(QSize(20, 20))
+    self.subplotToolBar.setIconSize(QSize(25,25))
 
     self.subplotsManagerAction = QAction(QIcon(self.appctxt.get_resource('icons/subplotsManager.png')), "Subplots manager", self)
     self.subplotsManagerAction.triggered.connect(self.subplotsManager)
@@ -133,7 +133,7 @@ def createActions(self):
 
     self.profileToolBar = self.addToolBar("Profile")
     self.profileToolBar.setMovable(False)
-    self.profileToolBar.setIconSize(QSize(20, 20))
+    self.profileToolBar.setIconSize(QSize(25,25))
 
     self.addProfileAction = QAction(QIcon(self.appctxt.get_resource('icons/addProfile.png')), "Add a text profile", self)
     self.addProfileAction.triggered.connect(self.addProfile)
@@ -142,6 +142,10 @@ def createActions(self):
     self.addShapeProfileAction = QAction(QIcon(self.appctxt.get_resource('icons/addShapeProfile.png')), "Add a shape profile", self)
     self.addShapeProfileAction.triggered.connect(self.addShapeProfile)
     self.profileToolBar.addAction(self.addShapeProfileAction)
+
+    self.addDataBaseProfileAction = QAction(QIcon(self.appctxt.get_resource('icons/addDataBaseProfile.png')), "Add a database profile", self)
+    self.addDataBaseProfileAction.triggered.connect(self.addDataBaseProfile)
+    self.profileToolBar.addAction(self.addDataBaseProfileAction)
 
     self.tableAction = QAction(QIcon(self.appctxt.get_resource('icons/table.png')), "Profile Values ​​Table", self)
     #self.tableAction.triggered.connect(self.table)
@@ -176,7 +180,7 @@ def createActions(self):
 
     self.editingToolBar = self.addToolBar("Interactive editing")
     self.editingToolBar.setMovable(False)
-    self.editingToolBar.setIconSize(QSize(20, 20))
+    self.editingToolBar.setIconSize(QSize(25,25))
 
     self.editingAction = QAction(QIcon(self.appctxt.get_resource('icons/editing.png')), "Interactive editing", self)
     self.editingAction.setCheckable(True)
@@ -214,7 +218,7 @@ def createActions(self):
 
     self.annotationToolBar = self.addToolBar("Annotation")
     self.annotationToolBar.setMovable(False)
-    self.annotationToolBar.setIconSize(QSize(20, 20))
+    self.annotationToolBar.setIconSize(QSize(25,25))
 
     self.addTextAction = QAction(QIcon(self.appctxt.get_resource('icons/text.png')), "Add a text", self)
     self.addTextAction.triggered.connect(self.addText)
@@ -273,7 +277,7 @@ def createActions(self):
 
     self.reminderLineToolBar = self.addToolBar("Reminder line")
     self.reminderLineToolBar.setMovable(False)
-    self.reminderLineToolBar.setIconSize(QSize(20, 20))
+    self.reminderLineToolBar.setIconSize(QSize(25,25))
 
     self.annotation2reminderLineAction = QAction(QIcon(self.appctxt.get_resource('icons/annotation2reminderLine.png')), "Annotation >>> Reminder line", self)
     self.annotation2reminderLineAction.triggered.connect(self.annotation2reminderLine)
@@ -287,7 +291,7 @@ def createActions(self):
 
     self.toolboxToolBar = self.addToolBar("Toolbox")
     self.toolboxToolBar.setMovable(False)
-    self.toolboxToolBar.setIconSize(QSize(20, 20))
+    self.toolboxToolBar.setIconSize(QSize(25,25))
 
     self.toolboxAction = QAction(QIcon(self.appctxt.get_resource('icons/toolbox.png')), "Toolbox", self)
     self.toolboxAction.triggered.connect(self.toolBox)
@@ -306,7 +310,7 @@ def createActions(self):
 
     self.otherDataToolBar = self.addToolBar("Other data")
     self.otherDataToolBar.setMovable(False)
-    self.otherDataToolBar.setIconSize(QSize(20, 20))
+    self.otherDataToolBar.setIconSize(QSize(25,25))
 
     self.addDataAction = QAction(QIcon(self.appctxt.get_resource('icons/addData.png')), "Add new data", self)
     self.addDataAction.triggered.connect(self.addData)
@@ -325,7 +329,7 @@ def createActions(self):
 
     self.resourceToolBar = self.addToolBar("Resources")
     self.resourceToolBar.setMovable(False)
-    self.resourceToolBar.setIconSize(QSize(20, 20))
+    self.resourceToolBar.setIconSize(QSize(25,25))
 
     self.documentationAction = QAction(QIcon(self.appctxt.get_resource('icons/documentation.png')), "Documentation", self)
     self.documentationAction.triggered.connect(self.documentation)
@@ -402,6 +406,7 @@ def createActions(self):
 
     self.profileMenu.addAction(self.addProfileAction)
     self.profileMenu.addAction(self.addShapeProfileAction)
+    self.profileMenu.addAction(self.addDataBaseProfileAction)
     self.profileMenu.addSeparator()
     self.profileMenu.addAction(self.tableAction)
     self.profileMenu.addSeparator()
