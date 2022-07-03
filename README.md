@@ -12,7 +12,7 @@ The easiest way to build **pyLong** from sources is to use *Conda*.
 4. Open a *Conda Powershell Prompt* and move to the **pyLong** directory
 5. Create and activate a virtual environment dedicated to **pyLong**:
 
-    ```conda create --name pyLong-venv python=3.6```
+    ```conda create --name pyLong-venv python=3.6```  
     ```conda activate pyLong-venv```
 
 6. Install the required modules:
