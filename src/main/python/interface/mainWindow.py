@@ -375,7 +375,7 @@ class MainWindow(QMainWindow):
         try:
             if self.project.path == "":
                 path = QFileDialog.getSaveFileName(caption="Save",
-                                                     filter="pyLong file (*.pyLong)")[0]
+                                                   filter="pyLong file (*.pyLong)")[0]
                 if path == "":
                     return 0
                 else:
