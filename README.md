@@ -1,6 +1,7 @@
 # Welcome to pyLong project
 
-**pyLong** is a free and open-source software dedicated to the visualization, analysis, publishing and processing of hydraulic (but not only) longitudinal profile... Visit the online documentation to learn more about **pyLong** : https://pylong.readthedocs.io/en/latest/
+**pyLong** is a free and open-source software dedicated to the visualization, analysis, publishing and processing of hydraulic (but not only) longitudinal profile...  
+Visit the online documentation to learn more about **pyLong**: https://pylong.readthedocs.io/en/latest/.
 
 ## Instructions to build **pyLong** from sources
 
