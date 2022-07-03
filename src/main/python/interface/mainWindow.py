@@ -80,7 +80,7 @@ class MainWindow(QMainWindow):
         
         self.appctxt = appctxt
 
-        with open(self.appctxt.get_resource('recent/projects.json')) as file:
+        with open(self.appctxt.get_resource("recent/projects.json")) as file:
             self.recentFiles = json.load(file)['paths']
 
         self.project = Project()
